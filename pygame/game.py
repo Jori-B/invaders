@@ -3,13 +3,15 @@ import pygame
 import os
 import time
 import random
+import utility
+
 # initialize font usage
 pygame.font.init()
 pygame.init()
 
 # How big is our window going to be, dimensions depend on the screen preventing windows to be too big
 infoObject = pygame.display.Info()
-WIDTH, HEIGHT = infoObject.current_w, infoObject.current_h
+WIDTH, HEIGHT = infoObject.current_w-20, infoObject.current_h-40
 # WIDTH, HEIGHT = 1366, 768
 WINDOW = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Multiplication Invaders")
@@ -30,6 +32,9 @@ YELLOW_LASER = pygame.image.load(os.path.join("assets", "pixel_laser_yellow.png"
 
 # Background
 BACKGROUND = pygame.transform.scale(pygame.image.load(os.path.join("assets", "background_black.png")), (WIDTH, HEIGHT))
+
+# Answer Box
+ANSWER_BOX= pygame.image.load(os.path.join("assets", "Answer_button.png"))
 
 class Laser:
     def __init__(self, x, y, img):
@@ -135,14 +140,14 @@ class Player(Ship):
                 # For each enemy in the objects list if it collides with the laser remove it
                 for obj in objs:
                     if laser.collision(obj):
-                    	# TODO: Add multplication showing and check if answr is correct or wrong
+                        # TODO: Add multplication showing and check if answr is correct or wrong
                         main_font = pygame.font.SysFont("notosansmonocjkkr", 30)
                         answer=""
                         answer_label = main_font.render(f"Answer: {answer}", 1, (255, 255, 255))
                         string=""
-                        pygame.draw.rect(WINDOW,(0,0,255),(WIDTH/2 - answer_label.get_width()/2, HEIGHT/2 - answer_label.get_height()/2,answer_label.get_width()+50,answer_label.get_height()))
-                                
-                        window.blit(answer_label, (WIDTH/2 - answer_label.get_width()/2, HEIGHT/2 - answer_label.get_height()/2))
+                        #pygame.draw.rect(WINDOW,(0,0,255),(WIDTH/2 - answer_label.get_width()/2, HEIGHT/2 - answer_label.get_height()/2,answer_label.get_width()+50,answer_label.get_height()))
+                        window.blit(ANSWER_BOX, (WIDTH/2 - ANSWER_BOX.get_width()/2, HEIGHT/2 - ANSWER_BOX.get_height()/2,ANSWER_BOX.get_width()+50,ANSWER_BOX.get_height()))        
+                        window.blit(answer_label, (WIDTH/2 - ANSWER_BOX.get_width()/2 +30, HEIGHT/2 - answer_label.get_height()/2))
                         pygame.display.update()
                         
                         while True:
@@ -166,7 +171,7 @@ class Player(Ship):
                                     break
 
                                 text = main_font.render(string, 1, (255, 255, 255))
-                                window.blit(text, (WIDTH/2 +answer_label.get_width()/2, HEIGHT/2 - answer_label.get_height()/2))
+                                window.blit(text, (WIDTH/2 -answer_label.get_width()/2 +40, HEIGHT/2 - answer_label.get_height()/2))
                                 pygame.display.update()
 
                         objs.remove(obj)
