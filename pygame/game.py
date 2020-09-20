@@ -5,9 +5,12 @@ import time
 import random
 # initialize font usage
 pygame.font.init()
+pygame.init()
 
-# How big is our window going to be
-WIDTH, HEIGHT = 1366, 768
+# How big is our window going to be, dimensions depend on the screen preventing windows to be too big
+infoObject = pygame.display.Info()
+WIDTH, HEIGHT = infoObject.current_w, infoObject.current_h
+# WIDTH, HEIGHT = 1366, 768
 WINDOW = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Multiplication Invaders")
 
@@ -120,7 +123,7 @@ class Player(Ship):
         self.max_health = health
 
     # Checks whether laser hit an enemy
-    def move_lasers(self, velocity, objs):
+    def move_lasers(self, velocity, objs, window):
         # When you move the lasers check if cooldown is finished
         self.cooldown()
         # For each laser that the player has
@@ -132,7 +135,40 @@ class Player(Ship):
                 # For each enemy in the objects list if it collides with the laser remove it
                 for obj in objs:
                     if laser.collision(obj):
-                        # TODO: Instead of simply removing the enemy WE WANT THE USER TO ENTER A MULTIPLICATION ANSWER
+                    	# TODO: Add multplication showing and check if answr is correct or wrong
+                        main_font = pygame.font.SysFont("notosansmonocjkkr", 30)
+                        answer=""
+                        answer_label = main_font.render(f"Answer: {answer}", 1, (255, 255, 255))
+                        string=""
+                        pygame.draw.rect(WINDOW,(0,0,255),(WIDTH/2 - answer_label.get_width()/2, HEIGHT/2 - answer_label.get_height()/2,answer_label.get_width()+50,answer_label.get_height()))
+                                
+                        window.blit(answer_label, (WIDTH/2 - answer_label.get_width()/2, HEIGHT/2 - answer_label.get_height()/2))
+                        pygame.display.update()
+                        
+                        while True:
+                            event = pygame.event.poll()
+                            keys = pygame.key.get_pressed()
+                            
+                            if event.type == pygame.KEYDOWN:
+                                key = pygame.key.name(event.key)  # Returns string id of pressed key.
+                                
+                                if len(key) == 1:  # This covers all letters and numbers not on numpad.
+                                    if keys[pygame.K_LSHIFT] or keys[pygame.K_RSHIFT]:
+                                        #if  # Include any other shift characters here.
+                                        #else:
+                                        string += key.upper()
+                                    else:
+                                        string += key
+                                #elif  # Include any other characters here.
+                                elif key == "backspace":
+                                    string = string[:len(string) - 1]
+                                elif event.key == pygame.K_RETURN:  # Finished typing.
+                                    break
+
+                                text = main_font.render(string, 1, (255, 255, 255))
+                                window.blit(text, (WIDTH/2 +answer_label.get_width()/2, HEIGHT/2 - answer_label.get_height()/2))
+                                pygame.display.update()
+
                         objs.remove(obj)
                         # Make sure that the laser you want to remove actually exists in the list
                         if laser in self.lasers:
@@ -312,7 +348,7 @@ def main():
                 enemies.remove(enemy)
 
         # Laser velocity needs to be negative since the y value is lower upwards the screen, meaning laser will go up
-        player.move_lasers(-laser_velocity, enemies)
+        player.move_lasers(-laser_velocity, enemies,WINDOW)
 
 def main_menu():
     title_font = pygame.font.SysFont("notosansmonocjkkr", 70)
