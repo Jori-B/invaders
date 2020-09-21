@@ -3,7 +3,7 @@ import pygame
 import os
 import time
 import random
-import utility
+# import utility
 
 # initialize font usage
 pygame.font.init()
@@ -14,7 +14,10 @@ infoObject = pygame.display.Info()
 WIDTH, HEIGHT = infoObject.current_w-20, infoObject.current_h-40
 # WIDTH, HEIGHT = 1366, 768
 WINDOW = pygame.display.set_mode((WIDTH, HEIGHT))
+
 pygame.display.set_caption("Multiplication Invaders")
+# A way to completely go full screen (however when using two displays it, just like the above, it grows too big
+# pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
 
 # Load images
 RED_SPACE_SHIP = pygame.image.load(os.path.join("assets", "pixel_ship_red_small.png"))
@@ -34,7 +37,7 @@ YELLOW_LASER = pygame.image.load(os.path.join("assets", "pixel_laser_yellow.png"
 BACKGROUND = pygame.transform.scale(pygame.image.load(os.path.join("assets", "background_black.png")), (WIDTH, HEIGHT))
 
 # Answer Box
-ANSWER_BOX= pygame.image.load(os.path.join("assets", "Answer_button.png"))
+ANSWER_BOX= pygame.image.load(os.path.join("assets", "answer_button.png"))
 
 class Laser:
     def __init__(self, x, y, img):
@@ -140,14 +143,16 @@ class Player(Ship):
                 # For each enemy in the objects list if it collides with the laser remove it
                 for obj in objs:
                     if laser.collision(obj):
-                        # TODO: Add multplication showing and check if answr is correct or wrong
+                        # TODO: Add multiplication showing and check if answer is correct or wrong
                         main_font = pygame.font.SysFont("notosansmonocjkkr", 30)
                         answer=""
-                        answer_label = main_font.render(f"Answer: {answer}", 1, (255, 255, 255))
+                        answer_label = main_font.render(f"4 x 6 = {answer}", 1, (0, 0, 0))
+                        upper_label = main_font.render(f"Enter the kill code below", 1, (152, 76, 62))
                         string=""
                         #pygame.draw.rect(WINDOW,(0,0,255),(WIDTH/2 - answer_label.get_width()/2, HEIGHT/2 - answer_label.get_height()/2,answer_label.get_width()+50,answer_label.get_height()))
                         window.blit(ANSWER_BOX, (WIDTH/2 - ANSWER_BOX.get_width()/2, HEIGHT/2 - ANSWER_BOX.get_height()/2,ANSWER_BOX.get_width()+50,ANSWER_BOX.get_height()))        
-                        window.blit(answer_label, (WIDTH/2 - ANSWER_BOX.get_width()/2 +30, HEIGHT/2 - answer_label.get_height()/2))
+                        window.blit(answer_label, (WIDTH/2 - ANSWER_BOX.get_width()/2 + 30, HEIGHT/2 + answer_label.get_height()/4))
+                        window.blit(upper_label, (WIDTH / 2 - ANSWER_BOX.get_width() / 2 + 30, HEIGHT / 2 - 1.5 * answer_label.get_height()))
                         pygame.display.update()
                         
                         while True:
@@ -166,12 +171,13 @@ class Player(Ship):
                                         string += key
                                 #elif  # Include any other characters here.
                                 elif key == "backspace":
-                                    string = string[:len(string) - 1]
+                                    # TODO: Make this work by erasing the current string
+                                    string = string[:-1]
                                 elif event.key == pygame.K_RETURN:  # Finished typing.
                                     break
 
-                                text = main_font.render(string, 1, (255, 255, 255))
-                                window.blit(text, (WIDTH/2 -answer_label.get_width()/2 +40, HEIGHT/2 - answer_label.get_height()/2))
+                                text = main_font.render(string, 1, (108, 99, 255))
+                                window.blit(text, (WIDTH/2 - answer_label.get_width()/2 + 40, HEIGHT/2 + answer_label.get_height() / 4))
                                 pygame.display.update()
 
                         objs.remove(obj)
