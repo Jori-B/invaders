@@ -74,6 +74,50 @@ class SpacingModel(object):
         return((not_seen_facts[0][0], True))
 
 
+    def get_next_three_facts(self, current_time):
+        # type: (int) -> ((Fact, bool),(Fact, bool),(Fact, bool))
+        """
+        Returns a list of tuples containing the three facts that need to be repeated most urgently and a boolean indicating whether this fact is new (True) or has been presented before (False).
+        If there are less than three seen facts that need to be repeated, new facts are added.
+        """
+        # Calculate all fact activations in the near future
+        fact_activations = [(f, self.calculate_activation(current_time + self.LOOKAHEAD_TIME, f)) for f in self.facts]
+
+        seen_facts = [(f, a) for (f, a) in fact_activations if a > -float("inf")]
+        not_seen_facts = [(f, a) for (f, a) in fact_activations if a == -float("inf")]
+
+        # Prevent an immediate repetition of the last three facts
+        if len(seen_facts) > 4:
+            last_response_1 = self.responses[-1]
+            seen_facts = [(f, a) for (f, a) in seen_facts if f.fact_id != last_response_1.fact.fact_id]
+            last_response_2 = self.responses[-2]
+            seen_facts = [(f, a) for (f, a) in seen_facts if f.fact_id != last_response_1.fact.fact_id]
+            last_response_3 = self.responses[-3]
+            seen_facts = [(f, a) for (f, a) in seen_facts if f.fact_id != last_response_1.fact.fact_id]
+
+        # Find the three previously seen facts with the lowest activation and check if they are below the threshold
+        seen_facts_below_threshold = [(f, a) for (f, a) in seen_facts if a < self.FORGET_THRESHOLD]
+        num_defined = False
+        if len(not_seen_facts) == 0 or len(seen_facts_below_threshold) > 0:
+            weakest_facts = sorted(seen_facts, key = lambda t: t[1])[:3]
+            if len(weakest_facts) > 2:
+                return((weakest_facts[0][0], False),(weakest_facts[1][0], False),(weakest_facts[2][0], False))
+            else:
+                extra_not_seen_facts_num = 3 - len(weakest_facts)
+                num_defined = True 
+
+        # If there are less than three previously seen facts with an activation below the threshold, new facts are added to make three      
+        if not num_defined:
+            extra_not_seen_facts_num = 3
+
+        if extra_not_seen_facts_num == 1:
+            return((weakest_facts[0][0], False),(weakest_facts[1][0], False),(not_seen_facts[0][0], True))
+        elif extra_not_seen_facts_num == 2:
+            return((weakest_facts[0][0], False),(not_seen_facts[0][0], True),(not_seen_facts[1][0], True))
+        else:
+            return((not_seen_facts[0][0], True),(not_seen_facts[1][0], True),(not_seen_facts[2][0], True))
+
+
     def get_rate_of_forgetting(self, time, fact):
         # type: (int, Fact) -> float
         """
