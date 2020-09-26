@@ -1,5 +1,5 @@
 
 .DS_Store
-pygame/__pycache__/game.cpython-37.pyc
-pygame/__pycache__/utility.cpython-37.pyc
-pygame/__pycache__/utils.cpython-37.pyc
+src/__pycache__/game.cpython-37.pyc
+src/__pycache__/utility.cpython-37.pyc
+src/__pycache__/utils.cpython-37.pyc
