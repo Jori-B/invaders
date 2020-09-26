@@ -1,6 +1,7 @@
 from __future__ import division
 import math
 import pandas as pd
+import statistics
 from collections import namedtuple
 
 Fact = namedtuple("Fact", "fact_id, question, answer")
@@ -139,6 +140,37 @@ class SpacingModel(object):
 
         return(alpha)
 
+    def get_average_rate_of_forgetting(self, time):
+        # type: (int) -> float
+        """
+        Return the estimated average rate of forgetting of all facts at the specified time
+        """
+        if time == 0:
+            return 0.3
+        
+        encounters = []
+        alphas_list = []
+
+        for f in self.facts:
+            responses_for_fact = [r for r in self.responses if r.fact.fact_id == f.fact_id and r.start_time < time]
+            alpha = self.DEFAULT_ALPHA
+
+            # Calculate the activation by running through the sequence of previous responses
+            for response in responses_for_fact:
+                activation = self.calculate_activation_from_encounters(encounters, response.start_time)
+                encounters.append(Encounter(activation, response.start_time, self.normalise_reaction_time(response), self.DEFAULT_ALPHA))
+                alpha = self.estimate_alpha(encounters, activation, response, alpha)
+
+                # Update decay estimates of previous encounters
+                encounters = [encounter._replace(decay = self.calculate_decay(encounter.activation, alpha)) for encounter in encounters]
+                
+                # Add the alpha of the current fact to the list of alphas
+                alphas_list.append(alpha)
+        
+        # Calculate the mean alpha value
+        average_alpha = statistics.mean(alphas_list)
+
+        return(average_alpha)
 
     def calculate_activation(self, time, fact):
         # type: (int, Fact) -> float
