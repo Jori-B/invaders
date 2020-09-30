@@ -116,11 +116,13 @@ def main():
                 enemies.append(enemy)
 
         # Check for all events (keypresses, mouseclick, etc.
-        for event in pygame.event.get():
+        events = pygame.event.get()
+        for event in events:
             # if the 'x' on the right top is pressed the game is quit
             if event.type == pygame.QUIT:
                 # YOU COULD CHANGE THIS TO quit() to press 'x' and quit the program
                 run = False
+
         # check and get all keyboard keys that are pressed
         keys = pygame.key.get_pressed()
 
@@ -194,64 +196,51 @@ def main():
 
         if answering_question:
 
-            # src.draw.rect(WINDOW,(0,0,255),(WIDTH/2 - answer_label.get_width()/2, HEIGHT/2 - answer_label.get_height()/2,answer_label.get_width()+50,answer_label.get_height()))
-            WINDOW.blit(ANSWER_BOX, (
-                WIDTH / 2 - ANSWER_BOX.get_width() / 2, HEIGHT / 2 - ANSWER_BOX.get_height() / 2,
-                ANSWER_BOX.get_width() + 50, ANSWER_BOX.get_height()))
-            WINDOW.blit(answer_label, (
-                WIDTH / 2 - ANSWER_BOX.get_width() / 2 + 30, HEIGHT / 2 + answer_label.get_height() / 4))
-            WINDOW.blit(upper_label, (
-                WIDTH / 2 - ANSWER_BOX.get_width() / 2 + 30, HEIGHT / 2 - 1.5 * answer_label.get_height()))
+            # TODO put text back 
 
-            event = pygame.event.poll()
-            keys = pygame.key.get_pressed()
+            # Render the current text.
+            input_box = pygame.Rect(100, 100, 140, 32) #TODO set to box coordinates
+            txt_surface = main_font.render(string, True, pygame.Color('black'))
+            # Resize the box if the text is too long.
+            width = max(200, txt_surface.get_width()+10)
+            input_box.w = width
+            # Blit the text.
+            WINDOW.blit(txt_surface, (input_box.x+5, input_box.y+5))
+            # Blit the input_box rect.
+            pygame.draw.rect(WINDOW, pygame.Color('white'), input_box, 2)
 
-            if event.type == pygame.KEYDOWN:
-                key = pygame.key.name(event.key)  # Returns string id of pressed key.
+            # event = pygame.event.poll()
+            # keys = pygame.key.get_pressed()
 
-                if len(key) == 1:  # This covers all letters and numbers not on numpad.
-                    if keys[pygame.K_LSHIFT] or keys[pygame.K_RSHIFT]:
-                        # if  # Include any other shift characters here.
-                        # else:
-                        string += key.upper()
+            for event in events:
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_RETURN:
+
+                        # Record response time
+                        response_time = int(round(time.time() * 1000)) - question_onset_time
+                        # Log the response
+                        # Stringify answer instead of typecasting string as int (since a string might not
+                        # be castable)
+                        if str(answer) == string:
+                            print("Correct!")
+                            resp = Response(new_fact, question_onset_time, response_time, True)
+                            Model().m.register_response(resp)
+                            kill_enemy(enemy_hit)
+                        else:
+                            print("Wrong!")
+                            resp = Response(new_fact, question_onset_time, response_time, False)
+                            Model().m.register_response(resp)
+
+                        answering_question = False
+                        enemy_hit = None
+
+                        string = ''
+                    elif event.key == pygame.K_BACKSPACE:
+                        string = string[:-1]
                     else:
-                        string += key
-                # elif  # Include any other characters here.
-                elif key == "backspace":
-                    # TODO: Make this work by erasing the current string
-                    string = string[:-1]
-                    WINDOW.blit(ANSWER_BOX, (
-                        WIDTH / 2 - ANSWER_BOX.get_width() / 2, HEIGHT / 2 - ANSWER_BOX.get_height() / 2,
-                        ANSWER_BOX.get_width() + 50, ANSWER_BOX.get_height()))
-                    WINDOW.blit(answer_label, (
-                        WIDTH / 2 - ANSWER_BOX.get_width() / 2 + 30, HEIGHT / 2 + answer_label.get_height() / 4))
-                    WINDOW.blit(upper_label, (
-                        WIDTH / 2 - ANSWER_BOX.get_width() / 2 + 30, HEIGHT / 2 - 1.5 * answer_label.get_height()))
-                    pygame.display.update()
-                elif event.key == pygame.K_RETURN:  # Finished typing.
-                    # Record response time
-                    response_time = int(round(time.time() * 1000)) - question_onset_time
-                    # Log the response
-                    # Stringify answer instead of typecasting string as int (since a string might not
-                    # be castable)
-                    if str(answer) == string:
-                        print("Correct!")
-                        resp = Response(new_fact, question_onset_time, response_time, True)
-                        Model().m.register_response(resp)
-                        kill_enemy(enemy_hit)
-                    else:
-                        print("Wrong!")
-                        resp = Response(new_fact, question_onset_time, response_time, False)
-                        Model().m.register_response(resp)
-
-                    answering_question = False
-                    enemy_hit = None
-
-                if answering_question:
-                    text = main_font.render(string, 1, (108, 99, 255))
-                    WINDOW.blit(text, (WIDTH / 2 - answer_label.get_width() / 2 + 40,
-                                        HEIGHT / 2 + answer_label.get_height() / 4))
-                    pygame.display.update()
+                        string += event.unicode
+            if answering_question:
+                pygame.display.update()
 
 
 def main_menu():
