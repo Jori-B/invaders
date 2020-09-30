@@ -34,7 +34,6 @@ class SpacingModel(object):
 
         self.facts.append(fact)
 
-
     def register_response(self, response):
         # type: (Response) -> None
         """

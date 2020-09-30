@@ -141,7 +141,73 @@ def main():
 
         # Laser velocity needs to be negative since the y value is lower upwards the screen, meaning laser will go up
         # TODO: Extra parameter SlimStampen question
-        player.move_lasers(-laser_velocity, enemies,WINDOW)
+        has_hit_enemy = player.move_lasers(-laser_velocity, enemies, WINDOW)
+        if has_hit_enemy:
+            # TODO: GET QUESTION FROM SLIMSTAMPEN
+            first_number = random.randint(1, 10)
+            second_number = random.randint(1, 10)
+            answer = first_number * second_number
+            question = f"{first_number} x {second_number} = "
+            # TODO: Add multiplication showing and check if answer is correct or wrong
+            main_font = pygame.font.SysFont("notosansmonocjkkr", 30)
+            answer_label = main_font.render(question, 1, (0, 0, 0))
+            upper_label = main_font.render(f"Enter the kill code below", 1, (152, 76, 62))
+            string = ""
+            # src.draw.rect(WINDOW,(0,0,255),(WIDTH/2 - answer_label.get_width()/2, HEIGHT/2 - answer_label.get_height()/2,answer_label.get_width()+50,answer_label.get_height()))
+            WINDOW.blit(ANSWER_BOX, (
+                WIDTH / 2 - ANSWER_BOX.get_width() / 2, HEIGHT / 2 - ANSWER_BOX.get_height() / 2,
+                ANSWER_BOX.get_width() + 50, ANSWER_BOX.get_height()))
+            WINDOW.blit(answer_label, (
+                WIDTH / 2 - ANSWER_BOX.get_width() / 2 + 30, HEIGHT / 2 + answer_label.get_height() / 4))
+            WINDOW.blit(upper_label, (
+                WIDTH / 2 - ANSWER_BOX.get_width() / 2 + 30, HEIGHT / 2 - 1.5 * answer_label.get_height()))
+            pygame.display.update()
+
+            while True:
+
+                event = pygame.event.poll()
+                keys = pygame.key.get_pressed()
+
+                if event.type == pygame.KEYDOWN:
+                    key = pygame.key.name(event.key)  # Returns string id of pressed key.
+
+                    if len(key) == 1:  # This covers all letters and numbers not on numpad.
+                        if keys[pygame.K_LSHIFT] or keys[pygame.K_RSHIFT]:
+                            # if  # Include any other shift characters here.
+                            # else:
+                            string += key.upper()
+                        else:
+                            string += key
+                    # elif  # Include any other characters here.
+                    elif key == "backspace":
+                        # TODO: Make this work by erasing the current string
+                        string = string[:-1]
+                        WINDOW.blit(ANSWER_BOX, (
+                            WIDTH / 2 - ANSWER_BOX.get_width() / 2, HEIGHT / 2 - ANSWER_BOX.get_height() / 2,
+                            ANSWER_BOX.get_width() + 50, ANSWER_BOX.get_height()))
+                        WINDOW.blit(answer_label, (
+                            WIDTH / 2 - ANSWER_BOX.get_width() / 2 + 30, HEIGHT / 2 + answer_label.get_height() / 4))
+                        WINDOW.blit(upper_label, (
+                            WIDTH / 2 - ANSWER_BOX.get_width() / 2 + 30, HEIGHT / 2 - 1.5 * answer_label.get_height()))
+                        pygame.display.update()
+                    elif event.key == pygame.K_RETURN:  # Finished typing.
+                        # TODO: SEND ANSWER BACK TO SLIMSTAMPEN
+                        # Stringify answer instead of typecasting string as int (since a string might not
+                        # be castable
+                        if str(answer) == string:
+                            print("Correct!")
+                        else:
+                            print("Wrong!")
+                        break
+
+                    text = main_font.render(string, 1, (108, 99, 255))
+                    WINDOW.blit(text, (WIDTH / 2 - answer_label.get_width() / 2 + 40,
+                                       HEIGHT / 2 + answer_label.get_height() / 4))
+                    pygame.display.update()
+
+
+
+
 
 def main_menu():
     title_font = pygame.font.SysFont("notosansmonocjkkr", 70)
