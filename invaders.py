@@ -10,6 +10,8 @@ from utilities.constants import *
 from utilities.main_functions import *
 # import utility
 
+MAX_ANS_LEN = 10
+
 # initialize font usage
 pygame.font.init()
 pygame.init()
@@ -196,18 +198,29 @@ def main():
 
         if answering_question:
 
-            # TODO put text back 
+            WINDOW.blit(ANSWER_BOX, (
+                WIDTH / 2 - ANSWER_BOX.get_width() / 2, HEIGHT / 2 - ANSWER_BOX.get_height() / 2,
+                ANSWER_BOX.get_width() + 50, ANSWER_BOX.get_height()))
+            WINDOW.blit(answer_label, (
+                WIDTH / 2 - ANSWER_BOX.get_width() / 2 + 30, HEIGHT / 2 + answer_label.get_height() / 4))
 
             # Render the current text.
-            input_box = pygame.Rect(100, 100, 140, 32) #TODO set to box coordinates
+            # input_box = pygame.Rect(
+            #             WIDTH / 2 - ANSWER_BOX.get_width() / 2, HEIGHT / 2 - answer_label.get_height() / 2,
+            #             ANSWER_BOX.get_width() + 50, answer_label.get_height()
+            # )
             txt_surface = main_font.render(string, True, pygame.Color('black'))
             # Resize the box if the text is too long.
-            width = max(200, txt_surface.get_width()+10)
-            input_box.w = width
+            # width = max(200, txt_surface.get_width()+10)
+            # input_box.w = width
             # Blit the text.
-            WINDOW.blit(txt_surface, (input_box.x+5, input_box.y+5))
+            WINDOW.blit(
+                txt_surface,
+                (
+                    WIDTH / 2 - ANSWER_BOX.get_width() / 2 +  30 + answer_label.get_width(), HEIGHT / 2 + answer_label.get_height() / 4
+                )
+            )
             # Blit the input_box rect.
-            pygame.draw.rect(WINDOW, pygame.Color('white'), input_box, 2)
 
             # event = pygame.event.poll()
             # keys = pygame.key.get_pressed()
@@ -237,7 +250,7 @@ def main():
                         string = ''
                     elif event.key == pygame.K_BACKSPACE:
                         string = string[:-1]
-                    else:
+                    elif len(string) < MAX_ANS_LEN:
                         string += event.unicode
             if answering_question:
                 pygame.display.update()
