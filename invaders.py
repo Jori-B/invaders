@@ -65,7 +65,6 @@ def main():
 
     def redraw_window():
         # Draw the background img at coordinate: 0,0 (which is the top left)
-        WINDOW.blit(BACKGROUND, (0, 0))
 
         all_sprites.update()
         all_sprites.draw(WINDOW)
@@ -87,14 +86,11 @@ def main():
             lost_label = lost_font.render("You Lost!", 1, WHITE)
             WINDOW.blit(lost_label, (WIDTH/2 - lost_label.get_width()/2, HEIGHT/2 - lost_label.get_height()/2))
 
-        # refresh the display surface
-        pygame.display.update()
-
     # TODO: When shooting an enemy tell the player the "explosion code" needs to be entered
     while run:
         clock.tick(FPS)
+        WINDOW.blit(BACKGROUND, (0, 0))
 
-        redraw_window()
         # No more lives or health then you lost
         if lives <= 0 or player.health <= 0:
             lost = True
@@ -168,6 +164,8 @@ def main():
                     lives -= 1
                     enemies.remove(enemy)
 
+        redraw_window()
+
         # Laser velocity needs to be negative since the y value is lower upwards the screen, meaning laser will go up
         # TODO: Extra parameter SlimStampen question
         has_hit_enemy, enemy = player.move_lasers(-laser_velocity, enemies, WINDOW)
@@ -201,32 +199,22 @@ def main():
             WINDOW.blit(ANSWER_BOX, (
                 WIDTH / 2 - ANSWER_BOX.get_width() / 2, HEIGHT / 2 - ANSWER_BOX.get_height() / 2,
                 ANSWER_BOX.get_width() + 50, ANSWER_BOX.get_height()))
+            WINDOW.blit(ANSWER_BOX, (
+                WIDTH / 2 - ANSWER_BOX.get_width() / 2, HEIGHT / 2 - ANSWER_BOX.get_height() / 2,
+                ANSWER_BOX.get_width() + 50, ANSWER_BOX.get_height()))
             WINDOW.blit(answer_label, (
                 WIDTH / 2 - ANSWER_BOX.get_width() / 2 + 30, HEIGHT / 2 + answer_label.get_height() / 4))
-
             WINDOW.blit(upper_label, (
                 WIDTH / 2 - ANSWER_BOX.get_width() / 2 + 30, HEIGHT / 2 + answer_label.get_height() / 4 - 50))
 
-            # Render the current text.
-            # input_box = pygame.Rect(
-            #             WIDTH / 2 - ANSWER_BOX.get_width() / 2, HEIGHT / 2 - answer_label.get_height() / 2,
-            #             ANSWER_BOX.get_width() + 50, answer_label.get_height()
-            # )
             txt_surface = main_font.render(string, True, pygame.Color('black'))
-            # Resize the box if the text is too long.
-            # width = max(200, txt_surface.get_width()+10)
-            # input_box.w = width
-            # Blit the text.
+
             WINDOW.blit(
                 txt_surface,
                 (
                     WIDTH / 2 - ANSWER_BOX.get_width() / 2 +  30 + answer_label.get_width(), HEIGHT / 2 + answer_label.get_height() / 4
                 )
             )
-            # Blit the input_box rect.
-
-            # event = pygame.event.poll()
-            # keys = pygame.key.get_pressed()
 
             for event in events:
                 if event.type == pygame.KEYDOWN:
@@ -255,8 +243,9 @@ def main():
                         string = string[:-1]
                     elif len(string) < MAX_ANS_LEN:
                         string += event.unicode
-            if answering_question:
-                pygame.display.update()
+
+
+        pygame.display.update()
 
 
 def main_menu():
