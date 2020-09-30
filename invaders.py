@@ -45,6 +45,9 @@ def main():
     player.y -= (player.get_height() + 50)
 
     clock = pygame.time.Clock()
+    
+    # Define reference to Model class
+    model = Model()
 
     lost = False
     lost_count = 0
@@ -160,7 +163,7 @@ def main():
             # Record question onset time
             question_onset_time = int(round(time.time() * 1000)) - START_TIME
             # Get a new question from the model
-            new_fact = Model().get_next_fact()
+            new_fact = model.get_next_fact()
             answer = f"{new_fact[2]}"
             question = f"{new_fact[1]} = "
             # TODO: Add multiplication showing and check if answer is correct or wrong
