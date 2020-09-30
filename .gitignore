@@ -3,3 +3,8 @@
 src/__pycache__/game.cpython-37.pyc
 src/__pycache__/utility.cpython-37.pyc
 src/__pycache__/utils.cpython-37.pyc
+classes/__pycache__/button.cpython-37.pyc
+classes/__pycache__/enemy.cpython-37.pyc
+classes/__pycache__/laser.cpython-37.pyc
+classes/__pycache__/player.cpython-37.pyc
+*.pyc
