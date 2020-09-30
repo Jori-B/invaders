@@ -1,5 +1,6 @@
 import os
 import pygame
+import time
 
 # WIDTH, HEIGHT = infoObject.current_w-20, infoObject.current_h-40
 WIDTH, HEIGHT = 1366, 768
@@ -57,4 +58,7 @@ for i in range(9):
     EXPLOSION_ANIMATION['small'].append(img_small)
 
 all_sprites = pygame.sprite.Group()
+
+# Starting Time
+START_TIME = int(round(time.time() * 1000))
 

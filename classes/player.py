@@ -1,7 +1,7 @@
 import random
-
 from classes.ship import Ship
 from utilities.constants import *
+
 
 # Inherits from player (so all the things from player are also in player)
 class Player(Ship):

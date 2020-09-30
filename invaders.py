@@ -4,6 +4,8 @@ from classes.button import Button
 from classes.player import Player
 from classes.enemy import Enemy
 from classes.explosion import Explosion
+from classes.model import Model
+from slimstampen.spacingmodel import Response
 from utilities.constants import *
 from utilities.main_functions import *
 # import utility
@@ -155,11 +157,12 @@ def main():
         has_hit_enemy, enemy = player.move_lasers(-laser_velocity, enemies, WINDOW)
         if has_hit_enemy:
             kill_enemy(enemy)
-            # TODO: GET QUESTION FROM SLIMSTAMPEN
-            first_number = random.randint(1, 10)
-            second_number = random.randint(1, 10)
-            answer = first_number * second_number
-            question = f"{first_number} x {second_number} = "
+            # Record question onset time
+            question_onset_time = int(round(time.time() * 1000)) - START_TIME
+            # Get a new question from the model
+            new_fact = Model().get_next_fact()
+            answer = f"{new_fact[2]}"
+            question = f"{new_fact[1]} = "
             # TODO: Add multiplication showing and check if answer is correct or wrong
             main_font = pygame.font.SysFont("notosansmonocjkkr", 30)
             answer_label = main_font.render(question, 1, (0, 0, 0))
@@ -203,13 +206,19 @@ def main():
                             WIDTH / 2 - ANSWER_BOX.get_width() / 2 + 30, HEIGHT / 2 - 1.5 * answer_label.get_height()))
                         pygame.display.update()
                     elif event.key == pygame.K_RETURN:  # Finished typing.
-                        # TODO: SEND ANSWER BACK TO SLIMSTAMPEN
+                        # Record response time
+                        response_time = int(round(time.time() * 1000)) - question_onset_time
+                        # Log the response
                         # Stringify answer instead of typecasting string as int (since a string might not
-                        # be castable
+                        # be castable)
                         if str(answer) == string:
                             print("Correct!")
+                            resp = Response(new_fact, question_onset_time, response_time, True)
+                            Model().m.register_response(resp)
                         else:
                             print("Wrong!")
+                            resp = Response(new_fact, question_onset_time, response_time, False)
+                            Model().m.register_response(resp)
                         break
 
                     text = main_font.render(string, 1, (108, 99, 255))

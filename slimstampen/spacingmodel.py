@@ -23,7 +23,7 @@ class SpacingModel(object):
         self.responses = []
 
     def add_fact(self, fact):
-        # type: (Fact) -> None
+        ## type: (Fact) -> None
         """
         Add a fact to the list of study items.
         """
@@ -35,7 +35,7 @@ class SpacingModel(object):
         self.facts.append(fact)
 
     def register_response(self, response):
-        # type: (Response) -> None
+        ## type: (Response) -> None
         """
         Register a response.
         """
@@ -48,7 +48,7 @@ class SpacingModel(object):
 
 
     def get_next_fact(self, current_time):
-        # type: (int) -> (Fact, bool)
+        ## type: (int) -> (Fact, bool)
         """
         Returns a tuple containing the fact that needs to be repeated most urgently and a boolean indicating whether this fact is new (True) or has been presented before (False).
         If none of the previously studied facts needs to be repeated right now, return a new fact instead.
@@ -75,7 +75,7 @@ class SpacingModel(object):
 
 
     def get_next_three_facts(self, current_time):
-        # type: (int) -> ((Fact, bool),(Fact, bool),(Fact, bool))
+        ## type: (int) -> ((Fact, bool),(Fact, bool),(Fact, bool))
         """
         Returns a list of tuples containing the three facts that need to be repeated most urgently and a boolean indicating whether this fact is new (True) or has been presented before (False).
         If there are less than three seen facts that need to be repeated, new facts are added.
@@ -104,9 +104,9 @@ class SpacingModel(object):
                 return((weakest_facts[0][0], False),(weakest_facts[1][0], False),(weakest_facts[2][0], False))
             else:
                 extra_not_seen_facts_num = 3 - len(weakest_facts)
-                num_defined = True 
+                num_defined = True
 
-        # If there are less than three previously seen facts with an activation below the threshold, new facts are added to make three      
+        # If there are less than three previously seen facts with an activation below the threshold, new facts are added to make three
         if not num_defined:
             extra_not_seen_facts_num = 3
 
@@ -119,7 +119,7 @@ class SpacingModel(object):
 
 
     def get_rate_of_forgetting(self, time, fact):
-        # type: (int, Fact) -> float
+        ## type: (int, Fact) -> float
         """
         Return the estimated rate of forgetting of the fact at the specified time
         """
@@ -140,13 +140,13 @@ class SpacingModel(object):
         return(alpha)
 
     def get_average_rate_of_forgetting(self, time):
-        # type: (int) -> float
+        ## type: (int) -> float
         """
         Return the estimated average rate of forgetting of all facts at the specified time
         """
         if time == 0:
             return 0.3
-        
+
         encounters = []
         alphas_list = []
 
@@ -162,17 +162,17 @@ class SpacingModel(object):
 
                 # Update decay estimates of previous encounters
                 encounters = [encounter._replace(decay = self.calculate_decay(encounter.activation, alpha)) for encounter in encounters]
-                
+
                 # Add the alpha of the current fact to the list of alphas
                 alphas_list.append(alpha)
-        
+
         # Calculate the mean alpha value
         average_alpha = statistics.mean(alphas_list)
 
         return(average_alpha)
 
     def calculate_activation(self, time, fact):
-        # type: (int, Fact) -> float
+        ## type: (int, Fact) -> float
         """
         Calculate the activation of a fact at the given time.
         """
@@ -195,7 +195,7 @@ class SpacingModel(object):
 
 
     def calculate_decay(self, activation, alpha):
-        # type: (float, float) -> float
+        ## type: (float, float) -> float
         """
         Calculate activation-dependent decay
         """
@@ -203,7 +203,7 @@ class SpacingModel(object):
 
 
     def estimate_alpha(self, encounters, activation, response, previous_alpha):
-        # type: ([Encounter], float, Response, float) -> float
+        ## type: ([Encounter], float, Response, float) -> float
         """
         Estimate the rate of forgetting parameter (alpha) for an item.
         """
@@ -219,7 +219,7 @@ class SpacingModel(object):
             # Estimated RT was too short (estimated activation too high), so actual decay was larger
             a0 = a_fit
             a1 = a_fit + 0.05
-        
+
         else:
             # Estimated RT was too long (estimated activation too low), so actual decay was smaller
             a0 = a_fit - 0.05
@@ -244,13 +244,13 @@ class SpacingModel(object):
                 a1 = ac
             else:
                 a0 = ac
-        
+
         # The new alpha estimate is the average value in the remaining bracket
         return((a0 + a1) / 2)
 
 
     def calculate_activation_from_encounters(self, encounters, current_time):
-        # type: ([Encounter], int) -> float
+        ## type: ([Encounter], int) -> float
         included_encounters = [e for e in encounters if e.time < current_time]
 
         if len(included_encounters) == 0:
@@ -260,7 +260,7 @@ class SpacingModel(object):
 
 
     def calculate_predicted_reaction_time_error(self, test_set, decay_adjusted_encounters, reading_time):
-        # type: ([Encounter], [Encounter], Fact) -> float
+        ## type: ([Encounter], [Encounter], Fact) -> float
         """
         Calculate the summed absolute difference between observed response times and those predicted based on a decay adjustment.
         """
@@ -271,7 +271,7 @@ class SpacingModel(object):
 
 
     def estimate_reaction_time_from_activation(self, activation, reading_time):
-        # type: (float, int) -> float
+        ## type: (float, int) -> float
         """
         Calculate an estimated reaction time given a fact's activation and the expected reading time 
         """
@@ -279,7 +279,7 @@ class SpacingModel(object):
 
 
     def get_max_reaction_time_for_fact(self, fact):
-        # type: (Fact) -> float
+        ## type: (Fact) -> float
         """
         Return the highest response time we can reasonably expect for a given fact
         """
@@ -289,7 +289,7 @@ class SpacingModel(object):
 
 
     def get_reading_time(self, text):
-        # type: (str) -> float
+        ## type: (str) -> float
         """
         Return expected reading time in milliseconds for a given string
         """
@@ -298,12 +298,12 @@ class SpacingModel(object):
         if word_count > 1:
             character_count = len(text)
             return(max((-157.9 + character_count * 19.5), 300))
-        
+
         return(300)
 
-    
+
     def normalise_reaction_time(self, response):
-        # type: (Response) -> float
+        ## type: (Response) -> float
         """
         Cut off extremely long responses to keep the reaction time within reasonable bounds
         """
@@ -313,7 +313,7 @@ class SpacingModel(object):
 
 
     def export_data(self, path = None):
-        # type: (str) -> DataFrame
+        ## type: (str) -> DataFrame
         """
         Save the response data to the specified csv file, and return a copy of the pandas DataFrame.
         If no path is specified, return a CSV-formatted copy of the data instead.
@@ -338,5 +338,5 @@ class SpacingModel(object):
         if path is not None:
             dat.to_csv(path, encoding="UTF-8")
             return(dat)
-        
+
         return(dat.to_csv())
