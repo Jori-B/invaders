@@ -11,6 +11,7 @@ pygame.display.set_caption("Multiplication Invaders")
 
 # Colors
 BLACK = (0, 0, 0, 0.5)
+BLACK_NON_TRANSPARENT = (0, 0, 0)
 WHITE = (225, 225, 255)
 PURPLE = (108, 99, 255)
 DARK_BLUE = (83, 109, 254)
@@ -39,3 +40,21 @@ BACKGROUND = pygame.transform.scale(pygame.image.load(os.path.join("assets", "ba
 
 # Answer Box
 ANSWER_BOX = pygame.image.load(os.path.join("assets", "answer_button.png"))
+
+# Explosion dictionary (dic: has names instead of numbers) animation which is looped through in small and large scale
+EXPLOSION_ANIMATION = {}
+EXPLOSION_ANIMATION['small'] = []
+EXPLOSION_ANIMATION['large'] = []
+# Images are numbered so we can loop through them
+for i in range(9):
+    file_name = 'regularExplosion0{}.png'.format(i)
+    img = pygame.image.load(os.path.join("assets/explosion", file_name)).convert()
+    img.set_colorkey(BLACK_NON_TRANSPARENT)
+    img_large = pygame.transform.scale(img, (75, 75))
+    EXPLOSION_ANIMATION['large'].append(img_large)
+    img_small = pygame.transform.scale(img, (32, 32))
+    # TODO: Small explosion should be used for when alien hits spaceship
+    EXPLOSION_ANIMATION['small'].append(img_small)
+
+all_sprites = pygame.sprite.Group()
+

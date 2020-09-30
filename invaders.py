@@ -3,6 +3,7 @@ import random
 from classes.button import Button
 from classes.player import Player
 from classes.enemy import Enemy
+from classes.explosion import Explosion
 from utilities.constants import *
 from utilities.main_functions import *
 # import utility
@@ -46,9 +47,19 @@ def main():
     lost = False
     lost_count = 0
 
+    def kill_enemy(enemy):
+        enemy_center_loc = (enemy.x + enemy.get_width() / 2, enemy.y + enemy.get_height() / 2)
+        explosion = Explosion(enemy_center_loc, 'large')
+        all_sprites.add(explosion)
+        enemies.remove(enemy)
+
     def redraw_window():
         # Draw the background img at coordinate: 0,0 (which is the top left)
         WINDOW.blit(BACKGROUND, (0, 0))
+
+        all_sprites.update()
+        all_sprites.draw(WINDOW)
+
         # Draw text (f strings embed variables)
         lives_label = main_font.render(f"Lives: {lives}", 1, WHITE)
         level_label = main_font.render(f"Level: {level}", 1, WHITE)
@@ -132,7 +143,7 @@ def main():
             # When the player collides with the enemy the enemy is removed and player's health reduces
             elif collide(enemy, player):
                 player.health -= 10
-                enemies.remove(enemy)
+                kill_enemy(enemy)
 
             # If the enemy moves off screen lose a life
             if enemy.y + enemy.get_height() > HEIGHT:
@@ -141,8 +152,9 @@ def main():
 
         # Laser velocity needs to be negative since the y value is lower upwards the screen, meaning laser will go up
         # TODO: Extra parameter SlimStampen question
-        has_hit_enemy = player.move_lasers(-laser_velocity, enemies, WINDOW)
+        has_hit_enemy, enemy = player.move_lasers(-laser_velocity, enemies, WINDOW)
         if has_hit_enemy:
+            kill_enemy(enemy)
             # TODO: GET QUESTION FROM SLIMSTAMPEN
             first_number = random.randint(1, 10)
             second_number = random.randint(1, 10)
@@ -204,9 +216,6 @@ def main():
                     WINDOW.blit(text, (WIDTH / 2 - answer_label.get_width() / 2 + 40,
                                        HEIGHT / 2 + answer_label.get_height() / 4))
                     pygame.display.update()
-
-
-
 
 
 def main_menu():

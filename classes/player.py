@@ -27,12 +27,12 @@ class Player(Ship):
                 # For each enemy in the objects list if it collides with the laser remove it
                 for obj in objs:
                     if laser.collision(obj):
-                        objs.remove(obj)
+
                         # Make sure that the laser you want to remove actually exists in the list
                         if laser in self.lasers:
                             self.lasers.remove(laser)
-                        return True
-            return False
+                        return True, obj
+        return False, "no enemy shot"
 
     def draw(self, window):
         super().draw(window)
