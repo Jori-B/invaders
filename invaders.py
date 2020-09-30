@@ -140,6 +140,7 @@ def main():
                 enemies.remove(enemy)
 
         # Laser velocity needs to be negative since the y value is lower upwards the screen, meaning laser will go up
+        # TODO: Extra parameter SlimStampen question
         player.move_lasers(-laser_velocity, enemies,WINDOW)
 
 def main_menu():
@@ -176,6 +177,7 @@ def main_menu():
             # if start button is pressed then start the game
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if startButton.isHovered(position):
+                    #initi slipsta
                     main()
     pygame.quit()
 

@@ -25,6 +25,7 @@ class Player(Ship):
                 # For each enemy in the objects list if it collides with the laser remove it
                 for obj in objs:
                     if laser.collision(obj):
+                        # TODO: GET QUESTION FROM SLIMSTAMPEN
                         # TODO: Add multiplication showing and check if answer is correct or wrong
                         main_font = pygame.font.SysFont("notosansmonocjkkr", 30)
                         answer = ""
@@ -60,6 +61,7 @@ class Player(Ship):
                                     # TODO: Make this work by erasing the current string
                                     string = string[:-1]
                                 elif event.key == pygame.K_RETURN:  # Finished typing.
+                                    # TODO: SEND ANSWER BACK TO SLIMSTAMPEN
                                     break
 
                                 text = main_font.render(string, 1, (108, 99, 255))
