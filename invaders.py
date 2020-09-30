@@ -52,6 +52,9 @@ def main():
     lost = False
     lost_count = 0
 
+    answering_question = False
+    enemy_hit = None
+
     def kill_enemy(enemy):
         enemy_center_loc = (enemy.x + enemy.get_width() / 2, enemy.y + enemy.get_height() / 2)
         explosion = Explosion(enemy_center_loc, 'large')
@@ -120,46 +123,61 @@ def main():
                 run = False
         # check and get all keyboard keys that are pressed
         keys = pygame.key.get_pressed()
-        # Key to move and don't let the player move off screen
-        if keys[pygame.K_LEFT] and player.x + player_velocity > 0:
-            # Move to the left
-            player.x -= player_velocity
-        # Adding 50 for width of the player's spaceship
-        if keys[pygame.K_RIGHT] and player.x + player_velocity + player.get_width() < WIDTH:
-            # Move to the right
-            player.x += player_velocity
-        if keys[pygame.K_UP] and player.y + player_velocity > 0:
-            # Move up
-            player.y -= player_velocity
-        if keys[pygame.K_DOWN] and player.y + player_velocity + player.get_height() < HEIGHT:
-            # Move down
-            player.y += player_velocity
-        if keys[pygame.K_SPACE]:
-            player.shoot()
+
+        if not answering_question:
+
+            # Key to move and don't let the player move off screen
+            if keys[pygame.K_LEFT] and player.x + player_velocity > 0:
+                # Move to the left
+                player.x -= player_velocity
+            # Adding 50 for width of the player's spaceship
+            if keys[pygame.K_RIGHT] and player.x + player_velocity + player.get_width() < WIDTH:
+                # Move to the right
+                player.x += player_velocity
+            if keys[pygame.K_UP] and player.y + player_velocity > 0:
+                # Move up
+                player.y -= player_velocity
+            if keys[pygame.K_DOWN] and player.y + player_velocity + player.get_height() < HEIGHT:
+                # Move down
+                player.y += player_velocity
+            if keys[pygame.K_SPACE]:
+                player.shoot()
 
         # Move the enemies downwards all the time, [:] means a copy of the list (just to be sure nothing bad happens)
         for enemy in enemies[:]:
-            enemy.move(enemy_velocity)
-            # Check if laser hit the player
-            enemy.move_lasers(laser_velocity, player)
-            # Roughly every 2 sec an enemy should shoot, randomly determined
-            if random.randrange(0, 2*60) == 1:
-                enemy.shoot()
-            # When the player collides with the enemy the enemy is removed and player's health reduces
-            elif collide(enemy, player):
-                player.health -= 10
-                kill_enemy(enemy)
 
-            # If the enemy moves off screen lose a life
-            if enemy.y + enemy.get_height() > HEIGHT:
-                lives -= 1
-                enemies.remove(enemy)
+            if not answering_question or enemy is not enemy_hit:
+
+                enemy.move(enemy_velocity)
+                # Check if laser hit the player
+                enemy.move_lasers(laser_velocity, player)
+                # Roughly every 2 sec an enemy should shoot, randomly determined
+                if random.randrange(0, 2*60) == 1 and not answering_question:
+                    enemy.shoot()
+                # When the player collides with the enemy the enemy is removed and player's health reduces
+                elif collide(enemy, player):
+                    player.health -= 10
+                    kill_enemy(enemy)
+
+                # If the enemy moves off screen lose a life
+                if enemy.y + enemy.get_height() > HEIGHT:
+                    lives -= 1
+                    enemies.remove(enemy)
 
         # Laser velocity needs to be negative since the y value is lower upwards the screen, meaning laser will go up
         # TODO: Extra parameter SlimStampen question
         has_hit_enemy, enemy = player.move_lasers(-laser_velocity, enemies, WINDOW)
-        if has_hit_enemy:
-            kill_enemy(enemy)
+        if has_hit_enemy and not answering_question:
+
+            enemy_hit = enemy
+
+            for enemy in enemies[:]:
+                enemy.stop_lasers()
+
+            player.stop_lasers()
+
+            enemy_hit.stop_lasers()
+
             # Record question onset time
             question_onset_time = int(round(time.time() * 1000)) - START_TIME
             # Get a new question from the model
@@ -171,6 +189,11 @@ def main():
             answer_label = main_font.render(question, 1, (0, 0, 0))
             upper_label = main_font.render(f"Enter the kill code below", 1, (152, 76, 62))
             string = ""
+
+            answering_question = True
+
+        if answering_question:
+
             # src.draw.rect(WINDOW,(0,0,255),(WIDTH/2 - answer_label.get_width()/2, HEIGHT/2 - answer_label.get_height()/2,answer_label.get_width()+50,answer_label.get_height()))
             WINDOW.blit(ANSWER_BOX, (
                 WIDTH / 2 - ANSWER_BOX.get_width() / 2, HEIGHT / 2 - ANSWER_BOX.get_height() / 2,
@@ -179,54 +202,55 @@ def main():
                 WIDTH / 2 - ANSWER_BOX.get_width() / 2 + 30, HEIGHT / 2 + answer_label.get_height() / 4))
             WINDOW.blit(upper_label, (
                 WIDTH / 2 - ANSWER_BOX.get_width() / 2 + 30, HEIGHT / 2 - 1.5 * answer_label.get_height()))
-            pygame.display.update()
 
-            while True:
+            event = pygame.event.poll()
+            keys = pygame.key.get_pressed()
 
-                event = pygame.event.poll()
-                keys = pygame.key.get_pressed()
+            if event.type == pygame.KEYDOWN:
+                key = pygame.key.name(event.key)  # Returns string id of pressed key.
 
-                if event.type == pygame.KEYDOWN:
-                    key = pygame.key.name(event.key)  # Returns string id of pressed key.
+                if len(key) == 1:  # This covers all letters and numbers not on numpad.
+                    if keys[pygame.K_LSHIFT] or keys[pygame.K_RSHIFT]:
+                        # if  # Include any other shift characters here.
+                        # else:
+                        string += key.upper()
+                    else:
+                        string += key
+                # elif  # Include any other characters here.
+                elif key == "backspace":
+                    # TODO: Make this work by erasing the current string
+                    string = string[:-1]
+                    WINDOW.blit(ANSWER_BOX, (
+                        WIDTH / 2 - ANSWER_BOX.get_width() / 2, HEIGHT / 2 - ANSWER_BOX.get_height() / 2,
+                        ANSWER_BOX.get_width() + 50, ANSWER_BOX.get_height()))
+                    WINDOW.blit(answer_label, (
+                        WIDTH / 2 - ANSWER_BOX.get_width() / 2 + 30, HEIGHT / 2 + answer_label.get_height() / 4))
+                    WINDOW.blit(upper_label, (
+                        WIDTH / 2 - ANSWER_BOX.get_width() / 2 + 30, HEIGHT / 2 - 1.5 * answer_label.get_height()))
+                    pygame.display.update()
+                elif event.key == pygame.K_RETURN:  # Finished typing.
+                    # Record response time
+                    response_time = int(round(time.time() * 1000)) - question_onset_time
+                    # Log the response
+                    # Stringify answer instead of typecasting string as int (since a string might not
+                    # be castable)
+                    if str(answer) == string:
+                        print("Correct!")
+                        resp = Response(new_fact, question_onset_time, response_time, True)
+                        Model().m.register_response(resp)
+                        kill_enemy(enemy_hit)
+                    else:
+                        print("Wrong!")
+                        resp = Response(new_fact, question_onset_time, response_time, False)
+                        Model().m.register_response(resp)
 
-                    if len(key) == 1:  # This covers all letters and numbers not on numpad.
-                        if keys[pygame.K_LSHIFT] or keys[pygame.K_RSHIFT]:
-                            # if  # Include any other shift characters here.
-                            # else:
-                            string += key.upper()
-                        else:
-                            string += key
-                    # elif  # Include any other characters here.
-                    elif key == "backspace":
-                        # TODO: Make this work by erasing the current string
-                        string = string[:-1]
-                        WINDOW.blit(ANSWER_BOX, (
-                            WIDTH / 2 - ANSWER_BOX.get_width() / 2, HEIGHT / 2 - ANSWER_BOX.get_height() / 2,
-                            ANSWER_BOX.get_width() + 50, ANSWER_BOX.get_height()))
-                        WINDOW.blit(answer_label, (
-                            WIDTH / 2 - ANSWER_BOX.get_width() / 2 + 30, HEIGHT / 2 + answer_label.get_height() / 4))
-                        WINDOW.blit(upper_label, (
-                            WIDTH / 2 - ANSWER_BOX.get_width() / 2 + 30, HEIGHT / 2 - 1.5 * answer_label.get_height()))
-                        pygame.display.update()
-                    elif event.key == pygame.K_RETURN:  # Finished typing.
-                        # Record response time
-                        response_time = int(round(time.time() * 1000)) - question_onset_time
-                        # Log the response
-                        # Stringify answer instead of typecasting string as int (since a string might not
-                        # be castable)
-                        if str(answer) == string:
-                            print("Correct!")
-                            resp = Response(new_fact, question_onset_time, response_time, True)
-                            Model().m.register_response(resp)
-                        else:
-                            print("Wrong!")
-                            resp = Response(new_fact, question_onset_time, response_time, False)
-                            Model().m.register_response(resp)
-                        break
+                    answering_question = False
+                    enemy_hit = None
 
+                if answering_question:
                     text = main_font.render(string, 1, (108, 99, 255))
                     WINDOW.blit(text, (WIDTH / 2 - answer_label.get_width() / 2 + 40,
-                                       HEIGHT / 2 + answer_label.get_height() / 4))
+                                        HEIGHT / 2 + answer_label.get_height() / 4))
                     pygame.display.update()
 
 

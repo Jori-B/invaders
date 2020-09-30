@@ -21,6 +21,13 @@ class Enemy(Ship):
     def move(self, velocity):
         self.y += velocity
 
+    def stop_lasers(self):
+
+        for laser in self.lasers.copy():
+            del laser
+
+        self.lasers = []
+
     def shoot(self):
         # Only shoot laser if the cooldown counter is 0
         if self.cool_down_counter == 0:
