@@ -204,6 +204,9 @@ def main():
             WINDOW.blit(answer_label, (
                 WIDTH / 2 - ANSWER_BOX.get_width() / 2 + 30, HEIGHT / 2 + answer_label.get_height() / 4))
 
+            WINDOW.blit(upper_label, (
+                WIDTH / 2 - ANSWER_BOX.get_width() / 2 + 30, HEIGHT / 2 + answer_label.get_height() / 4 - 50))
+
             # Render the current text.
             # input_box = pygame.Rect(
             #             WIDTH / 2 - ANSWER_BOX.get_width() / 2, HEIGHT / 2 - answer_label.get_height() / 2,
