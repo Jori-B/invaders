@@ -52,6 +52,39 @@ def main():
     lost = False
     lost_count = 0
 
+    def show_answer(is_correct, answer, x, y):
+
+        if is_correct:
+            text = "Correct!"
+            box = CORRECT_BOX
+            main_font_size = 30
+            main_font = pygame.font.SysFont("notosansmonocjkkr", main_font_size)
+            correct_label = main_font.render(text, 1, WHITE)
+            y_label = y + box.get_height() / 2 - correct_label.get_height() / 2
+
+        else:
+            text = "Incorrect! Answer was: "
+            box = INCORRECT_BOX
+            main_font_size = 15
+            main_font = pygame.font.SysFont("notosansmonocjkkr", main_font_size)
+            correct_label = main_font.render(text, 1, WHITE)
+            y_label = y + box.get_height() / 2 - 1.5 * correct_label.get_height()
+
+
+        answer_font = pygame.font.SysFont("notosansmonocjkkr", 40)
+        answer_label = answer_font.render(str(answer), 1, WHITE)
+        WINDOW.blit(box, (
+            x, y,
+            box.get_width() + 50, box.get_height()))
+        WINDOW.blit(correct_label, (
+            x + 100, y_label))
+        if not is_correct:
+            WINDOW.blit(answer_label, (
+                x + box.get_width() / 2 - answer_label.get_width() / 2, y_label + correct_label.get_height() / 2))
+        pygame.display.update()
+        # Show the correct answer for 2 seconds
+        time.sleep(2)
+
     def kill_enemy(enemy):
         enemy_center_loc = (enemy.x + enemy.get_width() / 2, enemy.y + enemy.get_height() / 2)
         explosion = Explosion(enemy_center_loc, 'large')
@@ -159,6 +192,7 @@ def main():
         # TODO: Extra parameter SlimStampen question
         has_hit_enemy, enemy = player.move_lasers(-laser_velocity, enemies, WINDOW)
         if has_hit_enemy:
+
             kill_enemy(enemy)
             # Record question onset time
             question_onset_time = int(round(time.time() * 1000)) - START_TIME
@@ -172,13 +206,15 @@ def main():
             upper_label = main_font.render(f"Enter the kill code below", 1, (152, 76, 62))
             string = ""
             # src.draw.rect(WINDOW,(0,0,255),(WIDTH/2 - answer_label.get_width()/2, HEIGHT/2 - answer_label.get_height()/2,answer_label.get_width()+50,answer_label.get_height()))
+            answer_box_x = WIDTH / 2 - ANSWER_BOX.get_width() / 2
+            answer_box_y = HEIGHT / 2 - ANSWER_BOX.get_height() / 2
             WINDOW.blit(ANSWER_BOX, (
-                WIDTH / 2 - ANSWER_BOX.get_width() / 2, HEIGHT / 2 - ANSWER_BOX.get_height() / 2,
+                answer_box_x, answer_box_y,
                 ANSWER_BOX.get_width() + 50, ANSWER_BOX.get_height()))
             WINDOW.blit(answer_label, (
-                WIDTH / 2 - ANSWER_BOX.get_width() / 2 + 30, HEIGHT / 2 + answer_label.get_height() / 4))
+                answer_box_x + 30, HEIGHT / 2 + answer_label.get_height() / 4))
             WINDOW.blit(upper_label, (
-                WIDTH / 2 - ANSWER_BOX.get_width() / 2 + 30, HEIGHT / 2 - 1.5 * answer_label.get_height()))
+                answer_box_x + 30, HEIGHT / 2 - 1.5 * answer_label.get_height()))
             pygame.display.update()
 
             while True:
@@ -201,12 +237,12 @@ def main():
                         # TODO: Make this work by erasing the current string
                         string = string[:-1]
                         WINDOW.blit(ANSWER_BOX, (
-                            WIDTH / 2 - ANSWER_BOX.get_width() / 2, HEIGHT / 2 - ANSWER_BOX.get_height() / 2,
+                            answer_box_x, answer_box_y,
                             ANSWER_BOX.get_width() + 50, ANSWER_BOX.get_height()))
                         WINDOW.blit(answer_label, (
-                            WIDTH / 2 - ANSWER_BOX.get_width() / 2 + 30, HEIGHT / 2 + answer_label.get_height() / 4))
+                            answer_box_x + 30, HEIGHT / 2 + answer_label.get_height() / 4))
                         WINDOW.blit(upper_label, (
-                            WIDTH / 2 - ANSWER_BOX.get_width() / 2 + 30, HEIGHT / 2 - 1.5 * answer_label.get_height()))
+                            answer_box_x + 30, HEIGHT / 2 - 1.5 * answer_label.get_height()))
                         pygame.display.update()
                     elif event.key == pygame.K_RETURN:  # Finished typing.
                         # Record response time
@@ -218,10 +254,12 @@ def main():
                             print("Correct!")
                             resp = Response(new_fact, question_onset_time, response_time, True)
                             Model().m.register_response(resp)
+                            show_answer(True, answer, answer_box_x, answer_box_y + ANSWER_BOX.get_height())
                         else:
-                            print("Wrong!")
+                            print("Wrong! The correct answer was " + str(answer))
                             resp = Response(new_fact, question_onset_time, response_time, False)
                             Model().m.register_response(resp)
+                            show_answer(False, answer, answer_box_x, answer_box_y + ANSWER_BOX.get_height())
                         break
 
                     text = main_font.render(string, 1, (108, 99, 255))
