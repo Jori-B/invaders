@@ -41,6 +41,8 @@ BACKGROUND = pygame.transform.scale(pygame.image.load(os.path.join("assets", "ba
 
 # Answer Box
 ANSWER_BOX = pygame.image.load(os.path.join("assets", "answer_button.png"))
+CORRECT_BOX = pygame.image.load(os.path.join("assets", "correct_box.png"))
+INCORRECT_BOX = pygame.image.load(os.path.join("assets", "incorrect_box.png"))
 
 # Explosion dictionary (dic: has names instead of numbers) animation which is looped through in small and large scale
 EXPLOSION_ANIMATION = {}

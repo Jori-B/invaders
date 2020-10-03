@@ -57,6 +57,39 @@ def main():
     answering_question = False
     enemy_hit = None
 
+    def show_answer(is_correct, answer, x, y):
+
+        if is_correct:
+            text = "Correct!"
+            box = CORRECT_BOX
+            main_font_size = 30
+            main_font = pygame.font.SysFont("notosansmonocjkkr", main_font_size)
+            correct_label = main_font.render(text, 1, WHITE)
+            y_label = y + box.get_height() / 2 - correct_label.get_height() / 2
+
+        else:
+            text = "Incorrect! Answer was: "
+            box = INCORRECT_BOX
+            main_font_size = 15
+            main_font = pygame.font.SysFont("notosansmonocjkkr", main_font_size)
+            correct_label = main_font.render(text, 1, WHITE)
+            y_label = y + box.get_height() / 2 - 1.5 * correct_label.get_height()
+
+
+        answer_font = pygame.font.SysFont("notosansmonocjkkr", 40)
+        answer_label = answer_font.render(str(answer), 1, WHITE)
+        WINDOW.blit(box, (
+            x, y,
+            box.get_width() + 50, box.get_height()))
+        WINDOW.blit(correct_label, (
+            x + 100, y_label))
+        if not is_correct:
+            WINDOW.blit(answer_label, (
+                x + box.get_width() / 2 - answer_label.get_width() / 2, y_label + correct_label.get_height() / 2))
+        pygame.display.update()
+        # Show the correct answer for 2 seconds
+        time.sleep(2)
+
     def kill_enemy(enemy):
         enemy_center_loc = (enemy.x + enemy.get_width() / 2, enemy.y + enemy.get_height() / 2)
         explosion = Explosion(enemy_center_loc, 'large')
@@ -65,6 +98,7 @@ def main():
 
     def redraw_window():
         # Draw the background img at coordinate: 0,0 (which is the top left)
+        
 
         all_sprites.update()
         all_sprites.draw(WINDOW)
@@ -86,11 +120,13 @@ def main():
             lost_label = lost_font.render("You Lost!", 1, WHITE)
             WINDOW.blit(lost_label, (WIDTH/2 - lost_label.get_width()/2, HEIGHT/2 - lost_label.get_height()/2))
 
+   
     # TODO: When shooting an enemy tell the player the "explosion code" needs to be entered
     while run:
         clock.tick(FPS)
         WINDOW.blit(BACKGROUND, (0, 0))
 
+        
         # No more lives or health then you lost
         if lives <= 0 or player.health <= 0:
             lost = True
@@ -122,9 +158,10 @@ def main():
                 run = False
 
         # check and get all keyboard keys that are pressed
-        keys = pygame.key.get_pressed()
 
         if not answering_question:
+
+            keys = pygame.key.get_pressed()
 
             # Key to move and don't let the player move off screen
             if keys[pygame.K_LEFT] and player.x + player_velocity > 0:
@@ -145,6 +182,7 @@ def main():
 
         # Move the enemies downwards all the time, [:] means a copy of the list (just to be sure nothing bad happens)
         for enemy in enemies[:]:
+          
 
             if not answering_question or enemy is not enemy_hit:
 
@@ -185,7 +223,11 @@ def main():
             # Get a new question from the model
             new_fact = model.get_next_fact()
             answer = f"{new_fact[2]}"
-            question = f"{new_fact[1]} = "
+            present_alt_question = int(random.uniform(0.001, 1.999))
+            if present_alt_question == 0:
+                question = f"{new_fact[1]} = "
+            else:
+                question = f"{new_fact[3]} = "
             # TODO: Add multiplication showing and check if answer is correct or wrong
             main_font = pygame.font.SysFont("notosansmonocjkkr", 30)
             answer_label = main_font.render(question, 1, (0, 0, 0))
@@ -220,6 +262,7 @@ def main():
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_RETURN:
 
+                    
                         # Record response time
                         response_time = int(round(time.time() * 1000)) - question_onset_time
                         # Log the response
@@ -231,9 +274,12 @@ def main():
                             Model().m.register_response(resp)
                             kill_enemy(enemy_hit)
                         else:
-                            print("Wrong!")
+                            print("Wrong! The correct answer was " + str(answer))
                             resp = Response(new_fact, question_onset_time, response_time, False)
                             Model().m.register_response(resp)
+
+                        show_answer(str(answer)==string, answer, ANSWER_BOX.get_width() + 50, ANSWER_BOX.get_height() + ANSWER_BOX.get_height())
+                      
 
                         answering_question = False
                         enemy_hit = None
@@ -241,8 +287,8 @@ def main():
                         string = ''
                     elif event.key == pygame.K_BACKSPACE:
                         string = string[:-1]
-                    elif len(string) < MAX_ANS_LEN:
-                        string += event.unicode
+                    elif len(string) < MAX_ANS_LEN and event.key >= 48 and event.key <= 57:
+                        string += str(event.key - 48)
 
 
         pygame.display.update()
