@@ -19,7 +19,7 @@ class Model:
         one_table_array = []
         for num2 in times:
             counter += 1
-            table_fact = Fact(fact_id=counter, question=f"{num1} x {num2}", answer=f"{num1 * num2}")
+            table_fact = Fact(fact_id=counter, question=f"{num1} x {num2}", answer=f"{num1 * num2}", question2=f"{num2} x {num1}")
             one_table_array.append(table_fact)
         tables_array.append(one_table_array)
 

@@ -199,7 +199,11 @@ def main():
             # Get a new question from the model
             new_fact = model.get_next_fact()
             answer = f"{new_fact[2]}"
-            question = f"{new_fact[1]} = "
+            present_alt_question = int(random.uniform(0.001, 1.999))
+            if present_alt_question == 0:
+                question = f"{new_fact[1]} = "
+            else:
+                question = f"{new_fact[3]} = "
             # TODO: Add multiplication showing and check if answer is correct or wrong
             main_font = pygame.font.SysFont("notosansmonocjkkr", 30)
             answer_label = main_font.render(question, 1, (0, 0, 0))

@@ -4,7 +4,7 @@ import pandas as pd
 import statistics
 from collections import namedtuple
 
-Fact = namedtuple("Fact", "fact_id, question, answer")
+Fact = namedtuple("Fact", "fact_id, question, answer, question2")
 Response = namedtuple("Response", "fact, start_time, rt, correct")
 Encounter = namedtuple("Encounter", "activation, time, reaction_time, decay")
 
