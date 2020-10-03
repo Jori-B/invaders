@@ -1,3 +1,4 @@
+import random
 from slimstampen.spacingmodel import SpacingModel, Fact
 from utilities.constants import *
 
@@ -9,19 +10,23 @@ class Model:
     # All multiplication facts in the array are added as facts
     # Index with tables_array["table of ...+1"]["question in table+1"]["tuple content"].
     # E.g. tables_array[2][5][2] will return the answer to 3*6, which is 18.
-    min_table = 1
-    max_table = 10
+    list_of_tables = [7,8,13,14,16]
+    times = range(2,9 + 1)
     tables_array = []
     counter = 0
 
-    for num1 in range(min_table, max_table + 1):
+    for num1 in list_of_tables:
         one_table_array = []
-        for num2 in range(min_table, max_table + 1):
+        for num2 in times:
             counter += 1
             table_fact = Fact(fact_id=counter, question=f"{num1} x {num2}", answer=f"{num1 * num2}")
-            m.add_fact(table_fact)
             one_table_array.append(table_fact)
         tables_array.append(one_table_array)
+
+    random_table = random.sample(range(0, (len(tables_array) * len(one_table_array)) - 1),
+                                 k=len(tables_array) * len(one_table_array) - 1)
+    for i in range(0,(len(tables_array)*len(one_table_array)) - 1):
+        m.add_fact(tables_array[random_table[i] % len(list_of_tables)][random_table[i] % len(times)])
 
     def get_next_fact(self):
         # Get the time for get_new_fact by subtracting the starting time from the current time in milliseconds
