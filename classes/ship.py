@@ -37,6 +37,13 @@ class Ship:
                 # After a hit the laser needs to be removed again
                 self.lasers.remove(laser)
 
+    def stop_lasers(self):
+
+        for laser in self.lasers.copy():
+            del laser
+
+        self.lasers = []
+
 
     # Handles counting the cooldown, before a laser can be shot again
     def cooldown(self):
