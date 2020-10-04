@@ -1,6 +1,7 @@
 # Based on https://www.youtube.com/watch?v=Q-__8Xw9KTM&ab_channel=UnityCoin
 import random
 from classes.button import Button
+from classes.rectangle import Rectangle
 from classes.player import Player
 from classes.enemy import Enemy
 from classes.explosion import Explosion
@@ -56,34 +57,28 @@ def main():
 
         if is_correct:
             text = "Correct!"
-            box = CORRECT_BOX
+            correct_img = CORRECT_IMG
             main_font_size = 30
             main_font = pygame.font.SysFont("notosansmonocjkkr", main_font_size)
-            correct_label = main_font.render(text, 1, WHITE)
-            y_label = y + box.get_height() / 2 - correct_label.get_height() / 2
-
+            correct_box = Rectangle(WHITE, x + correct_img.get_width(), y, 250, 100, main_font, main_font, False, text)
+            correct_box.draw(WINDOW)
         else:
             text = "Incorrect! Answer was: "
-            box = INCORRECT_BOX
-            main_font_size = 15
+            correct_img = INCORRECT_IMG
+            main_font_size = 20
             main_font = pygame.font.SysFont("notosansmonocjkkr", main_font_size)
-            correct_label = main_font.render(text, 1, WHITE)
-            y_label = y + box.get_height() / 2 - 1.5 * correct_label.get_height()
+            answer_font = pygame.font.SysFont("notosansmonocjkkr", 30)
 
+            correct_box = Rectangle(WHITE, x + correct_img.get_width(), y, 250, 100, main_font, answer_font, True, text, str(answer))
+            correct_box.draw(WINDOW)
 
-        answer_font = pygame.font.SysFont("notosansmonocjkkr", 40)
-        answer_label = answer_font.render(str(answer), 1, WHITE)
-        WINDOW.blit(box, (
-            x, y,
-            box.get_width() + 50, box.get_height()))
-        WINDOW.blit(correct_label, (
-            x + 100, y_label))
-        if not is_correct:
-            WINDOW.blit(answer_label, (
-                x + box.get_width() / 2 - answer_label.get_width() / 2, y_label + correct_label.get_height() / 2))
+        WINDOW.blit(correct_img, (
+            x, y + 15,
+            correct_img.get_width() + 50, correct_img.get_height()))
+
         pygame.display.update()
         # Show the correct answer for 2 seconds
-        time.sleep(2)
+        time.sleep(3)
 
     def kill_enemy(enemy):
         enemy_center_loc = (enemy.x + enemy.get_width() / 2, enemy.y + enemy.get_height() / 2)
@@ -285,8 +280,8 @@ def main_menu():
 
         WINDOW.blit(BACKGROUND, (0, 0))
         startButton.draw(WINDOW)
-        title_label = title_font.render("Multiplication Invaders", 1, WHITE)
-        title_label_drop_shadow = title_font.render("Multiplication Invaders", 1, BLACK)
+        title_label = title_font.render("SPACE TIMES", 1, WHITE)
+        title_label_drop_shadow = title_font.render("SPACE TIMES", 1, BLACK)
         offset = 3
         WINDOW.blit(title_label_drop_shadow, (WIDTH / 2 - title_label.get_width() / 2 + offset, HEIGHT / 2 - title_label.get_height() + offset))
         WINDOW.blit(title_label, (WIDTH / 2 - title_label.get_width() / 2, HEIGHT / 2 - title_label.get_height()))

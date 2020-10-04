@@ -13,7 +13,7 @@ pygame.display.set_caption("Multiplication Invaders")
 # Colors
 BLACK = (0, 0, 0, 0.5)
 BLACK_NON_TRANSPARENT = (0, 0, 0)
-WHITE = (225, 225, 255)
+WHITE = (255, 255, 255)
 PURPLE = (108, 99, 255)
 DARK_BLUE = (83, 109, 254)
 RED = (245, 0, 87)
@@ -41,8 +41,8 @@ BACKGROUND = pygame.transform.scale(pygame.image.load(os.path.join("assets", "ba
 
 # Answer Box
 ANSWER_BOX = pygame.image.load(os.path.join("assets", "answer_button.png"))
-CORRECT_BOX = pygame.image.load(os.path.join("assets", "correct_box.png"))
-INCORRECT_BOX = pygame.image.load(os.path.join("assets", "incorrect_box.png"))
+CORRECT_IMG = pygame.image.load(os.path.join("assets", "correct.png"))
+INCORRECT_IMG = pygame.image.load(os.path.join("assets", "incorrect.png"))
 
 # Explosion dictionary (dic: has names instead of numbers) animation which is looped through in small and large scale
 EXPLOSION_ANIMATION = {}
@@ -63,4 +63,3 @@ all_sprites = pygame.sprite.Group()
 
 # Starting Time
 START_TIME = int(round(time.time() * 1000))
-
