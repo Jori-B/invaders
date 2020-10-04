@@ -35,7 +35,7 @@ def main():
     enemies = []
     # Every level a new wave will be created of 5 enemies
     wave_length = 5
-    enemy_velocity = 1
+    enemy_velocity = 0.5
 
     # How fast the player can move every time you press the key a max of 5 pixels to move
     player_velocity = 5
@@ -225,31 +225,45 @@ def main():
                 question = f"{new_fact[3]} = "
             # TODO: Add multiplication showing and check if answer is correct or wrong
             main_font = pygame.font.SysFont("notosansmonocjkkr", 30)
-            answer_label = main_font.render(question, 1, (0, 0, 0))
-            upper_label = main_font.render(f"Enter the kill code below", 1, (152, 76, 62))
+            #answer_label = main_font.render(question, 1, (0, 0, 0))
+            #upper_label = main_font.render(f"Enter the kill code below", 1, (152, 76, 62))
             string = ""
 
             answering_question = True
 
         if answering_question:
 
-            WINDOW.blit(ANSWER_BOX, (
-                WIDTH / 2 - ANSWER_BOX.get_width() / 2, HEIGHT / 2 - ANSWER_BOX.get_height() / 2,
-                ANSWER_BOX.get_width() + 50, ANSWER_BOX.get_height()))
-            WINDOW.blit(ANSWER_BOX, (
-                WIDTH / 2 - ANSWER_BOX.get_width() / 2, HEIGHT / 2 - ANSWER_BOX.get_height() / 2,
-                ANSWER_BOX.get_width() + 50, ANSWER_BOX.get_height()))
-            WINDOW.blit(answer_label, (
-                WIDTH / 2 - ANSWER_BOX.get_width() / 2 + 30, HEIGHT / 2 + answer_label.get_height() / 4))
-            WINDOW.blit(upper_label, (
-                WIDTH / 2 - ANSWER_BOX.get_width() / 2 + 30, HEIGHT / 2 + answer_label.get_height() / 4 - 50))
+            code_text=str("Enter the kill code below")
+            #answer_box_x = 464
+            #answer_box_y = 177
+            x=WIDTH / 2 - ANSWER_BOX.get_width() / 2
+            y=HEIGHT / 2 - ANSWER_BOX.get_height() / 2
+            width = 400 
+            heigth = 150
+
+            print ("Width:" + str(width))
+            print ("Height:" +str(heigth))
+
+            correct_box = Rectangle(WHITE, x, y, width, heigth, main_font, main_font, True, code_text, str(question),RED,BLACK_NON_TRANSPARENT)
+            correct_box.draw(WINDOW)
+
+            #WINDOW.blit(ANSWER_BOX, (
+            #    WIDTH / 2 - ANSWER_BOX.get_width() / 2, HEIGHT / 2 - ANSWER_BOX.get_height() / 2,
+            #    ANSWER_BOX.get_width() + 50, ANSWER_BOX.get_height()))
+            #WINDOW.blit(ANSWER_BOX, (
+            #    WIDTH / 2 - ANSWER_BOX.get_width() / 2, HEIGHT / 2 - ANSWER_BOX.get_height() / 2,
+            #    ANSWER_BOX.get_width() + 50, ANSWER_BOX.get_height()))
+            #WINDOW.blit(answer_label, (
+            #    WIDTH / 2 - ANSWER_BOX.get_width() / 2 + 30, HEIGHT / 2 + answer_label.get_height() / 4))
+            #WINDOW.blit(upper_label, (
+            #    WIDTH / 2 - ANSWER_BOX.get_width() / 2 + 30, HEIGHT / 2 + answer_label.get_height() / 4 - 50))
 
             txt_surface = main_font.render(string, True, pygame.Color('black'))
 
             WINDOW.blit(
                 txt_surface,
                 (
-                    WIDTH / 2 - ANSWER_BOX.get_width() / 2 +  30 + answer_label.get_width(), HEIGHT / 2 + answer_label.get_height() / 4
+                    width + 150 +100  , heigth+ 237.25
                 )
             )
 
@@ -273,7 +287,7 @@ def main():
                             resp = Response(new_fact, question_onset_time, response_time, False)
                             Model().m.register_response(resp)
 
-                        show_answer(str(answer)==string, answer, ANSWER_BOX.get_width() + 50, ANSWER_BOX.get_height() + ANSWER_BOX.get_height())
+                        show_answer(str(answer)==string, answer, x, y + ANSWER_BOX.get_height())
                       
 
                         answering_question = False
