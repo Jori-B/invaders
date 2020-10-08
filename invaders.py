@@ -1,5 +1,6 @@
 # Based on https://www.youtube.com/watch?v=Q-__8Xw9KTM&ab_channel=UnityCoin
 import random
+import numpy as np
 from classes.button import Button
 from classes.rectangle import Rectangle
 from classes.player import Player
@@ -34,7 +35,7 @@ def main():
 
     enemies = []
     # Every level a new wave will be created of 5 enemies
-    wave_length = 5
+    wave_length = 3
     enemy_velocity = 0.5
 
     # How fast the player can move every time you press the key a max of 5 pixels to move
@@ -133,15 +134,19 @@ def main():
             else:
                 continue
         # If there are no more enemies on screen then
-        if len(enemies) == 0:
+        if len(enemies) == 0 or len(enemies)==1:
             level += 1
-            wave_length += 5
-            for i in range(wave_length):
-                # TODO: when enemies overlap they need to be offset
-                # TODO: probably -100 is too low
-                # pick random positions way up the screen for enemies to spawn in to make it look like they come in at
-                # different height and Random choice from color list
-                enemy = Enemy(random.randrange(50, WIDTH-100), random.randrange(-1500, -100), random.choice(["red", "blue", "green"]))
+            wave_length += 3
+            spawn_box= random.sample(range(1,6), 5)
+
+            x_boundaries=np.arange(0,WIDTH+20, WIDTH/3).astype(int) #range 1,2,3 
+            y_boundaries=np.arange(0,HEIGHT+20,HEIGHT/2).astype(int) #range 4,5,6
+
+            for i in range(3):
+                if spawn_box[i]<=3:
+                    enemy = Enemy(random.randrange(x_boundaries[i], x_boundaries[i+1]-20), random.randrange(-y_boundaries[2], -y_boundaries[1]-10), random.choice(["red", "blue", "green"]))
+                else:
+                    enemy = Enemy(random.randrange(x_boundaries[i-4], x_boundaries[i-3]-20), random.randrange(-y_boundaries[1]-10, -y_boundaries[0]), random.choice(["red", "blue", "green"]))
                 enemies.append(enemy)
 
         # Check for all events (keypresses, mouseclick, etc.
@@ -225,8 +230,6 @@ def main():
                 question = f"{new_fact[3]} = "
             # TODO: Add multiplication showing and check if answer is correct or wrong
             main_font = pygame.font.SysFont("notosansmonocjkkr", 30)
-            #answer_label = main_font.render(question, 1, (0, 0, 0))
-            #upper_label = main_font.render(f"Enter the kill code below", 1, (152, 76, 62))
             string = ""
 
             answering_question = True
@@ -234,29 +237,14 @@ def main():
         if answering_question:
 
             code_text=str("Enter the kill code below")
-            #answer_box_x = 464
-            #answer_box_y = 177
             x=WIDTH / 2 - ANSWER_BOX.get_width() / 2
             y=HEIGHT / 2 - ANSWER_BOX.get_height() / 2
             width = 400 
             heigth = 150
 
-            print ("Width:" + str(width))
-            print ("Height:" +str(heigth))
-
             correct_box = Rectangle(WHITE, x, y, width, heigth, main_font, main_font, True, code_text, str(question),RED,BLACK_NON_TRANSPARENT)
             correct_box.draw(WINDOW)
 
-            #WINDOW.blit(ANSWER_BOX, (
-            #    WIDTH / 2 - ANSWER_BOX.get_width() / 2, HEIGHT / 2 - ANSWER_BOX.get_height() / 2,
-            #    ANSWER_BOX.get_width() + 50, ANSWER_BOX.get_height()))
-            #WINDOW.blit(ANSWER_BOX, (
-            #    WIDTH / 2 - ANSWER_BOX.get_width() / 2, HEIGHT / 2 - ANSWER_BOX.get_height() / 2,
-            #    ANSWER_BOX.get_width() + 50, ANSWER_BOX.get_height()))
-            #WINDOW.blit(answer_label, (
-            #    WIDTH / 2 - ANSWER_BOX.get_width() / 2 + 30, HEIGHT / 2 + answer_label.get_height() / 4))
-            #WINDOW.blit(upper_label, (
-            #    WIDTH / 2 - ANSWER_BOX.get_width() / 2 + 30, HEIGHT / 2 + answer_label.get_height() / 4 - 50))
 
             txt_surface = main_font.render(string, True, pygame.Color('black'))
 
