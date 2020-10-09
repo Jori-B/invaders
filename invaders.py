@@ -6,6 +6,7 @@ from classes.rectangle import Rectangle
 from classes.player import Player
 from classes.enemy import Enemy
 from classes.explosion import Explosion
+from classes.disappear import Disappear
 from classes.model import Model
 from slimstampen.spacingmodel import Response
 from utilities.constants import *
@@ -90,6 +91,12 @@ def main():
         enemy_center_loc = (enemy.x + enemy.get_width() / 2, enemy.y + enemy.get_height() / 2)
         explosion = Explosion(enemy_center_loc, 'large')
         all_sprites.add(explosion)
+        enemies.remove(enemy)
+
+    def runaway_enemy(enemy):
+        enemy_center_loc = (enemy.x + enemy.get_width() / 2, enemy.y + enemy.get_height() / 2)
+        disappear = Disappear(enemy_center_loc, 'large')
+        all_sprites.add(disappear)
         enemies.remove(enemy)
 
     def redraw_window():
@@ -274,6 +281,7 @@ def main():
                             print("Wrong! The correct answer was " + str(answer))
                             resp = Response(new_fact, question_onset_time, response_time, False)
                             Model().m.register_response(resp)
+                            runaway_enemy(enemy_hit)
 
                         show_answer(str(answer)==string, answer, x, y + ANSWER_BOX.get_height())
                       

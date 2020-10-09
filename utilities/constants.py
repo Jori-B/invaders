@@ -61,5 +61,21 @@ for i in range(9):
 
 all_sprites = pygame.sprite.Group()
 
+DISAPPEAR_ANIMATION = {}
+DISAPPEAR_ANIMATION['small'] = []
+DISAPPEAR_ANIMATION['large'] = []
+# Images are numbered so we can loop through them
+for i in range(5):
+    file_name = 'spaceshipPuff0{}.png'.format(i)
+    img = pygame.image.load(os.path.join("assets/disappear", file_name)).convert()
+    img.set_colorkey(BLACK_NON_TRANSPARENT)
+    img_large = pygame.transform.scale(img, (75, 75))
+    DISAPPEAR_ANIMATION['large'].append(img_large)
+    img_small = pygame.transform.scale(img, (32, 32))
+    # TODO: Small explosion should be used for when alien hits spaceship
+    DISAPPEAR_ANIMATION['small'].append(img_small)
+
+all_sprites = pygame.sprite.Group()
+
 # Starting Time
 START_TIME = int(round(time.time() * 1000))
