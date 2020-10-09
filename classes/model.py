@@ -28,6 +28,9 @@ class Model:
     for i in range(0,(len(tables_array)*len(one_table_array)) - 1):
         m.add_fact(tables_array[random_table[i] % len(list_of_tables)][random_table[i] % len(times)])
 
+    def get_count_seen_facts(self, current_time):
+        return self.m.count_seen_facts(current_time)
+
     def get_next_fact(self):
         # Get the time for get_new_fact by subtracting the starting time from the current time in milliseconds
         # time.sleep(1); # is a test

@@ -47,6 +47,13 @@ class SpacingModel(object):
         self.responses.append(response)
 
 
+    def count_seen_facts(self, current_time):
+        fact_activations = [(f, self.calculate_activation(current_time + self.LOOKAHEAD_TIME, f)) for f in self.facts]
+
+        seen_facts = [(f, a) for (f, a) in fact_activations if a > -float("inf")]
+        return(len(seen_facts))
+
+
     def get_next_fact(self, current_time):
         ## type: (int) -> (Fact, bool)
         """
