@@ -147,8 +147,10 @@ def main(ship):
             wave_length += 3
             spawn_box = random.sample(range(1, 6), 5)
 
-            x_boundaries = np.arange(0, WIDTH + 20, WIDTH / 3).astype(int)  # range 1,2,3 
-            y_boundaries = np.arange(0, HEIGHT + 20, HEIGHT / 2).astype(int)  # range 4,5,6
+            x_boundaries = np.arange(20, WIDTH -20, (WIDTH -45)/ 3).astype(int)  # range 1,2,3 
+            y_boundaries = np.arange(10, HEIGHT -10, (HEIGHT -25)/ 2).astype(int)  # range 4,5,6
+            print(x_boundaries)
+            print(y_boundaries)
 
             for i in range(3):
                 if spawn_box[i] <= 3:
