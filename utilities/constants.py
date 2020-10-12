@@ -10,7 +10,10 @@ pygame.display.set_caption("Multiplication Invaders")
 # A way to completely go full screen (however when using two displays it, just like the above, it grows too big
 # src.display.set_mode((0, 0), src.FULLSCREEN)
 
+MENU_TEXT = pygame.image.load(os.path.join("assets/menu", "header.png"))
+MENU_SHIP = pygame.image.load(os.path.join("assets/menu", "menu_ship.png"))
 # Colors
+BACKGROUND_GREY = (59, 56, 56, 0)
 BLACK = (0, 0, 0, 0.5)
 BLACK_NON_TRANSPARENT = (0, 0, 0)
 WHITE = (255, 255, 255)
@@ -28,7 +31,16 @@ GREEN_SPACE_SHIP = pygame.image.load(os.path.join("assets", "pixel_ship_green_sm
 BLUE_SPACE_SHIP = pygame.image.load(os.path.join("assets", "pixel_ship_blue_small.png"))
 
 # Player player
-YELLOW_SPACE_SHIP = pygame.image.load(os.path.join("assets", "pixel_ship_yellow.png"))
+# PLAYER_SHIP = pygame.image.load(os.path.join("assets/ships", "lord_nelson_purple.png"))
+def choose_ship(name, color):
+    ship_img_string = name + "_" + color + ".png"
+    return pygame.image.load(os.path.join("assets/ships", ship_img_string))
+
+NELSON = pygame.image.load(os.path.join("assets/ships", "lord_nelson_purple.png"))
+COMMANDER = pygame.image.load(os.path.join("assets/ships", "commander_purple.png"))
+POINTY_BOY = pygame.image.load(os.path.join("assets/ships", "pointy_boy_purple.png"))
+DONUT = pygame.image.load(os.path.join("assets/ships", "donut_purple.png"))
+
 
 # Lasers
 RED_LASER = pygame.image.load(os.path.join("assets", "pixel_laser_red.png"))

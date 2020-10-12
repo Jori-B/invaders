@@ -2,6 +2,7 @@
 import random
 import numpy as np
 from classes.button import Button
+from classes.bigButton import BigButton
 from classes.rectangle import Rectangle
 from classes.player import Player
 from classes.enemy import Enemy
@@ -24,7 +25,7 @@ pygame.init()
 infoObject = pygame.display.Info()
 
 
-def main():
+def main(ship):
     # Dictates if while loop is going to run
     run = True
     # Amount of frames per second (checking if character is moving once every second)
@@ -49,7 +50,7 @@ def main():
     laser_velocity = 4
 
     # Define a player space ship at location
-    player = Player(WIDTH / 2, HEIGHT)
+    player = Player(WIDTH / 2, HEIGHT, ship)
     # Center the ship on screen
     player.x -= (player.get_width() / 2)
     player.y -= (player.get_height() + 50)
@@ -253,18 +254,18 @@ def main():
             x = WIDTH / 2 - ANSWER_BOX.get_width() / 2
             y = HEIGHT / 2 - ANSWER_BOX.get_height() / 2
             width = 400
-            heigth = 150
+            height = 150
 
-            correct_box = Rectangle(WHITE, x, y, width, heigth, main_font, main_font, True, code_text, str(question),
+            correct_box = Rectangle(WHITE, x, y, width, height, main_font, main_font, True, code_text, str(question),
                                     RED, BLACK_NON_TRANSPARENT)
             correct_box.draw(WINDOW)
 
             txt_surface = main_font.render(string, True, pygame.Color('black'))
-
+            txt_y = y + (height / 4) * 3 - (txt_surface.get_height() / 4) * 3 - 5
             WINDOW.blit(
                 txt_surface,
                 (
-                    width + 150 + 100, heigth + 237.25
+                    width + 150 + 100, txt_y  # heigth + 237.25
                 )
             )
 
@@ -307,24 +308,32 @@ def main():
 
 
 def main_menu():
-    title_font = pygame.font.SysFont("notosansmonocjkkr", 70)
     button_font = pygame.font.SysFont("notosansmonocjkkr", 30)
-    startButton = Button(PURPLE, WIDTH / 2, HEIGHT, 250, 80, button_font, "Start game!")
-    # Move the startButton a bit upwards (by leaving a gap of its own height between the bottom and itself
-    startButton.y -= startButton.height * 2
-    # Center the startButton on screen
-    startButton.x -= startButton.width / 2
+    button_width = 400
+    button_height = 80
+    button_x = WIDTH - 1.3 * button_width
+    start_button_y = 130
+    start_button = Button(BACKGROUND_GREY, button_x, start_button_y, button_width,
+                          button_height, button_font, "Start game!")
+    upgrade_button = Button(BACKGROUND_GREY, button_x, start_button_y + 140, button_width,
+                            button_height, button_font, "Upgrades")
+    settings_button = Button(BACKGROUND_GREY, button_x, start_button_y + 280,
+                             button_width,
+                             button_height, button_font, "Settings")
+    about_button = Button(BACKGROUND_GREY, button_x, start_button_y + 420, button_width,
+                          button_height, button_font, "About")
     run = True
     while run:
 
         WINDOW.blit(BACKGROUND, (0, 0))
-        startButton.draw(WINDOW)
-        title_label = title_font.render("SPACE TIMES", 1, WHITE)
-        title_label_drop_shadow = title_font.render("SPACE TIMES", 1, BLACK)
-        offset = 3
-        WINDOW.blit(title_label_drop_shadow,
-                    (WIDTH / 2 - title_label.get_width() / 2 + offset, HEIGHT / 2 - title_label.get_height() + offset))
-        WINDOW.blit(title_label, (WIDTH / 2 - title_label.get_width() / 2, HEIGHT / 2 - title_label.get_height()))
+        start_button.draw(WINDOW, WHITE)
+        upgrade_button.draw(WINDOW, WHITE)
+        settings_button.draw(WINDOW, WHITE)
+        about_button.draw(WINDOW, WHITE)
+        menu_x = 80
+        WINDOW.blit(MENU_TEXT, (menu_x, HEIGHT / 2 - MENU_TEXT.get_height()))
+        WINDOW.blit(MENU_SHIP, (menu_x + 0.5 * MENU_TEXT.get_width() - 0.5 * MENU_SHIP.get_width(), HEIGHT / 2 + 50))
+        # WINDOW.blit(title_label, (WIDTH / 2 - title_label.get_width() / 2, HEIGHT / 2 - title_label.get_height()))
         pygame.display.update()
         for event in pygame.event.get():
             position = pygame.mouse.get_pos()
@@ -334,15 +343,96 @@ def main_menu():
                 run = False
             # if start button is pressed then start the game
             if event.type == pygame.MOUSEMOTION:
-                if startButton.isHovered(position):
-                    startButton.color = GREEN
+                if start_button.isHovered(position):
+                    start_button.color = GREEN
                 else:
-                    startButton.color = PURPLE
+                    start_button.color = BACKGROUND_GREY
+                if upgrade_button.isHovered(position):
+                    upgrade_button.color = GREEN
+                else:
+                    upgrade_button.color = BACKGROUND_GREY
+                if about_button.isHovered(position):
+                    about_button.color = GREEN
+                else:
+                    about_button.color = BACKGROUND_GREY
+                if settings_button.isHovered(position):
+                    settings_button.color = GREEN
+                else:
+                    settings_button.color = BACKGROUND_GREY
+
             # if start button is pressed then start the game
             if event.type == pygame.MOUSEBUTTONDOWN:
-                if startButton.isHovered(position):
+                if start_button.isHovered(position):
                     # initi slipsta
-                    main()
+                    choose_fighter()
+    pygame.quit()
+
+
+def choose_fighter():
+    title_font = pygame.font.SysFont("notosansmonocjkkr", 40)
+    button_font = pygame.font.SysFont("notosansmonocjkkr", 20)
+    button_width = WIDTH * (4/21)
+    button_height = 500
+    button_y = 150
+    nelson_button = BigButton(BACKGROUND_GREY, WIDTH * (1/21), button_y, button_width,
+                           button_height, button_font, NELSON, "Lord Nelson")
+    commander_button = BigButton(BACKGROUND_GREY, WIDTH * (6/21), button_y, button_width,
+                              button_height, button_font, COMMANDER, "Commander Cosmonaut")
+    pointy_button = BigButton(BACKGROUND_GREY, WIDTH * (11/21), button_y,
+                           button_width ,
+                           button_height, button_font, POINTY_BOY, "Pointy Boy")
+    donut_button = BigButton(BACKGROUND_GREY, WIDTH * (16/21), button_y, button_width,
+                          button_height, button_font, DONUT, "Donut Warrior")
+
+    run = True
+    while run:
+
+        WINDOW.blit(BACKGROUND, (0, 0))
+        nelson_button.draw(WINDOW, WHITE)
+        commander_button.draw(WINDOW, WHITE)
+        pointy_button.draw(WINDOW, WHITE)
+        donut_button.draw(WINDOW, WHITE)
+        title_label = title_font.render("Choose fighter:", 1, WHITE)
+        title_label_drop_shadow = title_font.render("Choose fighter:", 1, BLACK)
+        offset = 3
+        WINDOW.blit(title_label_drop_shadow, (WIDTH * (1/21) + offset, title_label.get_height() + offset))
+        WINDOW.blit(title_label, (WIDTH * (1/21), title_label.get_height()))
+        pygame.display.update()
+        for event in pygame.event.get():
+            position = pygame.mouse.get_pos()
+
+            # if pressing quit 'x' then stop
+            if event.type == pygame.QUIT:
+                run = False
+            # if start button is pressed then start the game
+            if event.type == pygame.MOUSEMOTION:
+                if nelson_button.isHovered(position):
+                    nelson_button.color = GREEN
+                else:
+                    nelson_button.color = BACKGROUND_GREY
+                if commander_button.isHovered(position):
+                    commander_button.color = GREEN
+                else:
+                    commander_button.color = BACKGROUND_GREY
+                if pointy_button.isHovered(position):
+                    pointy_button.color = GREEN
+                else:
+                    pointy_button.color = BACKGROUND_GREY
+                if donut_button.isHovered(position):
+                    donut_button.color = GREEN
+                else:
+                    donut_button.color = BACKGROUND_GREY
+
+            # if start button is pressed then start the game
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if nelson_button.isHovered(position):
+                    main(choose_ship("lord_nelson", "purple"))
+                if commander_button.isHovered(position):
+                    main(choose_ship("commander", "purple"))
+                if pointy_button.isHovered(position):
+                    main(choose_ship("pointy_boy", "purple"))
+                if donut_button.isHovered(position):
+                    main(choose_ship("donut", "purple"))
     pygame.quit()
 
 
