@@ -8,6 +8,7 @@ from classes.player import Player
 from classes.enemy import Enemy
 from classes.explosion import Explosion
 from classes.disappear import Disappear
+from classes.reappear import Reappear
 from classes.model import Model
 from slimstampen.spacingmodel import Response
 from utilities.constants import *
@@ -97,11 +98,35 @@ def main(ship):
         all_sprites.add(explosion)
         enemies.remove(enemy)
 
-    def runaway_enemy(enemy):
-        enemy_center_loc = (enemy.x + enemy.get_width() / 2, enemy.y + enemy.get_height() / 2)
+    def runaway_enemy(enemy, enemies):
+        enemy_center_loc = [enemy.x + enemy.get_width() / 2, enemy.y + enemy.get_height() / 2]
         disappear = Disappear(enemy_center_loc, 'large')
         all_sprites.add(disappear)
         enemies.remove(enemy)
+
+        new_enemy_center_loc=[enemy_center_loc[0],enemy_center_loc[1]-100]
+
+        for enemy_check in enemies:
+            enemy_check_loc = (enemy_check.x + enemy_check.get_width() / 2, enemy_check.y + enemy_check.get_height() / 2)
+
+            #diff_x = abs(new_enemy_center_loc[1] - enemy_check_loc[1])
+            diff_y = abs(new_enemy_center_loc[1] - enemy_check_loc[1])
+
+
+            if diff_y<= (enemy_check.get_height() + 100) :
+
+                while not diff_y<= (enemy_check.get_height() + 100) :
+                    print("Kebabo è intelligente")
+
+                    new_enemy_center_loc[1]-=50
+
+                    diff_y = abs(new_enemy_center_loc[1] - enemy_check_loc[1])
+
+
+        reappear = Reappear(new_enemy_center_loc, 'large')
+        all_sprites.add(reappear)
+        reapp_enemy = Enemy( new_enemy_center_loc[0]-enemy.get_width() / 2, new_enemy_center_loc[1]-enemy.get_height() / 2, enemy.color)
+        enemies.append(reapp_enemy)
 
     def redraw_window():
         # Draw the background img at coordinate: 0,0 (which is the top left)
@@ -147,10 +172,8 @@ def main(ship):
             wave_length += 3
             spawn_box = random.sample(range(1, 6), 5)
 
-            x_boundaries = np.arange(20, WIDTH -20, (WIDTH -45)/ 3).astype(int)  # range 1,2,3 
+            x_boundaries = np.arange(70, WIDTH -70, (WIDTH -145)/ 3).astype(int)  # range 1,2,3 
             y_boundaries = np.arange(10, HEIGHT -10, (HEIGHT -25)/ 2).astype(int)  # range 4,5,6
-            print(x_boundaries)
-            print(y_boundaries)
 
             for i in range(3):
                 if spawn_box[i] <= 3:
@@ -196,6 +219,7 @@ def main(ship):
 
         # Move the enemies downwards all the time, [:] means a copy of the list (just to be sure nothing bad happens)
         for enemy in enemies[:]:
+            print (enemy.get_width())
 
             if not answering_question or enemy is not enemy_hit:
 
@@ -289,7 +313,7 @@ def main(ship):
                             print("Wrong! The correct answer was " + str(answer))
                             resp = Response(new_fact, question_onset_time, response_time, False)
                             model.m.register_response(resp)
-                            runaway_enemy(enemy_hit)
+                            runaway_enemy(enemy_hit, enemies)
 
                         show_answer(str(answer) == string, answer, x, y + ANSWER_BOX.get_height())
 

@@ -14,12 +14,16 @@ class Enemy(Ship):
     def __init__(self, x, y, color, health=100):
         # Use ship's initialization method
         super().__init__(x, y, health)
+        self.color=color
         self.ship_img, self.laser_img = self.COLOR_MAP[color]
         self.mask = pygame.mask.from_surface(self.ship_img)
 
     # Move the ship downward when this is called
     def move(self, velocity):
         self.y += velocity
+
+    def returnColor(self):
+        return self.color
 
     def stop_lasers(self):
 
