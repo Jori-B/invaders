@@ -219,7 +219,6 @@ def main(ship):
 
         # Move the enemies downwards all the time, [:] means a copy of the list (just to be sure nothing bad happens)
         for enemy in enemies[:]:
-            print (enemy.get_width())
 
             if not answering_question or enemy is not enemy_hit:
 
