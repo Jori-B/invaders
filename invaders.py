@@ -101,39 +101,39 @@ def main(ship):
 
     def runaway_enemy(enemy, enemies, surface):
         enemy_center_loc = [enemy.x + enemy.get_width() / 2, enemy.y + enemy.get_height() / 2]
-        new_loc=enemy_center_loc
+        new_loc = enemy_center_loc
         enemies.remove(enemy)
         disappear = Disappear(enemy_center_loc, 'large')
         all_sprites.add(disappear)
 
-        new_enemy_center_loc=[enemy_center_loc[0],enemy_center_loc[1]-200]
+        new_enemy_center_loc = [enemy_center_loc[0], enemy_center_loc[1] - 200]
 
         for enemy_check in enemies:
-            enemy_check_loc = (enemy_check.x + enemy_check.get_width() / 2, enemy_check.y + enemy_check.get_height() / 2)
+            enemy_check_loc = (
+            enemy_check.x + enemy_check.get_width() / 2, enemy_check.y + enemy_check.get_height() / 2)
 
-            #diff_x = abs(new_enemy_center_loc[1] - enemy_check_loc[1])
+            # diff_x = abs(new_enemy_center_loc[1] - enemy_check_loc[1])
             diff_y = abs(new_enemy_center_loc[1] - enemy_check_loc[1])
 
-            if diff_y<= (enemy_check.get_height() + 100) :
+            if diff_y <= (enemy_check.get_height() + 100):
 
-                while diff_y<= (enemy_check.get_height() + 100):
-
-                    new_enemy_center_loc[1]-=100
+                while diff_y <= (enemy_check.get_height() + 100):
+                    new_enemy_center_loc[1] -= 100
 
                     diff_y = abs(new_enemy_center_loc[1] - enemy_check_loc[1])
 
-        while diff_y> 10:
-            diff_y-=5
-            new_loc[1]-=5
+        while diff_y > 10:
+            diff_y -= 5
+            new_loc[1] -= 5
             # print("NEW LOCATION:"+ str(new_loc[1]))
             # print("DIFF YYY:"+ str(diff_y))
             move_up = Move(new_loc, 'large')
             all_sprites.add(move_up)
 
-
         reappear = Reappear(new_enemy_center_loc, 'large')
         all_sprites.add(reappear)
-        reapp_enemy = Enemy( new_enemy_center_loc[0]-enemy.get_width() / 2, new_enemy_center_loc[1]-enemy.get_height() / 2, enemy.color)
+        reapp_enemy = Enemy(new_enemy_center_loc[0] - enemy.get_width() / 2,
+                            new_enemy_center_loc[1] - enemy.get_height() / 2, enemy.color)
         enemies.append(reapp_enemy)
 
     def redraw_window():
@@ -180,8 +180,8 @@ def main(ship):
             wave_length += 3
             spawn_box = random.sample(range(1, 6), 5)
 
-            x_boundaries = np.arange(70, WIDTH -70, (WIDTH -145)/ 3).astype(int)  # range 1,2,3 
-            y_boundaries = np.arange(10, HEIGHT -10, (HEIGHT -25)/ 2).astype(int)  # range 4,5,6
+            x_boundaries = np.arange(70, WIDTH - 70, (WIDTH - 145) / 3).astype(int)  # range 1,2,3
+            y_boundaries = np.arange(10, HEIGHT - 10, (HEIGHT - 25) / 2).astype(int)  # range 4,5,6
 
             for i in range(3):
                 if spawn_box[i] <= 3:
@@ -376,22 +376,10 @@ def main_menu():
                 run = False
             # if start button is pressed then start the game
             if event.type == pygame.MOUSEMOTION:
-                if start_button.isHovered(position):
-                    start_button.color = GREEN
-                else:
-                    start_button.color = BACKGROUND_GREY
-                if upgrade_button.isHovered(position):
-                    upgrade_button.color = GREEN
-                else:
-                    upgrade_button.color = BACKGROUND_GREY
-                if about_button.isHovered(position):
-                    about_button.color = GREEN
-                else:
-                    about_button.color = BACKGROUND_GREY
-                if settings_button.isHovered(position):
-                    settings_button.color = GREEN
-                else:
-                    settings_button.color = BACKGROUND_GREY
+                start_button.hoverEffect(position)
+                upgrade_button.hoverEffect(position)
+                about_button.hoverEffect(position)
+                settings_button.hoverEffect(position)
 
             # if start button is pressed then start the game
             if event.type == pygame.MOUSEBUTTONDOWN:
@@ -404,23 +392,26 @@ def main_menu():
 def choose_fighter():
     title_font = pygame.font.SysFont("notosansmonocjkkr", 40)
     button_font = pygame.font.SysFont("notosansmonocjkkr", 20)
-    button_width = WIDTH * (4/21)
+    # Essentially the screen is split up into 21 parts. Buttons take up 4*4 = 16 parts of space
+    button_width = WIDTH * (4 / 21)
     button_height = 500
-    button_y = 150
-    nelson_button = BigButton(BACKGROUND_GREY, WIDTH * (1/21), button_y, button_width,
-                           button_height, button_font, NELSON, "Lord Nelson")
-    commander_button = BigButton(BACKGROUND_GREY, WIDTH * (6/21), button_y, button_width,
-                              button_height, button_font, COMMANDER, "Commander Cosmonaut")
-    pointy_button = BigButton(BACKGROUND_GREY, WIDTH * (11/21), button_y,
-                           button_width ,
-                           button_height, button_font, POINTY_BOY, "Pointy Boy")
-    donut_button = BigButton(BACKGROUND_GREY, WIDTH * (16/21), button_y, button_width,
-                          button_height, button_font, DONUT, "Donut Warrior")
+    button_y = HEIGHT - button_height - 50
+    back_button = Button(BACKGROUND_GREY, WIDTH * (1 / 21), button_font.get_height(), 150, 50, button_font, "< Back")
+    # Inbetween each of the buttons 1/21 part is left open
+    nelson_button = BigButton(BACKGROUND_GREY, WIDTH * (1 / 21), button_y, button_width,
+                              button_height, button_font, NELSON, True, "lord_nelson", "Lord Nelson")
+    commander_button = BigButton(BACKGROUND_GREY, WIDTH * (6 / 21), button_y, button_width,
+                                 button_height, button_font, COMMANDER, True, "commander_cosmonaut", "Commander Cosmonaut")
+    pointy_button = BigButton(BACKGROUND_GREY, WIDTH * (11 / 21), button_y,
+                              button_width, button_height, button_font, POINTY_BOY, True, "pointy_boy", "Pointy Boy")
+    donut_button = BigButton(BACKGROUND_GREY, WIDTH * (16 / 21), button_y, button_width,
+                             button_height, button_font, DONUT, True, "donut_warrior", "Donut Warrior")
 
     run = True
     while run:
 
         WINDOW.blit(BACKGROUND, (0, 0))
+        back_button.draw(WINDOW, WHITE)
         nelson_button.draw(WINDOW, WHITE)
         commander_button.draw(WINDOW, WHITE)
         pointy_button.draw(WINDOW, WHITE)
@@ -428,8 +419,8 @@ def choose_fighter():
         title_label = title_font.render("Choose fighter:", 1, WHITE)
         title_label_drop_shadow = title_font.render("Choose fighter:", 1, BLACK)
         offset = 3
-        WINDOW.blit(title_label_drop_shadow, (WIDTH * (1/21) + offset, title_label.get_height() + offset))
-        WINDOW.blit(title_label, (WIDTH * (1/21), title_label.get_height()))
+        WINDOW.blit(title_label_drop_shadow, (WIDTH * (1 / 21) + offset, title_label.get_height() + 50 + offset))
+        WINDOW.blit(title_label, (WIDTH * (1 / 21), title_label.get_height() + 50))
         pygame.display.update()
         for event in pygame.event.get():
             position = pygame.mouse.get_pos()
@@ -439,33 +430,93 @@ def choose_fighter():
                 run = False
             # if start button is pressed then start the game
             if event.type == pygame.MOUSEMOTION:
-                if nelson_button.isHovered(position):
-                    nelson_button.color = GREEN
-                else:
-                    nelson_button.color = BACKGROUND_GREY
-                if commander_button.isHovered(position):
-                    commander_button.color = GREEN
-                else:
-                    commander_button.color = BACKGROUND_GREY
-                if pointy_button.isHovered(position):
-                    pointy_button.color = GREEN
-                else:
-                    pointy_button.color = BACKGROUND_GREY
-                if donut_button.isHovered(position):
-                    donut_button.color = GREEN
-                else:
-                    donut_button.color = BACKGROUND_GREY
+                back_button.hoverEffect(position)
+                nelson_button.hoverEffect(position)
+                commander_button.hoverEffect(position)
+                pointy_button.hoverEffect(position)
+                donut_button.hoverEffect(position)
 
             # if start button is pressed then start the game
             if event.type == pygame.MOUSEBUTTONDOWN:
+                if back_button.isHovered(position):
+                    main_menu()
                 if nelson_button.isHovered(position):
-                    main(choose_ship("lord_nelson", "purple"))
+                    choose_color("lord_nelson")
                 if commander_button.isHovered(position):
-                    main(choose_ship("commander", "purple"))
+                    choose_color("commander_cosmonaut")
                 if pointy_button.isHovered(position):
-                    main(choose_ship("pointy_boy", "purple"))
+                    choose_color("pointy_boy")
                 if donut_button.isHovered(position):
-                    main(choose_ship("donut", "purple"))
+                    choose_color("donut_warrior")
+    pygame.quit()
+
+
+def choose_color(chosen_ship):
+    title_font = pygame.font.SysFont("notosansmonocjkkr", 40)
+    subtitle_font = pygame.font.SysFont("notosansmonocjkkr", 30)
+    button_font = pygame.font.SysFont("notosansmonocjkkr", 20)
+    button_width = WIDTH * (4 / 21)
+    button_height = 400
+    button_y = HEIGHT - button_height - 50
+    back_button = Button(BACKGROUND_GREY, WIDTH * (1 / 21), button_font.get_height(), 150, 50, button_font, "< Back")
+    purple_button = BigButton(BACKGROUND_GREY, WIDTH * (1 / 21), button_y, button_width,
+                              button_height, button_font, choose_ship(chosen_ship, "purple"), "", False, "Purple")
+    green_button = BigButton(BACKGROUND_GREY, WIDTH * (6 / 21), button_y, button_width,
+                             button_height, button_font, choose_ship(chosen_ship, "green"), "", False, "Green")
+    red_button = BigButton(BACKGROUND_GREY, WIDTH * (11 / 21), button_y,
+                           button_width,
+                           button_height, button_font, choose_ship(chosen_ship, "red"), "", False, "Red")
+    gold_button = BigButton(BACKGROUND_GREY, WIDTH * (16 / 21), button_y, button_width,
+                            button_height, button_font, choose_ship(chosen_ship, "gold"), "", False, "Gold")
+
+    run = True
+    while run:
+
+        WINDOW.blit(BACKGROUND, (0, 0))
+        back_button.draw(WINDOW, WHITE)
+        purple_button.draw(WINDOW, WHITE)
+        green_button.draw(WINDOW, WHITE)
+        red_button.draw(WINDOW, WHITE)
+        gold_button.draw(WINDOW, WHITE)
+        title_label = title_font.render("Pick a color:", 1, WHITE)
+        title_label_drop_shadow = title_font.render("Pick a color:", 1, BLACK)
+        # Remove the underscores from the string and capitalize the first letters of each word
+        ship_name = chosen_ship.replace("_", " ").title()
+        subtitle_label = subtitle_font.render(ship_name, 1, WHITE)
+        subtitle_label_drop_shadow = subtitle_font.render(ship_name, 1, BLACK)
+        offset = 3
+        WINDOW.blit(title_label_drop_shadow, (WIDTH * (1 / 21) + offset, title_label.get_height() + 50 + offset))
+        WINDOW.blit(title_label, (WIDTH * (1 / 21), title_label.get_height() + 50))
+        WINDOW.blit(subtitle_label_drop_shadow,
+                    (WIDTH * (1 / 21) + offset, title_label.get_height() * 2 + 50 + offset))
+        WINDOW.blit(subtitle_label, (WIDTH * (1 / 21), title_label.get_height() * 2 + 50))
+        pygame.display.update()
+        for event in pygame.event.get():
+            position = pygame.mouse.get_pos()
+
+            # if pressing quit 'x' then stop
+            if event.type == pygame.QUIT:
+                run = False
+            # if start button is pressed then start the game
+            if event.type == pygame.MOUSEMOTION:
+                back_button.hoverEffect(position)
+                purple_button.hoverEffect(position)
+                green_button.hoverEffect(position)
+                red_button.hoverEffect(position)
+                gold_button.hoverEffect(position)
+
+            # if start button is pressed then start the game
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if back_button.isHovered(position):
+                    choose_fighter()
+                if purple_button.isHovered(position):
+                    main(choose_ship(chosen_ship, "purple"))
+                if green_button.isHovered(position):
+                    main(choose_ship(chosen_ship, "green"))
+                if red_button.isHovered(position):
+                    main(choose_ship(chosen_ship, "red"))
+                if gold_button.isHovered(position):
+                    main(choose_ship(chosen_ship, "gold"))
     pygame.quit()
 
 

@@ -38,9 +38,9 @@ def choose_ship(name, color):
     return pygame.image.load(os.path.join("assets/ships", ship_img_string))
 
 NELSON = pygame.image.load(os.path.join("assets/ships", "lord_nelson_purple.png"))
-COMMANDER = pygame.image.load(os.path.join("assets/ships", "commander_purple.png"))
+COMMANDER = pygame.image.load(os.path.join("assets/ships", "commander_cosmonaut_purple.png"))
 POINTY_BOY = pygame.image.load(os.path.join("assets/ships", "pointy_boy_purple.png"))
-DONUT = pygame.image.load(os.path.join("assets/ships", "donut_purple.png"))
+DONUT = pygame.image.load(os.path.join("assets/ships", "donut_warrior_purple.png"))
 
 
 # Lasers
