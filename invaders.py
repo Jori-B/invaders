@@ -9,6 +9,7 @@ from classes.enemy import Enemy
 from classes.explosion import Explosion
 from classes.disappear import Disappear
 from classes.reappear import Reappear
+from classes.move import Move
 from classes.model import Model
 from slimstampen.spacingmodel import Response
 from utilities.constants import *
@@ -98,13 +99,14 @@ def main(ship):
         all_sprites.add(explosion)
         enemies.remove(enemy)
 
-    def runaway_enemy(enemy, enemies):
+    def runaway_enemy(enemy, enemies, surface):
         enemy_center_loc = [enemy.x + enemy.get_width() / 2, enemy.y + enemy.get_height() / 2]
+        new_loc=enemy_center_loc
+        enemies.remove(enemy)
         disappear = Disappear(enemy_center_loc, 'large')
         all_sprites.add(disappear)
-        enemies.remove(enemy)
 
-        new_enemy_center_loc=[enemy_center_loc[0],enemy_center_loc[1]-100]
+        new_enemy_center_loc=[enemy_center_loc[0],enemy_center_loc[1]-200]
 
         for enemy_check in enemies:
             enemy_check_loc = (enemy_check.x + enemy_check.get_width() / 2, enemy_check.y + enemy_check.get_height() / 2)
@@ -112,15 +114,21 @@ def main(ship):
             #diff_x = abs(new_enemy_center_loc[1] - enemy_check_loc[1])
             diff_y = abs(new_enemy_center_loc[1] - enemy_check_loc[1])
 
-
             if diff_y<= (enemy_check.get_height() + 100) :
 
-                while not diff_y<= (enemy_check.get_height() + 100) :
-                    print("Kebabo è intelligente")
+                while diff_y<= (enemy_check.get_height() + 100):
 
-                    new_enemy_center_loc[1]-=50
+                    new_enemy_center_loc[1]-=100
 
                     diff_y = abs(new_enemy_center_loc[1] - enemy_check_loc[1])
+
+        while diff_y> 10:
+            diff_y-=5
+            new_loc[1]-=5
+            # print("NEW LOCATION:"+ str(new_loc[1]))
+            # print("DIFF YYY:"+ str(diff_y))
+            move_up = Move(new_loc, 'large')
+            all_sprites.add(move_up)
 
 
         reappear = Reappear(new_enemy_center_loc, 'large')
@@ -312,7 +320,7 @@ def main(ship):
                             print("Wrong! The correct answer was " + str(answer))
                             resp = Response(new_fact, question_onset_time, response_time, False)
                             model.m.register_response(resp)
-                            runaway_enemy(enemy_hit, enemies)
+                            runaway_enemy(enemy_hit, enemies, WINDOW)
 
                         show_answer(str(answer) == string, answer, x, y + ANSWER_BOX.get_height())
 

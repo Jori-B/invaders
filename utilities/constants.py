@@ -25,6 +25,7 @@ GREEN = (0, 191, 166)
 ORANGE = (249, 168, 38)
 
 
+
 # Load images
 RED_SPACE_SHIP = pygame.image.load(os.path.join("assets", "pixel_ship_red_small.png"))
 GREEN_SPACE_SHIP = pygame.image.load(os.path.join("assets", "pixel_ship_green_small.png"))
@@ -102,6 +103,22 @@ for i in range(5):
     img_small = pygame.transform.scale(img, (32, 32))
     # TODO: Small explosion should be used for when alien hits spaceship
     REAPPEAR_ANIMATION['small'].append(img_small)
+
+all_sprites = pygame.sprite.Group()
+
+MOVE_ANIMATION = {}
+MOVE_ANIMATION['small'] = []
+MOVE_ANIMATION['large'] = []
+# Images are numbered so we can loop through them
+for i in range(5):
+    file_name = 'spaceshipPuff0{}.png'.format(i)
+    img = pygame.image.load(os.path.join("assets/moveup", file_name)).convert()
+    img.set_colorkey(BLACK_NON_TRANSPARENT)
+    img_large = pygame.transform.scale(img, (75, 75))
+    MOVE_ANIMATION['large'].append(img_large)
+    img_small = pygame.transform.scale(img, (32, 32))
+    # TODO: Small explosion should be used for when alien hits spaceship
+    MOVE_ANIMATION['small'].append(img_small)
 
 all_sprites = pygame.sprite.Group()
 
