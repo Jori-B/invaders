@@ -341,6 +341,8 @@ def main(ship):
 
 
 def main_menu():
+    model = Model()
+
     button_font = pygame.font.SysFont("notosansmonocjkkr", 30)
     button_width = 400
     button_height = 80
@@ -374,6 +376,7 @@ def main_menu():
             # if pressing quit 'x' then stop
             if event.type == pygame.QUIT:
                 run = False
+                model.save_data()
             # if start button is pressed then start the game
             if event.type == pygame.MOUSEMOTION:
                 start_button.hoverEffect(position)

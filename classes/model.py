@@ -39,4 +39,7 @@ class Model:
         next_fact, new = self.m.get_next_fact(current_time=run_time)
         return next_fact
 
+    def save_data(self):
+        self.m.export_data(f"Save_Data/save_data_{START_TIME}.csv")
+
 
