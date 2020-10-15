@@ -17,7 +17,7 @@ class Laser:
 
     def off_screen(self, height):
         # Return a false value when the y position is higher than the height of screen (starts at top with 0)
-        return not(self.y < height and self.y >= 0)
+        return not(self.y <= height and self.y >= -30)
 
     def collision(self, obj):
         # Is an object colliding with the object that called the function
