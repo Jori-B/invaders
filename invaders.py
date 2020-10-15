@@ -111,22 +111,19 @@ def main(ship):
         for enemy_check in enemies:
             enemy_check_loc = (
             enemy_check.x + enemy_check.get_width() / 2, enemy_check.y + enemy_check.get_height() / 2)
-
-            # diff_x = abs(new_enemy_center_loc[1] - enemy_check_loc[1])
+            
+            diff_x = abs(new_enemy_center_loc[0] - enemy_check_loc[0])
             diff_y = abs(new_enemy_center_loc[1] - enemy_check_loc[1])
 
-            if diff_y <= (enemy_check.get_height() + 100):
+            if (diff_y <= (enemy_check.get_height() + 100) and diff_x <= (enemy_check.get_height() + 100)):
 
                 while diff_y <= (enemy_check.get_height() + 100):
                     new_enemy_center_loc[1] -= 100
 
                     diff_y = abs(new_enemy_center_loc[1] - enemy_check_loc[1])
 
-        while diff_y > 10:
-            diff_y -= 5
+        while abs(new_enemy_center_loc[1]-enemy_center_loc[1]) > 5:
             new_loc[1] -= 5
-            # print("NEW LOCATION:"+ str(new_loc[1]))
-            # print("DIFF YYY:"+ str(diff_y))
             move_up = Move(new_loc, 'large')
             all_sprites.add(move_up)
 
