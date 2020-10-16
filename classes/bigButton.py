@@ -8,7 +8,7 @@ offset = 3
 
 
 class BigButton():
-    def __init__(self, color, x, y, width, height, font, img, show_stats=False, ship="", text=""):
+    def __init__(self, color, x, y, width, height, font, img, show_stats=False, ship="", text="", is_locked=False):
         self.color = color
         self.x = x
         self.y = y
@@ -18,11 +18,15 @@ class BigButton():
         self.font = font
         self.img = img
         self.show_stats = show_stats
+        self.is_locked = is_locked
         if show_stats:
             self.stats = Stats(ship)
 
     def getXMiddle(self, widthOfObject):
         return self.x + self.width / 2 - widthOfObject / 2
+
+    def getYMiddle(self, heightOfObject):
+        return self.y + self.height / 2 - heightOfObject / 2
 
     def drawStatBar(self, bar_x, bar_y, bar_height, current_stat, window):
         bar_width = self.width * (2 / 5)
@@ -84,6 +88,16 @@ class BigButton():
 
         if self.img is not None:
             window.blit(self.img, (self.getXMiddle(self.img.get_width()), self.y + self.height - self.img.get_height() - 50))
+
+        if self.is_locked:
+            # Draw a semi-transparant button on top of the previous one when the item is locked
+            s = pygame.Surface((self.width, self.height))  # the size of your rect
+            s.set_alpha(128)  # alpha level
+            s.fill((0, 0, 0))  # this fills the entire surface
+            window.blit(s, (self.x, self.y))  # (0,0) are the top-left coordinates
+            # Draw a lock image on top of the button
+            window.blit(LOCK, (self.getXMiddle(LOCK.get_width()), self.getYMiddle(LOCK.get_height())))
+
 
     def isHovered(self, position):
         X = 0

@@ -408,7 +408,7 @@ def choose_fighter():
     pointy_button = BigButton(BACKGROUND_GREY, WIDTH * (11 / 21), button_y,
                               button_width, button_height, button_font, POINTY_BOY, True, "pointy_boy", "Pointy Boy")
     donut_button = BigButton(BACKGROUND_GREY, WIDTH * (16 / 21), button_y, button_width,
-                             button_height, button_font, DONUT, True, "donut_warrior", "Donut Warrior")
+                             button_height, button_font, DONUT, True, "donut_warrior", "Donut Warrior", True)
 
     run = True
     while run:
@@ -450,7 +450,8 @@ def choose_fighter():
                 if pointy_button.isHovered(position):
                     choose_color("pointy_boy")
                 if donut_button.isHovered(position):
-                    choose_color("donut_warrior")
+                    if not donut_button.is_locked:
+                        choose_color("donut_warrior")
     pygame.quit()
 
 
@@ -470,7 +471,7 @@ def choose_color(chosen_ship):
                            button_width,
                            button_height, button_font, choose_ship(chosen_ship, "red"), "", False, "Red")
     gold_button = BigButton(BACKGROUND_GREY, WIDTH * (16 / 21), button_y, button_width,
-                            button_height, button_font, choose_ship(chosen_ship, "gold"), "", False, "Gold")
+                            button_height, button_font, choose_ship(chosen_ship, "gold"), "", False, "Gold", True)
 
     run = True
     while run:
@@ -519,7 +520,8 @@ def choose_color(chosen_ship):
                 if red_button.isHovered(position):
                     main(choose_ship(chosen_ship, "red"), chosen_ship)
                 if gold_button.isHovered(position):
-                    main(choose_ship(chosen_ship, "gold"), chosen_ship)
+                    if not gold_button.is_locked:
+                        main(choose_ship(chosen_ship, "gold"), chosen_ship)
     pygame.quit()
 
 
