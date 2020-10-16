@@ -11,6 +11,7 @@ from classes.disappear import Disappear
 from classes.reappear import Reappear
 from classes.move import Move
 from classes.model import Model
+from classes.stats import Stats
 from slimstampen.spacingmodel import Response
 from utilities.constants import *
 from utilities.main_functions import *
@@ -27,7 +28,7 @@ pygame.init()
 infoObject = pygame.display.Info()
 
 
-def main(ship):
+def main(ship, ship_name):
     # Dictates if while loop is going to run
     run = True
     # Amount of frames per second (checking if character is moving once every second)
@@ -46,13 +47,15 @@ def main(ship):
     # Every level a new wave will be created of 5 enemies
     wave_length = 3
     enemy_velocity = 0.5
-
+    print(ship_name)
+    stats = Stats(ship_name)
     # How fast the player can move every time you press the key a max of 5 pixels to move
-    player_velocity = 5
+    player_velocity = 4 + stats.ship_speed
     laser_velocity = 4
+    player_laser_velocity = 3 + stats.laser_speed
 
     # Define a player space ship at location
-    player = Player(WIDTH / 2, HEIGHT, ship)
+    player = Player(WIDTH / 2, HEIGHT, ship, stats)
     # Center the ship on screen
     player.x -= (player.get_width() / 2)
     player.y -= (player.get_height() + 50)
@@ -247,7 +250,7 @@ def main(ship):
 
         # Laser velocity needs to be negative since the y value is lower upwards the screen, meaning laser will go up
         # TODO: Extra parameter SlimStampen question
-        has_hit_enemy, enemy = player.move_lasers(-laser_velocity, enemies, WINDOW)
+        has_hit_enemy, enemy = player.move_lasers(-player_laser_velocity, enemies, WINDOW)
         if has_hit_enemy and not answering_question:
 
             enemy_hit = enemy
@@ -510,13 +513,13 @@ def choose_color(chosen_ship):
                 if back_button.isHovered(position):
                     choose_fighter()
                 if purple_button.isHovered(position):
-                    main(choose_ship(chosen_ship, "purple"))
+                    main(choose_ship(chosen_ship, "purple"), chosen_ship)
                 if green_button.isHovered(position):
-                    main(choose_ship(chosen_ship, "green"))
+                    main(choose_ship(chosen_ship, "green"), chosen_ship)
                 if red_button.isHovered(position):
-                    main(choose_ship(chosen_ship, "red"))
+                    main(choose_ship(chosen_ship, "red"), chosen_ship)
                 if gold_button.isHovered(position):
-                    main(choose_ship(chosen_ship, "gold"))
+                    main(choose_ship(chosen_ship, "gold"), chosen_ship)
     pygame.quit()
 
 

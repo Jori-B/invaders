@@ -5,12 +5,12 @@ from utilities.constants import *
 
 # Inherits from player (so all the things from player are also in player)
 class Player(Ship):
-    def __init__(self, x, y, ship, health=100):
+    def __init__(self, x, y, ship, stats, health=100):
         # Use ship's initialization method
         super().__init__(x, y, health)
 
         self.ship_img = ship
-        self.laser_img = YELLOW_LASER
+        self.laser_img = pygame.image.load(os.path.join("assets", "pixel_laser_yellow_" + str(stats.laser_width) + ".png"))
         # Mask for pixel perfect collision instead of square collision box
         self.mask = pygame.mask.from_surface(self.ship_img)
         self.max_health = health

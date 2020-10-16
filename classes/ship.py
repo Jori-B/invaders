@@ -55,10 +55,10 @@ class Ship:
     def shoot(self):
         # Only shoot laser if the cooldown counter is 0
         if self.cool_down_counter == 0:
-            if self.ship_img.get_width()<=100:
-                laser = Laser(self.x-(abs(self.ship_img.get_width()-100)/2), self.y-40, self.laser_img)
-            else:
-                laser = Laser(self.x+(abs(self.ship_img.get_width()-100)/2), self.y-40, self.laser_img)
+            # if self.ship_img.get_width()<=100:
+            laser = Laser(self.x+(abs(self.ship_img.get_width())/2) - (self.laser_img.get_width() / 2), self.y, self.laser_img)
+            # else:
+            #     laser = Laser(self.x+(abs(self.ship_img.get_width())/2), self.y, self.laser_img)
 
             self.lasers.append(laser)
             self.cool_down_counter = 1
