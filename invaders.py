@@ -73,6 +73,9 @@ def main(ship, ship_name, ship_color):
     lost = False
     lost_count = 0
 
+    correct_count = 0
+    total_count = 0
+
     answering_question = False
     enemy_hit = None
 
@@ -85,6 +88,7 @@ def main(ship, ship_name, ship_color):
             main_font = pygame.font.SysFont("notosansmonocjkkr", main_font_size)
             correct_box = Rectangle(WHITE, x + correct_img.get_width(), y, 250, 100, main_font, main_font, False, text)
             correct_box.draw(WINDOW)
+
         else:
             text = "Incorrect! Answer was: "
             correct_img = INCORRECT_IMG
@@ -151,23 +155,23 @@ def main(ship, ship_name, ship_color):
         all_sprites.draw(WINDOW)
 
         # Draw text (f strings embed variables)
-        lives_label = main_font.render(f"Lives: {lives}", 1, WHITE)
+        lives_label = main_font.render(f"Lives: ", 1, WHITE)
         level_label = main_font.render(f"Level: {level}", 1, WHITE)
+        correct_label = main_font.render(f"Solved {correct_count} of {total_count}", 1, WHITE)
         # Top left hand corner plus a little offset
         WINDOW.blit(lives_label, (10, 10))
-        # Top light hand corner (width screen minus width of label minus 10 pixels offset
+        # Draw an amount of hearts in the top left corner indicating the amount of lives
+        for life_cnt in range(1, lives + 1):
+            WINDOW.blit(LIFE, (lives_label.get_width() + life_cnt*10 + ((life_cnt - 1) * LIFE.get_width()), 10 + LIFE.get_height()/4))
+        # Top right hand corner (width screen minus width of label minus 10 pixels offset)
         WINDOW.blit(level_label, (WIDTH - level_label.get_width() - 10, 10))
+        WINDOW.blit(correct_label, (WIDTH - level_label.get_width() - correct_label.get_width() - 50, 10))
         # Draw all enemies (before you initialize the player so the player goes over them)
         for enemy in enemies:
             enemy.draw(WINDOW)
         # Draw the player
         player.draw(WINDOW)
 
-        if lost:
-            lost_label = lost_font.render("You Lost!", 1, WHITE)
-            WINDOW.blit(lost_label, (WIDTH / 2 - lost_label.get_width() / 2, HEIGHT / 2 - lost_label.get_height() / 2))
-
-    # TODO: When shooting an enemy tell the player the "explosion code" needs to be entered
     while run:
         clock.tick(FPS)
         WINDOW.blit(BACKGROUND, (0, 0))
@@ -178,10 +182,48 @@ def main(ship, ship_name, ship_color):
             lost_count += 1
         if lost:
             # FPS * 3 = 3 sec
-            if lost_count > FPS * 3:
-                run = False
-            else:
-                continue
+            # So for 3 seconds, show a "You lost message"
+            # if lost_count > FPS * 3:
+            #     run = False
+            # else:
+
+            WINDOW.blit(BACKGROUND,
+                        (WIDTH, HEIGHT, 0, 0))
+            lost_label = lost_font.render("You Lost!", 1, WHITE)
+
+            WINDOW.blit(lost_label,
+                        (WIDTH / 2 - lost_label.get_width() / 2, HEIGHT / 2 - lost_label.get_height()))
+
+            button_font = pygame.font.SysFont("notosansmonocjkkr", 20)
+            button_width = 180
+            button_height = 60
+            menu_button = Button(BACKGROUND_GREY, WIDTH / 2 - 1.5 * button_width, HEIGHT / 2 + lost_label.get_height(), button_width, button_height, button_font,
+                                 "Menu")
+            menu_button.draw(WINDOW, WHITE)
+            restart_button = Button(BACKGROUND_GREY, WIDTH / 2 + button_width / 2, HEIGHT / 2 + lost_label.get_height(), button_width, button_height, button_font,
+                                 "Try again")
+            restart_button.draw(WINDOW, WHITE)
+            # Draw the lost message and buttons
+            pygame.display.update()
+            for event in pygame.event.get():
+                position = pygame.mouse.get_pos()
+                # TODO: Hover effect working
+                if event.type == pygame.MOUSEMOTION:
+                    restart_button.hoverEffect(position)
+                    menu_button.hoverEffect(position)
+
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    # Setting run to false bring you back to menu
+                    if menu_button.isHovered(position):
+                        run = False
+                    # Restart the game
+                    # TODO: Check to see if this works with saving data
+                    if restart_button.isHovered(position):
+                        main(ship, ship_name, ship_color)
+                pygame.display.update()
+            continue
+
+
         # If there are no more enemies on screen then
         if len(enemies) == 0 or len(enemies) == 1:
             level += 1
@@ -354,8 +396,11 @@ def main(ship, ship_name, ship_color):
                             model.m.register_response(resp)
                             runaway_enemy(enemy_hit, enemies, WINDOW)
 
-                        show_answer(str(answer) == string, answer, x, y + ANSWER_BOX.get_height())
-
+                        is_correct = str(answer) == string
+                        show_answer(is_correct, answer, x, y + ANSWER_BOX.get_height())
+                        if is_correct:
+                            correct_count += 1
+                        total_count += 1
                         # Update enemy velocity according to the amount of facts that have been seen
                         enemy_velocity = 0.5 + (
                                 model.get_count_seen_facts(int(round(time.time() * 1000)) - START_TIME) * 0.1)
@@ -370,6 +415,8 @@ def main(ship, ship_name, ship_color):
                         string += str(event.key - 48)
 
         pygame.display.update()
+    # When run is set to false the system comes here
+    # TODO: The app should bring the user to a new instance of the menu
 
 
 def main_menu():

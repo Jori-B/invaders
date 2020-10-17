@@ -26,8 +26,6 @@ LIGHT_BLUE = (0, 176, 255)
 GREEN = (0, 191, 166)
 ORANGE = (249, 168, 38)
 
-
-
 # Load images
 RED_SPACE_SHIP = pygame.image.load(os.path.join("assets", "pixel_ship_red_small.png"))
 GREEN_SPACE_SHIP = pygame.image.load(os.path.join("assets", "pixel_ship_green_small.png"))
@@ -53,6 +51,8 @@ YELLOW_LASER = pygame.image.load(os.path.join("assets", "pixel_laser_yellow_1.pn
 
 # Background
 BACKGROUND = pygame.transform.scale(pygame.image.load(os.path.join("assets", "background_black.png")), (WIDTH, HEIGHT))
+# Heart icon
+LIFE = pygame.image.load(os.path.join("assets", "heart.png"))
 
 # Answer Box
 ANSWER_BOX = pygame.image.load(os.path.join("assets", "answer_button.png"))
