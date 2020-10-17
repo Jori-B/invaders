@@ -346,4 +346,4 @@ class SpacingModel(object):
             dat.to_csv(path, encoding="UTF-8")
             return(dat)
 
-        return(dat.to_csv())
+        return(dat)

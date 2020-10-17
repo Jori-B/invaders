@@ -1,6 +1,8 @@
 import os
 import pygame
 import time
+import random
+import string
 
 # WIDTH, HEIGHT = infoObject.current_w-20, infoObject.current_h-40
 WIDTH, HEIGHT = 1366, 768
@@ -124,5 +126,5 @@ for i in range(5):
 
 all_sprites = pygame.sprite.Group()
 
-# Starting Time
 START_TIME = int(round(time.time() * 1000))
+PATH = f"Save_Data/save_data_{random.choice(string.ascii_letters)}{START_TIME % 10000}"

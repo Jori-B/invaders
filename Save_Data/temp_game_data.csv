@@ -1,0 +1,4 @@
+trial,block,is_gamification,shots_fired,ship_name,ship_color
+1,1,True,0,lord_nelson,red
+2,1,[True],0,['lord_nelson'],['red']
+3,1,[True],0,['lord_nelson'],['red']

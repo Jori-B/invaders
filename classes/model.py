@@ -10,7 +10,7 @@ class Model:
     # All multiplication facts in the array are added as facts
     # Index with tables_array["table of ...+1"]["question in table+1"]["tuple content"].
     # E.g. tables_array[2][5][2] will return the answer to 3*6, which is 18.
-    list_of_tables = [7,8,13,14,16]
+    list_of_tables = [6,9,13,14,16]
     times = range(2,9 + 1)
     tables_array = []
     counter = 0
@@ -39,7 +39,7 @@ class Model:
         next_fact, new = self.m.get_next_fact(current_time=run_time)
         return next_fact
 
-    def save_data(self):
-        self.m.export_data(f"Save_Data/save_data_{START_TIME}.csv")
+    def save_model_data(self):
+        return self.m.export_data()  # f"Save_Data/save_data_{START_TIME}.csv"
 
 

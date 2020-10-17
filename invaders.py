@@ -1,5 +1,7 @@
 # Based on https://www.youtube.com/watch?v=Q-__8Xw9KTM&ab_channel=UnityCoin
 import random
+import os
+import pandas as pd
 import numpy as np
 from classes.button import Button
 from classes.bigButton import BigButton
@@ -28,7 +30,7 @@ pygame.init()
 infoObject = pygame.display.Info()
 
 
-def main(ship, ship_name):
+def main(ship, ship_name, ship_color):
     # Dictates if while loop is going to run
     run = True
     # Amount of frames per second (checking if character is moving once every second)
@@ -42,6 +44,12 @@ def main(ship, ship_name):
 
     # Define reference to Model class
     model = Model()
+    # if this_is_the_first_block:
+    block = 1  # else: block = 2
+    game_data = pd.DataFrame()
+    trial_nr = 0
+    is_gamification = True
+    print(ship_color)
 
     enemies = []
     # Every level a new wave will be created of 5 enemies
@@ -113,8 +121,8 @@ def main(ship, ship_name):
 
         for enemy_check in enemies:
             enemy_check_loc = (
-            enemy_check.x + enemy_check.get_width() / 2, enemy_check.y + enemy_check.get_height() / 2)
-            
+                enemy_check.x + enemy_check.get_width() / 2, enemy_check.y + enemy_check.get_height() / 2)
+
             diff_x = abs(new_enemy_center_loc[0] - enemy_check_loc[0])
             diff_y = abs(new_enemy_center_loc[1] - enemy_check_loc[1])
 
@@ -125,7 +133,7 @@ def main(ship, ship_name):
 
                     diff_y = abs(new_enemy_center_loc[1] - enemy_check_loc[1])
 
-        while abs(new_enemy_center_loc[1]-enemy_center_loc[1]) > 5:
+        while abs(new_enemy_center_loc[1] - enemy_center_loc[1]) > 5:
             new_loc[1] -= 5
             move_up = Move(new_loc, 'large')
             all_sprites.add(move_up)
@@ -199,6 +207,10 @@ def main(ship, ship_name):
         for event in events:
             # if the 'x' on the right top is pressed the game is quit
             if event.type == pygame.QUIT:
+                # Merge and save data from model and game in case the game is completely closed
+                model_data = model.save_model_data()
+                save_data = pd.merge(model_data, game_data, on='trial', how='outer')
+                save_data.to_csv(PATH, encoding="UTF-8")
                 # YOU COULD CHANGE THIS TO quit() to press 'x' and quit the program
                 run = False
 
@@ -263,7 +275,27 @@ def main(ship, ship_name):
             enemy_hit.stop_lasers()
 
             # Record question onset time
-            question_onset_time = int(round(time.time() * 1000)) - START_TIME
+            question_onset_time_for_RT_calc = int(round(time.time() * 1000))
+            question_onset_time = question_onset_time_for_RT_calc - START_TIME
+
+            # Record game data
+            if os.path.isfile('Save_Data/temp_game_data.csv'):
+                game_data = pd.read_csv('Save_Data/temp_game_data.csv')
+                trial_nr = game_data['trial'].iloc[-1]
+                print(game_data['trial'].iloc[-1])
+            trial_nr += 1
+            print(trial_nr)
+            d = {'trial': trial_nr, 'block': block, 'is_gamification': [is_gamification], 'shots_fired': 0, 'ship_name': [ship_name],
+                 'ship_color': [ship_color]}
+            # shot_count = player.move_lasers.shots_fired
+            if game_data.empty:
+                game_data = pd.DataFrame(data=d)
+                print(game_data)
+            else:
+                game_data = game_data.append(d, ignore_index=True)
+                print(game_data)
+            game_data.to_csv("Save_Data/temp_game_data.csv", index=False)
+
             # Get a new question from the model
             new_fact = model.get_next_fact()
             answer = f"{new_fact[2]}"
@@ -307,7 +339,7 @@ def main(ship, ship_name):
                     if event.key == pygame.K_RETURN:
 
                         # Record response time
-                        response_time = int(round(time.time() * 1000)) - question_onset_time
+                        response_time = int(round(time.time() * 1000)) - question_onset_time_for_RT_calc
                         # Log the response
                         # Stringify answer instead of typecasting string as int (since a string might not
                         # be castable)
@@ -341,8 +373,6 @@ def main(ship, ship_name):
 
 
 def main_menu():
-    model = Model()
-
     button_font = pygame.font.SysFont("notosansmonocjkkr", 30)
     button_width = 400
     button_height = 80
@@ -376,7 +406,6 @@ def main_menu():
             # if pressing quit 'x' then stop
             if event.type == pygame.QUIT:
                 run = False
-                model.save_data()
             # if start button is pressed then start the game
             if event.type == pygame.MOUSEMOTION:
                 start_button.hoverEffect(position)
@@ -404,7 +433,8 @@ def choose_fighter():
     nelson_button = BigButton(BACKGROUND_GREY, WIDTH * (1 / 21), button_y, button_width,
                               button_height, button_font, NELSON, True, "lord_nelson", "Lord Nelson")
     commander_button = BigButton(BACKGROUND_GREY, WIDTH * (6 / 21), button_y, button_width,
-                                 button_height, button_font, COMMANDER, True, "commander_cosmonaut", "Commander Cosmonaut")
+                                 button_height, button_font, COMMANDER, True, "commander_cosmonaut",
+                                 "Commander Cosmonaut")
     pointy_button = BigButton(BACKGROUND_GREY, WIDTH * (11 / 21), button_y,
                               button_width, button_height, button_font, POINTY_BOY, True, "pointy_boy", "Pointy Boy")
     donut_button = BigButton(BACKGROUND_GREY, WIDTH * (16 / 21), button_y, button_width,
@@ -514,15 +544,17 @@ def choose_color(chosen_ship):
                 if back_button.isHovered(position):
                     choose_fighter()
                 if purple_button.isHovered(position):
-                    main(choose_ship(chosen_ship, "purple"), chosen_ship)
+                    main(choose_ship(chosen_ship, "purple"), chosen_ship, "purple")
                 if green_button.isHovered(position):
-                    main(choose_ship(chosen_ship, "green"), chosen_ship)
+                    main(choose_ship(chosen_ship, "green"), chosen_ship, "green")
                 if red_button.isHovered(position):
-                    main(choose_ship(chosen_ship, "red"), chosen_ship)
+                    main(choose_ship(chosen_ship, "red"), chosen_ship, "red")
                 if gold_button.isHovered(position):
                     if not gold_button.is_locked:
-                        main(choose_ship(chosen_ship, "gold"), chosen_ship)
+                        main(choose_ship(chosen_ship, "gold"), chosen_ship, "gold")
     pygame.quit()
 
 
+if os.path.isfile('Save_Data/temp_game_data.csv'):
+    os.remove("Save_Data/temp_game_data.csv")
 main_menu()

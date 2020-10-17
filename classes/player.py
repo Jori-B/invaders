@@ -10,7 +10,8 @@ class Player(Ship):
         super().__init__(x, y, health)
 
         self.ship_img = ship
-        self.laser_img = pygame.image.load(os.path.join("assets", "pixel_laser_yellow_" + str(stats.laser_width) + ".png"))
+        self.laser_img = pygame.image.load(
+            os.path.join("assets", "pixel_laser_yellow_" + str(stats.laser_width) + ".png"))
         # Mask for pixel perfect collision instead of square collision box
         self.mask = pygame.mask.from_surface(self.ship_img)
         self.max_health = health
@@ -46,3 +47,5 @@ class Player(Ship):
         # Green rectangle
         pygame.draw.rect(window, (0, 255, 0), (self.x, self.y + self.ship_img.get_height() + 20,
                                                self.ship_img.get_width() * (self.health / self.max_health), 10))
+
+    shots_fired = Ship.laser_counter
