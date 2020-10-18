@@ -1,4 +1,3 @@
 trial,block,is_gamification,shots_fired,ship_name,ship_color
-1,1,True,0,pointy_boy,red
-2,1,[True],0,['pointy_boy'],['red']
-3,1,[True],0,['pointy_boy'],['red']
+1,1,True,0,commander_cosmonaut,green
+2,1,[True],0,['commander_cosmonaut'],['green']

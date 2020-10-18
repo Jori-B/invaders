@@ -21,7 +21,7 @@ class Rectangle():
     def draw(self, window, outline=None, shade=True):
         # To draw the rectangle, this method is called
         if outline:
-            pygame.draw.rect(window, outline, (self.x-2, self.y-2, self.width+4, self.height+4), 0)
+            pygame.draw.rect(window, outline, (self.x - 2, self.y - 2, self.width + 4, self.height + 4), 3)
 
         # Draw a shadow below the rectangle
         if shade == True:

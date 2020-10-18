@@ -1,0 +1,2 @@
+,trial,start_time,rt,correct,fact_id,question,answer,question2,alpha,block,is_gamification,shots_fired,ship_name,ship_color
+0,1,5467,1363,False,32,14 x 9,126,9 x 14,0.3,1,True,0,pointy_boy,red

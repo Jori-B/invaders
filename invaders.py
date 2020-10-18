@@ -30,6 +30,14 @@ pygame.init()
 infoObject = pygame.display.Info()
 
 
+def create_new_player(ship, stats):
+    player = Player(WIDTH / 2, HEIGHT, ship, stats)
+    # Center the ship on screen
+    player.x -= (player.get_width() / 2)
+    player.y -= (player.get_height() + 50)
+    return player
+
+
 def main(ship, ship_name, ship_color):
     # Dictates if while loop is going to run
     run = True
@@ -38,7 +46,7 @@ def main(ship, ship_name, ship_color):
     level = 0
     lives = 3
     main_font = pygame.font.SysFont("notosansmonocjkkr", 30)
-    lost_font = pygame.font.SysFont("notosansmonocjkkr", 60)
+    # lost_font = pygame.font.SysFont("notosansmonocjkkr", 60)
     # If you want to know which fonts are available
     # print(src.font.get_fonts())
 
@@ -63,10 +71,7 @@ def main(ship, ship_name, ship_color):
     player_laser_velocity = 3 + stats.laser_speed
 
     # Define a player space ship at location
-    player = Player(WIDTH / 2, HEIGHT, ship, stats)
-    # Center the ship on screen
-    player.x -= (player.get_width() / 2)
-    player.y -= (player.get_height() + 50)
+    player = create_new_player(ship, stats)
 
     clock = pygame.time.Clock()
 
@@ -75,9 +80,12 @@ def main(ship, ship_name, ship_color):
 
     correct_count = 0
     total_count = 0
+    score = 0
 
     answering_question = False
     enemy_hit = None
+
+
 
     def show_answer(is_correct, answer, x, y):
 
@@ -105,14 +113,19 @@ def main(ship, ship_name, ship_color):
             correct_img.get_width() + 50, correct_img.get_height()))
 
         pygame.display.update()
-        # Show the correct answer for 2 seconds
-        time.sleep(3)
+        # Show the correct answer for a couple of seconds
+        if is_correct:
+            # Less time for when the answer is correct
+            time.sleep(1)
+        else:
+            time.sleep(3)
 
-    def kill_enemy(enemy):
-        enemy_center_loc = (enemy.x + enemy.get_width() / 2, enemy.y + enemy.get_height() / 2)
-        explosion = Explosion(enemy_center_loc, 'large')
+    def explode_object(object, is_enemy):
+        object_center_loc = (object.x + object.get_width() / 2, object.y + object.get_height() / 2)
+        explosion = Explosion(object_center_loc, 'large')
         all_sprites.add(explosion)
-        enemies.remove(enemy)
+        if is_enemy:
+            enemies.remove(object)
 
     def runaway_enemy(enemy, enemies, surface):
         enemy_center_loc = [enemy.x + enemy.get_width() / 2, enemy.y + enemy.get_height() / 2]
@@ -156,16 +169,23 @@ def main(ship, ship_name, ship_color):
 
         # Draw text (f strings embed variables)
         lives_label = main_font.render(f"Lives: ", 1, WHITE)
-        level_label = main_font.render(f"Level: {level}", 1, WHITE)
         correct_label = main_font.render(f"Solved {correct_count} of {total_count}", 1, WHITE)
+        level_label = main_font.render(f"Level: {level}", 1, WHITE)
+        score_label = main_font.render(f"Score: {score}", 1, WHITE)
         # Top left hand corner plus a little offset
         WINDOW.blit(lives_label, (10, 10))
         # Draw an amount of hearts in the top left corner indicating the amount of lives
         for life_cnt in range(1, lives + 1):
             WINDOW.blit(LIFE, (lives_label.get_width() + life_cnt*10 + ((life_cnt - 1) * LIFE.get_width()), 10 + LIFE.get_height()/4))
+        offset_right = 20
+        offset = 50
         # Top right hand corner (width screen minus width of label minus 10 pixels offset)
-        WINDOW.blit(level_label, (WIDTH - level_label.get_width() - 10, 10))
-        WINDOW.blit(correct_label, (WIDTH - level_label.get_width() - correct_label.get_width() - 50, 10))
+        score_x = WIDTH - score_label.get_width() - offset_right
+        level_x = score_x - level_label.get_width() - offset
+        correct_x = level_x - correct_label.get_width() - offset
+        WINDOW.blit(score_label, (score_x, 10))
+        WINDOW.blit(level_label, (level_x, 10))
+        WINDOW.blit(correct_label, (correct_x, 10))
         # Draw all enemies (before you initialize the player so the player goes over them)
         for enemy in enemies:
             enemy.draw(WINDOW)
@@ -177,51 +197,28 @@ def main(ship, ship_name, ship_color):
         WINDOW.blit(BACKGROUND, (0, 0))
 
         # No more lives or health then you lost
-        if lives <= 0 or player.health <= 0:
+        if lives <= 0:
             lost = True
             lost_count += 1
+        if player.health <= 0:
+            # Explode the ship when health goes below zero
+            explode_object(player, False)
+            if lives > 0:
+                # Create a new ship
+                player = create_new_player(ship, stats)
+            lives -= 1
         if lost:
             # FPS * 3 = 3 sec
             # So for 3 seconds, show a "You lost message"
-            # if lost_count > FPS * 3:
+            if lost_count > FPS * 3:
             #     run = False
-            # else:
+                lost_screen(ship, ship_name, ship_color)
+                run = False
+            else:
+                for enemy in enemies:
+                    explode_object(enemy, True)
 
-            WINDOW.blit(BACKGROUND,
-                        (WIDTH, HEIGHT, 0, 0))
-            lost_label = lost_font.render("You Lost!", 1, WHITE)
-
-            WINDOW.blit(lost_label,
-                        (WIDTH / 2 - lost_label.get_width() / 2, HEIGHT / 2 - lost_label.get_height()))
-
-            button_font = pygame.font.SysFont("notosansmonocjkkr", 20)
-            button_width = 180
-            button_height = 60
-            menu_button = Button(BACKGROUND_GREY, WIDTH / 2 - 1.5 * button_width, HEIGHT / 2 + lost_label.get_height(), button_width, button_height, button_font,
-                                 "Menu")
-            menu_button.draw(WINDOW, WHITE)
-            restart_button = Button(BACKGROUND_GREY, WIDTH / 2 + button_width / 2, HEIGHT / 2 + lost_label.get_height(), button_width, button_height, button_font,
-                                 "Try again")
-            restart_button.draw(WINDOW, WHITE)
-            # Draw the lost message and buttons
-            pygame.display.update()
-            for event in pygame.event.get():
-                position = pygame.mouse.get_pos()
-                # TODO: Hover effect working
-                if event.type == pygame.MOUSEMOTION:
-                    restart_button.hoverEffect(position)
-                    menu_button.hoverEffect(position)
-
-                if event.type == pygame.MOUSEBUTTONDOWN:
-                    # Setting run to false bring you back to menu
-                    if menu_button.isHovered(position):
-                        run = False
-                    # Restart the game
-                    # TODO: Check to see if this works with saving data
-                    if restart_button.isHovered(position):
-                        main(ship, ship_name, ship_color)
-                pygame.display.update()
-            continue
+                continue
 
 
         # If there are no more enemies on screen then
@@ -292,13 +289,13 @@ def main(ship, ship_name, ship_color):
                     enemy.shoot()
                 # When the player collides with the enemy the enemy is removed and player's health reduces
                 elif collide(enemy, player):
-                    player.health -= 10
-                    kill_enemy(enemy)
+                    player.health -= 50
+                    explode_object(enemy, True)
 
-                # If the enemy moves off screen lose a life
+                # If the enemy moves off the bottom of the screen reduce player's health by half
                 if enemy.y + enemy.get_height() > HEIGHT:
-                    lives -= 1
-                    enemies.remove(enemy)
+                    player.health -= 50
+                    explode_object(enemy, True)
 
         redraw_window()
 
@@ -308,7 +305,8 @@ def main(ship, ship_name, ship_color):
         if has_hit_enemy and not answering_question:
 
             enemy_hit = enemy
-
+            # Increase the player's score when they hit an enemy
+            score += 50
             for enemy in enemies[:]:
                 enemy.stop_lasers()
 
@@ -389,7 +387,7 @@ def main(ship, ship_name, ship_color):
                             print("Correct!")
                             resp = Response(new_fact, question_onset_time, response_time, True)
                             model.m.register_response(resp)
-                            kill_enemy(enemy_hit)
+                            explode_object(enemy_hit, True)
                         else:
                             print("Wrong! The correct answer was " + str(answer))
                             resp = Response(new_fact, question_onset_time, response_time, False)
@@ -397,10 +395,19 @@ def main(ship, ship_name, ship_color):
                             runaway_enemy(enemy_hit, enemies, WINDOW)
 
                         is_correct = str(answer) == string
-                        show_answer(is_correct, answer, x, y + ANSWER_BOX.get_height())
                         if is_correct:
+                            bonus_score = 0
+                            # Max response time is 10 seconds -> 10.000 ms
+                            if response_time < 10000:
+                                # ( 10.000 ms - response time in ms ) / 100 = bonus score
+                                # So if the player responds within 10 seconds they get a bonus
+                                # Make the bonus score an int so that it's got no decimal places
+                                bonus_score = int((10000 - response_time) / 100)
+                            score = score + 50 + bonus_score
                             correct_count += 1
                         total_count += 1
+                        show_answer(is_correct, answer, x, y + ANSWER_BOX.get_height())
+
                         # Update enemy velocity according to the amount of facts that have been seen
                         enemy_velocity = 0.5 + (
                                 model.get_count_seen_facts(int(round(time.time() * 1000)) - START_TIME) * 0.1)
@@ -465,6 +472,52 @@ def main_menu():
                 if start_button.isHovered(position):
                     # initi slipsta
                     choose_fighter()
+    pygame.quit()
+
+
+def lost_screen(ship, ship_name, ship_color):
+    lost_font = pygame.font.SysFont("notosansmonocjkkr", 60)
+    lost_label = lost_font.render("You Lost!", 1, WHITE)
+    button_font = pygame.font.SysFont("notosansmonocjkkr", 20)
+    button_width = 180
+    button_height = 60
+    menu_button = Button(BACKGROUND_GREY, WIDTH / 2 - 1.5 * button_width, HEIGHT / 2 + lost_label.get_height(),
+                         button_width, button_height, button_font,
+                         "Menu")
+    restart_button = Button(BACKGROUND_GREY, WIDTH / 2 + button_width / 2, HEIGHT / 2 + lost_label.get_height(),
+                            button_width, button_height, button_font,
+                            "Try again")
+
+    run = True
+    while run:
+
+        WINDOW.blit(BACKGROUND, (0, 0))
+        WINDOW.blit(lost_label,
+                    (WIDTH / 2 - lost_label.get_width() / 2, HEIGHT / 2 - lost_label.get_height()))
+        menu_button.draw(WINDOW, WHITE)
+        restart_button.draw(WINDOW, WHITE)
+
+        pygame.display.update()
+        for event in pygame.event.get():
+            position = pygame.mouse.get_pos()
+
+            # if pressing quit 'x' then stop
+            if event.type == pygame.QUIT:
+                run = False
+            # if start button is pressed then start the game
+            if event.type == pygame.MOUSEMOTION:
+                restart_button.hoverEffect(position)
+                menu_button.hoverEffect(position)
+
+            # if start button is pressed then start the game
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                # Setting run to false bring you back to menu
+                if menu_button.isHovered(position):
+                    main_menu()
+                    run = False
+                # Restart the game
+                if restart_button.isHovered(position):
+                    main(ship, ship_name, ship_color)
     pygame.quit()
 
 
