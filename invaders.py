@@ -85,8 +85,6 @@ def main(ship, ship_name, ship_color):
     answering_question = False
     enemy_hit = None
 
-
-
     def show_answer(is_correct, answer, x, y):
 
         if is_correct:
@@ -192,9 +190,21 @@ def main(ship, ship_name, ship_color):
         # Draw the player
         player.draw(WINDOW)
 
+    # Create one background on top of another background and move both downwards to make it seem like you're moving
+    # through space
+    y_background_new = -HEIGHT
+    y_background = 0
     while run:
         clock.tick(FPS)
-        WINDOW.blit(BACKGROUND, (0, 0))
+
+        # Move background downwards
+        WINDOW.blit(BACKGROUND, (0, y_background_new))
+        WINDOW.blit(BACKGROUND, (0, y_background))
+        y_background += 0.3
+        y_background_new += 0.3
+        if y_background_new == 0:
+            y_background_new = -HEIGHT
+            y_background = 0
 
         # No more lives or health then you lost
         if lives <= 0:
@@ -224,6 +234,8 @@ def main(ship, ship_name, ship_color):
         # If there are no more enemies on screen then
         if len(enemies) == 0 or len(enemies) == 1:
             level += 1
+            y_background = 0
+            y_background_new = - HEIGHT
             wave_length += 3
             spawn_box = random.sample(range(1, 6), 5)
 
@@ -523,6 +535,71 @@ def lost_screen(ship, ship_name, ship_color):
                     main(ship, ship_name, ship_color)
     pygame.quit()
 
+def show_explanation(ship, chosen_ship, color):
+    def render_multi_line(text, x, y, fsize, font):
+        lines = text.splitlines()
+        x_all = 0
+        for i, l in enumerate(lines):
+            label = font.render(l, 1, WHITE)
+            if not x_all:
+                x_all = get_middle_x(label)
+            WINDOW.blit(label, (x_all, y + fsize * i))
+            max_y = y + fsize * i
+        return max_y
+
+    def get_middle_x(object):
+        if isinstance(object, int):
+            return WIDTH / 2 - object / 2
+        else:
+            return WIDTH / 2 - object.get_width() / 2
+
+
+    font_size = 25
+    explanation_font_general = pygame.font.SysFont("Arial", font_size)
+    explanation_font = pygame.font.SysFont("Arial", font_size)
+    font_press_any_key = pygame.font.SysFont("Arial", 35)
+    explanation_general = "This game is developed for an experiment. \n" \
+                          "In this experiment you will play with a ship \n" \
+                          "that shoots aliens. \n" \
+                          "Whenever an alien is shot a killcode is asked. \n" \
+                          "Solve the multiplications for the correct killcode. \n" \
+                          "The entire experiment will take 12 minutes."
+    explanation_numpad = "Press the arrow keys to move the ship around"
+    explanation_spacebar = "To shoot at an alien press the spacebar"
+    explanation_press_any_key = "PRESS ANY KEY TO CONTINUE"
+    explanation_numpad_label = explanation_font.render(explanation_numpad, 1, WHITE)
+    explanation_spacebar_label = explanation_font.render(explanation_spacebar, 1, WHITE)
+    explanation_press_any_key_label = font_press_any_key.render(explanation_press_any_key, 1, DARK_BLUE)
+    text_x = WIDTH / 2 - explanation_numpad_label.get_width() / 2
+    run = True
+    while run:
+        WINDOW.blit(BACKGROUND, (0, 0))
+        max_y_general = render_multi_line(explanation_general, text_x, 50, font_size + 5, explanation_font_general)
+
+        explanation_numpad_y = max_y_general + font_size * 3
+        numpad_y = explanation_numpad_y + font_size * 2
+        explanation_spacebar_y = numpad_y + NUMPAD.get_height() + font_size * 2
+        spacebar_y = explanation_spacebar_y + font_size * 2
+        press_any_key_y = spacebar_y + + NUMPAD.get_height() + font_size * 2
+
+        WINDOW.blit(explanation_numpad_label, (get_middle_x(explanation_numpad_label), explanation_numpad_y))
+        WINDOW.blit(NUMPAD, (get_middle_x(NUMPAD.get_width()), numpad_y))
+
+        WINDOW.blit(explanation_spacebar_label, (get_middle_x(explanation_spacebar_label), explanation_spacebar_y))
+        WINDOW.blit(SPACEBAR, (get_middle_x(SPACEBAR.get_width()), spacebar_y))
+        WINDOW.blit(explanation_press_any_key_label, (get_middle_x(explanation_press_any_key_label), press_any_key_y))
+
+        events = pygame.event.get()
+        pygame.display.update()
+        for event in events:
+            # if pressing quit 'x' then stop
+            if event.type == pygame.QUIT:
+                run = False
+
+            if event.type == pygame.KEYDOWN:
+                run = False
+                main(ship, chosen_ship, color)
+
 
 def choose_fighter():
     title_font = pygame.font.SysFont("notosansmonocjkkr", 40)
@@ -647,14 +724,18 @@ def choose_color(chosen_ship):
                 if back_button.isHovered(position):
                     choose_fighter()
                 if purple_button.isHovered(position):
-                    main(choose_ship(chosen_ship, "purple"), chosen_ship, "purple")
+                    show_explanation(choose_ship(chosen_ship, "purple"), chosen_ship, "purple")
+                    # main(choose_ship(chosen_ship, "purple"), chosen_ship, "purple")
                 if green_button.isHovered(position):
-                    main(choose_ship(chosen_ship, "green"), chosen_ship, "green")
+                    show_explanation(choose_ship(chosen_ship, "purple"), chosen_ship, "purple")
+                    # main(choose_ship(chosen_ship, "green"), chosen_ship, "green")
                 if red_button.isHovered(position):
-                    main(choose_ship(chosen_ship, "red"), chosen_ship, "red")
+                    show_explanation(choose_ship(chosen_ship, "purple"), chosen_ship, "purple")
+                    # main(choose_ship(chosen_ship, "red"), chosen_ship, "red")
                 if gold_button.isHovered(position):
                     if not gold_button.is_locked:
-                        main(choose_ship(chosen_ship, "gold"), chosen_ship, "gold")
+                        show_explanation(choose_ship(chosen_ship, "purple"), chosen_ship, "purple")
+                        # main(choose_ship(chosen_ship, "gold"), chosen_ship, "gold")
     pygame.quit()
 
 

@@ -59,6 +59,9 @@ LIFE = pygame.image.load(os.path.join("assets", "heart.png"))
 BACKGROUND = pygame.transform.scale(pygame.image.load(os.path.join("assets", "background_black.png")), (WIDTH, HEIGHT))
 BACKGROUND_SLIM = pygame.transform.scale(pygame.image.load(os.path.join("assets", "WhiteWallpaper.png")), (WIDTH, HEIGHT))
 
+NUMPAD = pygame.image.load(os.path.join("assets", "keypad.png"))
+SPACEBAR = pygame.image.load(os.path.join("assets", "spacebar.png"))
+
 # Answer Box
 ANSWER_BOX = pygame.image.load(os.path.join("assets", "answer_button.png"))
 CORRECT_IMG = pygame.image.load(os.path.join("assets", "correct.png"))

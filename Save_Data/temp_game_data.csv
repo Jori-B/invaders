@@ -1,12 +1,2 @@
 trial,block,is_gamification,shots_fired,ship_name,ship_color
-1,1,True,0,commander_cosmonaut,purple
-2,1,[True],0,['commander_cosmonaut'],['purple']
-3,1,[True],0,['commander_cosmonaut'],['purple']
-4,1,[True],0,['commander_cosmonaut'],['purple']
-5,1,[True],0,['commander_cosmonaut'],['purple']
-6,1,[True],0,['commander_cosmonaut'],['purple']
-7,1,[True],0,['commander_cosmonaut'],['purple']
-8,1,[True],0,['commander_cosmonaut'],['purple']
-9,1,[True],0,['commander_cosmonaut'],['purple']
-10,1,[True],0,['commander_cosmonaut'],['purple']
-11,1,[True],0,['commander_cosmonaut'],['purple']
+1,1,True,0,pointy_boy,purple
