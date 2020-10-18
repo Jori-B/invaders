@@ -17,7 +17,8 @@ class Rectangle():
         self.font2 = font2
         self.color1 = color1
         self.color2= color2
-def draw(self, window, outline=None, shade=True):
+    
+    def draw(self, window, outline=None, shade=True):
         # To draw the rectangle, this method is called
         if outline:
             pygame.draw.rect(window, outline, (self.x-2, self.y-2, self.width+4, self.height+4), 0)
@@ -25,6 +26,7 @@ def draw(self, window, outline=None, shade=True):
         # Draw a shadow below the rectangle
         if shade == True:
             pygame.draw.rect(window, BLACK, (self.x + offset, self.y + offset, self.width, self.height), 0)
+
         # Draw the button
         pygame.draw.rect(window, self.color, (self.x, self.y, self.width, self.height), 0)
 

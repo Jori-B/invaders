@@ -87,7 +87,7 @@ def main(ship, ship_name, ship_color):
             main_font_size = 30
             main_font = pygame.font.SysFont("notosansmonocjkkr", main_font_size)
             correct_box = Rectangle(WHITE, x + correct_img.get_width(), y, 250, 100, main_font, main_font, False, text)
-            correct_box.draw(WINDOW)
+            correct_box.draw(WINDOW, None, True)
 
         else:
             text = "Incorrect! Answer was: "
@@ -98,7 +98,7 @@ def main(ship, ship_name, ship_color):
 
             correct_box = Rectangle(WHITE, x + correct_img.get_width(), y, 250, 100, main_font, answer_font, True, text,
                                     str(answer))
-            correct_box.draw(WINDOW)
+            correct_box.draw(WINDOW, None, True)
 
         WINDOW.blit(correct_img, (
             x, y + 15,
@@ -363,9 +363,9 @@ def main(ship, ship_name, ship_color):
             width = 400
             height = 150
 
-            correct_box = Rectangle(WHITE, x, y, width, height, main_font, main_font, True, code_text, str(question),
-                                    RED, BLACK_NON_TRANSPARENT)
-            correct_box.draw(WINDOW)
+            correct_box = Rectangle(WHITE, x, y, width, height, main_font, main_font, True, code_text, str(question), RED, BLACK_NON_TRANSPARENT)
+
+            correct_box.draw(WINDOW, None, True)
 
             txt_surface = main_font.render(string, True, pygame.Color('black'))
             txt_y = y + (height / 4) * 3 - (txt_surface.get_height() / 4) * 3 - 5
