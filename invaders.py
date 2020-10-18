@@ -120,9 +120,9 @@ def main(ship, ship_name, ship_color):
         else:
             time.sleep(3)
 
-    def explode_object(object, is_enemy):
+    def explode_object(object, is_enemy, score=False):
         object_center_loc = (object.x + object.get_width() / 2, object.y + object.get_height() / 2)
-        explosion = Explosion(object_center_loc, 'large')
+        explosion = Explosion(object_center_loc, 'large', score)
         all_sprites.add(explosion)
         if is_enemy:
             enemies.remove(object)
@@ -380,21 +380,8 @@ def main(ship, ship_name, ship_color):
 
                         # Record response time
                         response_time = int(round(time.time() * 1000)) - question_onset_time_for_RT_calc
-                        # Log the response
-                        # Stringify answer instead of typecasting string as int (since a string might not
-                        # be castable)
-                        if str(answer) == string:
-                            print("Correct!")
-                            resp = Response(new_fact, question_onset_time, response_time, True)
-                            model.m.register_response(resp)
-                            explode_object(enemy_hit, True)
-                        else:
-                            print("Wrong! The correct answer was " + str(answer))
-                            resp = Response(new_fact, question_onset_time, response_time, False)
-                            model.m.register_response(resp)
-                            runaway_enemy(enemy_hit, enemies, WINDOW)
 
-                        is_correct = str(answer) == string
+                        is_correct = (str(answer) == string)
                         if is_correct:
                             bonus_score = 0
                             # Max response time is 10 seconds -> 10.000 ms
@@ -403,9 +390,25 @@ def main(ship, ship_name, ship_color):
                                 # So if the player responds within 10 seconds they get a bonus
                                 # Make the bonus score an int so that it's got no decimal places
                                 bonus_score = int((10000 - response_time) / 100)
-                            score = score + 50 + bonus_score
+                            points_added = 50 + bonus_score
+                            score = score + points_added
                             correct_count += 1
                         total_count += 1
+                        # Log the response
+                        # Stringify answer instead of typecasting string as int (since a string might not
+                        # be castable)
+                        if is_correct:
+                            print("Correct!")
+                            resp = Response(new_fact, question_onset_time, response_time, True)
+                            model.m.register_response(resp)
+                            explode_object(enemy_hit, True, points_added)
+                        else:
+                            print("Wrong! The correct answer was " + str(answer))
+                            resp = Response(new_fact, question_onset_time, response_time, False)
+                            model.m.register_response(resp)
+                            runaway_enemy(enemy_hit, enemies, WINDOW)
+
+
                         show_answer(is_correct, answer, x, y + ANSWER_BOX.get_height())
 
                         # Update enemy velocity according to the amount of facts that have been seen

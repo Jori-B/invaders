@@ -1,0 +1,7 @@
+,trial,start_time,rt,correct,fact_id,question,answer,question2,alpha,block,is_gamification,shots_fired,ship_name,ship_color
+0,1,6641.0,2213.0,True,12.0,9 x 5,45,5 x 9,0.3,1,True,0,pointy_boy,red
+1,2,15035.0,1985.0,True,12.0,9 x 5,45,5 x 9,0.3,1,[True],0,['pointy_boy'],['red']
+2,3,26210.0,9155.0,False,32.0,14 x 9,126,9 x 14,0.3,1,[True],0,['pointy_boy'],['red']
+3,4,40731.0,3215.0,True,32.0,14 x 9,126,9 x 14,0.3,1,[True],0,['pointy_boy'],['red']
+4,5,49028.0,2097.0,True,4.0,6 x 5,30,5 x 6,0.3,1,[True],0,['pointy_boy'],['red']
+5,6,,,,,,,,,1,[True],0,['pointy_boy'],['red']
