@@ -52,6 +52,9 @@ GREEN_LASER = pygame.image.load(os.path.join("assets", "pixel_laser_green.png"))
 BLUE_LASER = pygame.image.load(os.path.join("assets", "pixel_laser_blue.png"))
 YELLOW_LASER = pygame.image.load(os.path.join("assets", "pixel_laser_yellow_1.png"))
 
+# Heart icon
+LIFE = pygame.image.load(os.path.join("assets", "heart.png"))
+
 # Background
 BACKGROUND = pygame.transform.scale(pygame.image.load(os.path.join("assets", "background_black.png")), (WIDTH, HEIGHT))
 BACKGROUND_SLIM = pygame.transform.scale(pygame.image.load(os.path.join("assets", "WhiteWallpaper.png")), (WIDTH, HEIGHT))
