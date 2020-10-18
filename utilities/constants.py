@@ -16,6 +16,7 @@ MENU_TEXT = pygame.image.load(os.path.join("assets/menu", "header.png"))
 MENU_SHIP = pygame.image.load(os.path.join("assets/menu", "menu_ship.png"))
 # Colors
 BACKGROUND_GREY = (59, 56, 56, 0)
+BACKGROUND_WHITE = (255, 255, 255,0)
 BLACK = (0, 0, 0, 0.5)
 BLACK_NON_TRANSPARENT = (0, 0, 0)
 WHITE = (255, 255, 255)
@@ -25,6 +26,8 @@ RED = (245, 0, 87)
 LIGHT_BLUE = (0, 176, 255)
 GREEN = (0, 191, 166)
 ORANGE = (249, 168, 38)
+
+
 
 # Load images
 RED_SPACE_SHIP = pygame.image.load(os.path.join("assets", "pixel_ship_red_small.png"))
@@ -51,8 +54,7 @@ YELLOW_LASER = pygame.image.load(os.path.join("assets", "pixel_laser_yellow_1.pn
 
 # Background
 BACKGROUND = pygame.transform.scale(pygame.image.load(os.path.join("assets", "background_black.png")), (WIDTH, HEIGHT))
-# Heart icon
-LIFE = pygame.image.load(os.path.join("assets", "heart.png"))
+BACKGROUND_SLIM = pygame.transform.scale(pygame.image.load(os.path.join("assets", "WhiteWallpaper.png")), (WIDTH, HEIGHT))
 
 # Answer Box
 ANSWER_BOX = pygame.image.load(os.path.join("assets", "answer_button.png"))
