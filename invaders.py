@@ -178,7 +178,9 @@ def main(ship, ship_name, ship_color):
         WINDOW.blit(lives_label, (10, 10))
         # Draw an amount of hearts in the top left corner indicating the amount of lives
         for life_cnt in range(1, lives + 1):
-            WINDOW.blit(LIFE, (lives_label.get_width() + life_cnt*10 + ((life_cnt - 1) * LIFE.get_width()), 10 + LIFE.get_height()/4))
+            WINDOW.blit(LIFE, (
+                lives_label.get_width() + life_cnt * 10 + ((life_cnt - 1) * LIFE.get_width()),
+                10 + LIFE.get_height() / 4))
         offset_right = 20
         offset = 50
         # Top right hand corner (width screen minus width of label minus 10 pixels offset)
@@ -225,7 +227,7 @@ def main(ship, ship_name, ship_color):
             # FPS * 3 = 3 sec
             # So for 3 seconds, show a "You lost message"
             if lost_count > FPS * 3:
-            #     run = False
+                #     run = False
                 lost_screen(ship, ship_name, ship_color)
                 run = False
             else:
@@ -233,7 +235,6 @@ def main(ship, ship_name, ship_color):
                     explode_object(enemy, True)
 
                 continue
-
 
         # If there are no more enemies on screen then
         if len(enemies) == 0 or len(enemies) == 1:
@@ -266,7 +267,7 @@ def main(ship, ship_name, ship_color):
                 if not game_data.empty:
                     model_data = model.save_model_data()
                     save_data = pd.merge(model_data, game_data, on='trial', how='outer')
-                    save_data.to_csv(PATH, encoding="UTF-8")
+                    save_data.to_csv(PATH, index=False)
                 # YOU COULD CHANGE THIS TO quit() to press 'x' and quit the program
                 run = False
 
@@ -335,33 +336,6 @@ def main(ship, ship_name, ship_color):
             question_onset_time_for_RT_calc = int(round(time.time() * 1000))
             question_onset_time = question_onset_time_for_RT_calc - START_TIME
 
-            # Record game data
-            enemies_on_screen = 0
-            for each_enemy in enemies[:]:
-                if each_enemy.y > 0:
-                    enemies_on_screen += 1
-
-            if temp_lives != lives:
-                temp_shots_fired = 0
-
-            if os.path.isfile('Save_Data/temp_game_data.csv'):
-                game_data = pd.read_csv('Save_Data/temp_game_data.csv')
-                trial_nr = game_data['trial'].iloc[-1]
-            trial_nr += 1
-            d = {'trial': trial_nr, 'block': block, 'is_gamification': [is_gamification],
-                 'shots_fired': player.shots_fired - temp_shots_fired, 'shots_fired_total': player.shots_fired,
-                 'ship_name': [ship_name], 'ship_color': [ship_color], 'lives': lives, 'level': level,
-                 'enemies_on_screen': enemies_on_screen}
-            temp_shots_fired = player.shots_fired
-            temp_lives = lives
-            if game_data.empty:
-                game_data = pd.DataFrame(data=d)
-            else:
-                game_data = game_data.append(d, ignore_index=True)
-                print(game_data)
-            if not game_data.empty:
-                game_data.to_csv("Save_Data/temp_game_data.csv", index=False)
-
             # Get a new question from the model
             new_fact = model.get_next_fact()
             answer = f"{new_fact[2]}"
@@ -387,7 +361,8 @@ def main(ship, ship_name, ship_color):
             width = 400
             height = 150
 
-            correct_box = Rectangle(WHITE, x, y, width, height, main_font, main_font, True, code_text, str(question), RED, BLACK_NON_TRANSPARENT)
+            correct_box = Rectangle(WHITE, x, y, width, height, main_font, main_font, True, code_text, str(question),
+                                    RED, BLACK_NON_TRANSPARENT)
 
             correct_box.draw(WINDOW, None, True)
 
@@ -434,12 +409,37 @@ def main(ship, ship_name, ship_color):
                             model.m.register_response(resp)
                             runaway_enemy(enemy_hit, enemies, WINDOW)
 
+                        # Record game data
+                        enemies_on_screen = 0
+                        for each_enemy in enemies[:]:
+                            if each_enemy.y > 0:
+                                enemies_on_screen += 1
+
+                        if temp_lives != lives:
+                            temp_shots_fired = 0
+
+                        if os.path.isfile('Save_Data/temp_game_data.csv'):
+                            game_data = pd.read_csv('Save_Data/temp_game_data.csv')
+                            trial_nr = game_data['trial'].iloc[-1]
+                        trial_nr += 1
+                        d = {'trial': trial_nr, 'block': block, 'is_gamification': [is_gamification],
+                             'answer_given': string, 'shots_fired': player.shots_fired - temp_shots_fired,
+                             'shots_fired_total': player.shots_fired,
+                             'ship_name': [ship_name], 'ship_color': [ship_color], 'lives': lives, 'level': level,
+                             'enemies_on_screen': enemies_on_screen}
+                        temp_shots_fired = player.shots_fired
+                        temp_lives = lives
+                        if game_data.empty:
+                            game_data = pd.DataFrame(data=d)
+                        else:
+                            game_data = game_data.append(d, ignore_index=True)
+                            game_data.to_csv("Save_Data/temp_game_data.csv", index=False)
 
                         show_answer(is_correct, answer, x, y + ANSWER_BOX.get_height())
 
                         # Update enemy velocity according to the amount of facts that have been seen
                         enemy_velocity = 0.5 + (
-                                model.get_count_seen_facts(int(round(time.time() * 1000)) - START_TIME) * 0.1)
+                                model.get_count_seen_facts(int(round(time.time() * 1000)) - START_TIME) * 0.05)
 
                         answering_question = False
                         enemy_hit = None
@@ -488,6 +488,7 @@ def main_menu():
 
             # if pressing quit 'x' then stop
             if event.type == pygame.QUIT:
+                save_full_experiment_data()
                 run = False
             # if start button is pressed then start the game
             if event.type == pygame.MOUSEMOTION:
@@ -549,6 +550,7 @@ def lost_screen(ship, ship_name, ship_color):
                     main(ship, ship_name, ship_color)
     pygame.quit()
 
+
 def show_explanation(ship, chosen_ship, color):
     def render_multi_line(text, x, y, fsize, font):
         lines = text.splitlines()
@@ -566,7 +568,6 @@ def show_explanation(ship, chosen_ship, color):
             return WIDTH / 2 - object / 2
         else:
             return WIDTH / 2 - object.get_width() / 2
-
 
     font_size = 25
     explanation_font_general = pygame.font.SysFont("Arial", font_size)
@@ -654,6 +655,7 @@ def choose_fighter():
 
             # if pressing quit 'x' then stop
             if event.type == pygame.QUIT:
+                save_full_experiment_data()
                 run = False
             # if start button is pressed then start the game
             if event.type == pygame.MOUSEMOTION:
@@ -724,6 +726,7 @@ def choose_color(chosen_ship):
 
             # if pressing quit 'x' then stop
             if event.type == pygame.QUIT:
+                save_full_experiment_data()
                 run = False
             # if start button is pressed then start the game
             if event.type == pygame.MOUSEMOTION:
@@ -751,6 +754,16 @@ def choose_color(chosen_ship):
                         show_explanation(choose_ship(chosen_ship, "purple"), chosen_ship, "purple")
                         # main(choose_ship(chosen_ship, "gold"), chosen_ship, "gold")
     pygame.quit()
+
+
+def save_full_experiment_data():
+    if os.path.isfile(PATH):
+        experiment_data = pd.read_csv(PATH)
+        # if os.path.isfile(FINAL_PATH):
+        #     old_experiment_data = pd.read_csv(FINAL_PATH)
+        #     experiment_data = old_experiment_data.append(experiment_data, ignore_index=True)
+        os.remove(PATH)
+        experiment_data.to_csv(FINAL_PATH, index=False)
 
 
 if os.path.isfile('Save_Data/temp_game_data.csv'):

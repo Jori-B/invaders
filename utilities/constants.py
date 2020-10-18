@@ -135,4 +135,5 @@ for i in range(5):
 all_sprites = pygame.sprite.Group()
 
 START_TIME = int(round(time.time() * 1000))
-PATH = f"Save_Data/save_data_{random.choice(string.ascii_letters)}{START_TIME % 10000}"
+PATH = "Save_Data/temp_merged_save_data.csv"
+FINAL_PATH = f"Save_Data/experiment_data_subject_{random.choice(string.ascii_letters)}{START_TIME % 1000}.csv"

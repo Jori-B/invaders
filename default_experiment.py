@@ -70,7 +70,7 @@ def main():
             answer_font = pygame.font.SysFont("notosansmonocjkkr", 30)
 
             correct_box = Rectangle(WHITE, x + correct_img.get_width(), y, 250, 100, main_font, answer_font, True, text,
-                                    str(answer),)
+                                    str(answer), )
             correct_box.draw(WINDOW, None, False)
 
         WINDOW.blit(correct_img, (
@@ -93,35 +93,22 @@ def main():
         for event in events:
             # if the 'x' on the right top is pressed the game is quit
             if event.type == pygame.QUIT:
-                # YOU COULD CHANGE THIS TO quit() to press 'x' and quit the program
+                # Merge and save data from model and game in case the game is completely closed
                 if not game_data.empty:
                     model_data = model.save_model_data()
                     save_data = pd.merge(model_data, game_data, on='trial', how='outer')
-                    save_data.to_csv(PATH, encoding="UTF-8")
-
+                    save_data.to_csv(PATH, index=False)
+                # YOU COULD CHANGE THIS TO quit() to press 'x' and quit the program
                 run = False
 
         # Laser velocity needs to be negative since the y value is lower upwards the screen, meaning laser will go up
         # TODO: Extra parameter SlimStampen question
-        #has_hit_enemy, enemy = player.move_lasers(-laser_velocity, enemies, WINDOW)
+        # has_hit_enemy, enemy = player.move_lasers(-laser_velocity, enemies, WINDOW)
         if not answering_question:
 
-            if os.path.isfile('Save_Data/temp_basic_slimstampen_data.csv'):
-                game_data = pd.read_csv('Save_Data/temp_basic_slimstampen_data.csv')
-                trial_nr = game_data['trial'].iloc[-1]
-            trial_nr += 1
-            d = {'trial': trial_nr, 'block': block, 'is_gamification': [is_gamification]}
-
-            if game_data.empty:
-                game_data = pd.DataFrame(data=d)
-            else:
-                game_data = game_data.append(d, ignore_index=True)
-                print(game_data)
-            if not game_data.empty:
-                game_data.to_csv("Save_Data/temp_basic_slimstampen_data.csv", index=False)
-
             # Record question onset time
-            question_onset_time = int(round(time.time() * 1000)) - START_TIME
+            question_onset_time_for_RT_calc = int(round(time.time() * 1000))
+            question_onset_time = question_onset_time_for_RT_calc - START_TIME
             # Get a new question from the model
             new_fact = model.get_next_fact()
             answer = f"{new_fact[2]}"
@@ -163,7 +150,7 @@ def main():
                     if event.key == pygame.K_RETURN:
 
                         # Record response time
-                        response_time = int(round(time.time() * 1000)) - question_onset_time
+                        response_time = int(round(time.time() * 1000)) - question_onset_time_for_RT_calc
                         # Log the response
                         # Stringify answer instead of typecasting string as int (since a string might not
                         # be castable)
@@ -171,18 +158,31 @@ def main():
                             print("Correct!")
                             resp = Response(new_fact, question_onset_time, response_time, True)
                             model.m.register_response(resp)
-                            #kill_enemy(enemy_hit)
+                            # kill_enemy(enemy_hit)
                         else:
                             print("Wrong! The correct answer was " + str(answer))
                             resp = Response(new_fact, question_onset_time, response_time, False)
                             model.m.register_response(resp)
-                            #runaway_enemy(enemy_hit, enemies, WINDOW)
+                            # runaway_enemy(enemy_hit, enemies, WINDOW)
+
+                        if os.path.isfile('Save_Data/temp_basic_slimstampen_data.csv'):
+                            game_data = pd.read_csv('Save_Data/temp_basic_slimstampen_data.csv')
+                            trial_nr = game_data['trial'].iloc[-1]
+                        trial_nr += 1
+                        d = {'trial': trial_nr, 'block': block, 'is_gamification': [is_gamification],
+                             'answer_given': string}
+
+                        if game_data.empty:
+                            game_data = pd.DataFrame(data=d)
+                        else:
+                            game_data = game_data.append(d, ignore_index=True)
+                            game_data.to_csv("Save_Data/temp_basic_slimstampen_data.csv", index=False)
 
                         show_answer(str(answer) == string, answer, x, y + ANSWER_BOX.get_height())
 
                         # Update enemy velocity according to the amount of facts that have been seen
                         # enemy_velocity = 0.5 + (
-                                # model.get_count_seen_facts(int(round(time.time() * 1000)) - START_TIME) * 0.1)
+                        # model.get_count_seen_facts(int(round(time.time() * 1000)) - START_TIME) * 0.1)
 
                         answering_question = False
                         enemy_hit = None
@@ -197,40 +197,48 @@ def main():
 
 
 def main_menu():
-    model = Model()
-
     button_font = pygame.font.SysFont("notosansmonocjkkr", 30)
     button_width = 400
     button_height = 80
-    button_x = WIDTH/2 - button_width/2
-    start_button_y = 3*HEIGHT/4
+    button_x = WIDTH / 2 - button_width / 2
+    start_button_y = 3 * HEIGHT / 4
     start_button = Button(BACKGROUND_GREY, button_x, start_button_y, button_width,
                           button_height, button_font, "Start game!")
-    
+
     run = True
     while run:
 
         WINDOW.blit(BACKGROUND_SLIM, (0, 0))
         start_button.draw(WINDOW, WHITE)
-        
+
         pygame.display.update()
         for event in pygame.event.get():
             position = pygame.mouse.get_pos()
 
             # if pressing quit 'x' then stop
             if event.type == pygame.QUIT:
+                save_full_experiment_data()
                 run = False
-                #model.save_data()
             # if start button is pressed then start the game
             if event.type == pygame.MOUSEMOTION:
                 start_button.hoverEffect(position)
-                
 
             # if start button is pressed then start the game
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if start_button.isHovered(position):
                     main()
     pygame.quit()
+
+
+def save_full_experiment_data():
+    if os.path.isfile(PATH):
+        experiment_data = pd.read_csv(PATH)
+        # if os.path.isfile(FINAL_PATH):
+        #     old_experiment_data = pd.read_csv(FINAL_PATH)
+        #     experiment_data = old_experiment_data.append(experiment_data, ignore_index=True)
+        os.remove(PATH)
+        experiment_data.to_csv(FINAL_PATH, index=False)
+
 
 if os.path.isfile('Save_Data/temp_basic_slimstampen_data.csv'):
     os.remove("Save_Data/temp_basic_slimstampen_data.csv")
