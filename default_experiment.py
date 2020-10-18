@@ -1,6 +1,7 @@
 # Based on https://www.youtube.com/watch?v=Q-__8Xw9KTM&ab_channel=UnityCoin
 import random
 import numpy as np
+import pandas as pd
 from classes.button import Button
 from classes.bigButton import BigButton
 from classes.rectangle import Rectangle
@@ -41,6 +42,11 @@ def main():
 
     # Define reference to Model class
     model = Model()
+
+    block = 1  # else: block = 2
+    game_data = pd.DataFrame()
+    trial_nr = 0
+    is_gamification = False
 
     clock = pygame.time.Clock()
 
@@ -88,12 +94,31 @@ def main():
             # if the 'x' on the right top is pressed the game is quit
             if event.type == pygame.QUIT:
                 # YOU COULD CHANGE THIS TO quit() to press 'x' and quit the program
+                if not game_data.empty:
+                    model_data = model.save_model_data()
+                    save_data = pd.merge(model_data, game_data, on='trial', how='outer')
+                    save_data.to_csv(PATH, encoding="UTF-8")
+
                 run = False
 
         # Laser velocity needs to be negative since the y value is lower upwards the screen, meaning laser will go up
         # TODO: Extra parameter SlimStampen question
         #has_hit_enemy, enemy = player.move_lasers(-laser_velocity, enemies, WINDOW)
         if not answering_question:
+
+            if os.path.isfile('Save_Data/temp_basic_slimstampen_data.csv'):
+                game_data = pd.read_csv('Save_Data/temp_basic_slimstampen_data.csv')
+                trial_nr = game_data['trial'].iloc[-1]
+            trial_nr += 1
+            d = {'trial': trial_nr, 'block': block, 'is_gamification': [is_gamification]}
+
+            if game_data.empty:
+                game_data = pd.DataFrame(data=d)
+            else:
+                game_data = game_data.append(d, ignore_index=True)
+                print(game_data)
+            if not game_data.empty:
+                game_data.to_csv("Save_Data/temp_basic_slimstampen_data.csv", index=False)
 
             # Record question onset time
             question_onset_time = int(round(time.time() * 1000)) - START_TIME
@@ -195,7 +220,7 @@ def main_menu():
             # if pressing quit 'x' then stop
             if event.type == pygame.QUIT:
                 run = False
-                model.save_data()
+                #model.save_data()
             # if start button is pressed then start the game
             if event.type == pygame.MOUSEMOTION:
                 start_button.hoverEffect(position)
@@ -206,5 +231,8 @@ def main_menu():
                 if start_button.isHovered(position):
                     main()
     pygame.quit()
+
+if os.path.isfile('Save_Data/temp_basic_slimstampen_data.csv'):
+    os.remove("Save_Data/temp_basic_slimstampen_data.csv")
 
 main_menu()
