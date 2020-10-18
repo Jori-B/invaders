@@ -1,4 +1,0 @@
-,trial,start_time,rt,correct,fact_id,question,answer,question2,alpha,block,is_gamification,shots_fired,ship_name,ship_color
-0,1,29611,5750,True,7,6 x 8,48,8 x 6,0.3,1,True,0,pointy_boy,red
-1,2,39058,3410,True,7,6 x 8,48,8 x 6,0.3,1,[True],0,['pointy_boy'],['red']
-2,3,47762,9504,True,13,9 x 6,54,6 x 9,0.3,1,[True],0,['pointy_boy'],['red']

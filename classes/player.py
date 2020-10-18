@@ -16,10 +16,12 @@ class Player(Ship):
         self.mask = pygame.mask.from_surface(self.ship_img)
         self.max_health = health
 
+    shots_fired = 'NA'
+
     # Checks whether laser hit an enemy
     def move_lasers(self, velocity, objs, window):
         # When you move the lasers check if cooldown is finished
-        self.cooldown()
+        self.shots_fired = self.cooldown()
         # For each laser that the player has
         for laser in self.lasers:
             laser.move(velocity)
@@ -48,4 +50,4 @@ class Player(Ship):
         pygame.draw.rect(window, (0, 255, 0), (self.x, self.y + self.ship_img.get_height() + 20,
                                                self.ship_img.get_width() * (self.health / self.max_health), 10))
 
-    shots_fired = Ship.laser_counter
+

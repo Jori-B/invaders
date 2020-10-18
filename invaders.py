@@ -52,10 +52,14 @@ def main(ship, ship_name, ship_color):
 
     # Define reference to Model class
     model = Model()
+
+    # Setting variables for data recording
     # if this_is_the_first_block:
     block = 1  # else: block = 2
     game_data = pd.DataFrame()
     trial_nr = 0
+    temp_shots_fired = 0
+    temp_lives = lives
     is_gamification = True
     print(ship_color)
 
@@ -247,9 +251,10 @@ def main(ship, ship_name, ship_color):
             # if the 'x' on the right top is pressed the game is quit
             if event.type == pygame.QUIT:
                 # Merge and save data from model and game in case the game is completely closed
-                model_data = model.save_model_data()
-                save_data = pd.merge(model_data, game_data, on='trial', how='outer')
-                save_data.to_csv(PATH, encoding="UTF-8")
+                if not game_data.empty:
+                    model_data = model.save_model_data()
+                    save_data = pd.merge(model_data, game_data, on='trial', how='outer')
+                    save_data.to_csv(PATH, encoding="UTF-8")
                 # YOU COULD CHANGE THIS TO quit() to press 'x' and quit the program
                 run = False
 
@@ -319,22 +324,31 @@ def main(ship, ship_name, ship_color):
             question_onset_time = question_onset_time_for_RT_calc - START_TIME
 
             # Record game data
+            enemies_on_screen = 0
+            for each_enemy in enemies[:]:
+                if each_enemy.y > 0:
+                    enemies_on_screen += 1
+
+            if temp_lives != lives:
+                temp_shots_fired = 0
+
             if os.path.isfile('Save_Data/temp_game_data.csv'):
                 game_data = pd.read_csv('Save_Data/temp_game_data.csv')
                 trial_nr = game_data['trial'].iloc[-1]
-                print(game_data['trial'].iloc[-1])
             trial_nr += 1
-            print(trial_nr)
-            d = {'trial': trial_nr, 'block': block, 'is_gamification': [is_gamification], 'shots_fired': 0, 'ship_name': [ship_name],
-                 'ship_color': [ship_color]}
-            # shot_count = player.move_lasers.shots_fired
+            d = {'trial': trial_nr, 'block': block, 'is_gamification': [is_gamification],
+                 'shots_fired': player.shots_fired - temp_shots_fired, 'shots_fired_total': player.shots_fired,
+                 'ship_name': [ship_name], 'ship_color': [ship_color], 'lives': lives, 'level': level,
+                 'enemies_on_screen': enemies_on_screen}
+            temp_shots_fired = player.shots_fired
+            temp_lives = lives
             if game_data.empty:
                 game_data = pd.DataFrame(data=d)
-                print(game_data)
             else:
                 game_data = game_data.append(d, ignore_index=True)
                 print(game_data)
-            game_data.to_csv("Save_Data/temp_game_data.csv", index=False)
+            if not game_data.empty:
+                game_data.to_csv("Save_Data/temp_game_data.csv", index=False)
 
             # Get a new question from the model
             new_fact = model.get_next_fact()

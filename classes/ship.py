@@ -44,6 +44,7 @@ class Ship:
 
         self.lasers = []
 
+    laser_counter = 0
 
     # Handles counting the cooldown, before a laser can be shot again
     def cooldown(self):
@@ -51,8 +52,7 @@ class Ship:
             self.cool_down_counter = 0
         elif self.cool_down_counter > 0:
             self.cool_down_counter += 1
-
-    laser_counter = 0
+        return self.laser_counter
 
     def shoot(self):
         # Only shoot laser if the cooldown counter is 0
