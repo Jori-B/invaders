@@ -64,4 +64,4 @@ def break_screen(group_number, questionnaire_code):
                     if group_number == 1:
                         print("main(group_num=group_number)")
                     if group_number == 2:
-                        print("default_experiment(group_num=group_number)"
+                        print("default_experiment(group_num=group_number)")
