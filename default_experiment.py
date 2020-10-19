@@ -42,6 +42,10 @@ def default_main(group_num):
     trial_nr = 0
     is_gamification = False
 
+    # Define reference to Model class
+    model = Model()
+    model.add_facts_for_block(group_number=group_num, block=block)
+
     clock = pygame.time.Clock()
 
     if start_ticks == 0:
