@@ -44,7 +44,9 @@ def default_main(group_num):
 
     # Define reference to Model class
     model = Model()
-    model.add_facts_for_block(group_number=group_num, block=block)
+    if not default_main.has_been_called:
+        model.add_facts_for_block(group_number=group_num, block=block)
+    default_main.has_been_called = True
 
     clock = pygame.time.Clock()
 
@@ -203,6 +205,8 @@ def default_main(group_num):
                         string += str(event.key - 48)
 
         pygame.display.update()
+
+default_main.has_been_called = False
 
 
 def default_main_menu(group_num):
