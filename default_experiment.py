@@ -1,15 +1,16 @@
 # Based on https://www.youtube.com/watch?v=Q-__8Xw9KTM&ab_channel=UnityCoin
+
 import random
 import numpy as np
 import pandas as pd
 from classes.button import Button
 from classes.bigButton import BigButton
 from classes.rectangle import Rectangle
-from classes.player import Player
-from classes.enemy import Enemy
-from classes.explosion import Explosion
-from classes.disappear import Disappear
-from classes.reappear import Reappear
+#from classes.player import Player
+#from classes.enemy import Enemy
+#from classes.explosion import Explosion
+#from classes.disappear import Disappear
+#from classes.reappear import Reappear
 from classes.move import Move
 from classes.model import Model
 from slimstampen.spacingmodel import Response
@@ -28,7 +29,7 @@ pygame.init()
 infoObject = pygame.display.Info()
 
 
-def main():
+def default_main():
     # Dictates if while loop is going to run
     run = True
     # Amount of frames per second (checking if character is moving once every second)
@@ -83,7 +84,7 @@ def main():
 
     while run:
         clock.tick(FPS)
-        WINDOW.blit(BACKGROUND_SLIM, (0, 0))
+        WINDOW.blit(BACKGROUND, (0, 0))
 
         # No more lives or health then you lost
         # If there are no more enemies on screen then
@@ -196,7 +197,7 @@ def main():
         pygame.display.update()
 
 
-def main_menu():
+def default_main_menu():
     button_font = pygame.font.SysFont("notosansmonocjkkr", 30)
     button_width = 400
     button_height = 80
@@ -208,7 +209,7 @@ def main_menu():
     run = True
     while run:
 
-        WINDOW.blit(BACKGROUND_SLIM, (0, 0))
+        WINDOW.blit(BACKGROUND, (0, 0))
         start_button.draw(WINDOW, WHITE)
 
         pygame.display.update()
@@ -226,7 +227,7 @@ def main_menu():
             # if start button is pressed then start the game
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if start_button.isHovered(position):
-                    main()
+                    default_main()
     pygame.quit()
 
 
@@ -243,4 +244,4 @@ def save_full_experiment_data():
 if os.path.isfile('Save_Data/temp_basic_slimstampen_data.csv'):
     os.remove("Save_Data/temp_basic_slimstampen_data.csv")
 
-main_menu()
+#default_main_menu()

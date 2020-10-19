@@ -768,4 +768,4 @@ def save_full_experiment_data():
 
 if os.path.isfile('Save_Data/temp_game_data.csv'):
     os.remove("Save_Data/temp_game_data.csv")
-main_menu()
+#main_menu()
