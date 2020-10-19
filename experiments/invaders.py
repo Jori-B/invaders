@@ -17,12 +17,9 @@ from classes.move import Move
 from classes.model import Model
 from classes.stats import Stats
 from slimstampen.spacingmodel import Response
-from classes.breakScreen import *
 from classes.aboutScreen import *
 from utilities.constants import *
 from utilities.main_functions import *
-
-# import utility
 
 MAX_ANS_LEN = 10
 
@@ -36,7 +33,7 @@ infoObject = pygame.display.Info()
 # The minutes and seconds when someone started are defined globally. Namely, if someone pressed the
 # menu during the game, then the minutes and seconds should still count as having passed.
 minutes_start = 0
-seconds_start = 10
+seconds_start = 2
 start_ticks = 0
 
 
@@ -279,9 +276,6 @@ def main(ship, ship_name, ship_color, group_num):
         # If the specified time is up the user should switch to the break sceen
         if minutes == 0 and seconds == 0:
             print("Experiment done")
-            # TODO: Make it so that we can pass group number to break screen
-            code = "0000"
-            break_screen(group_num, code)
             run = False
         if lost:
             # FPS * 3 = 3 sec
@@ -696,7 +690,7 @@ def show_explanation(ship, chosen_ship, color, group_num):
                 back_button.hoverEffect(position)
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if back_button.isHovered(position):
-                    choose_color(chosen_ship)
+                    choose_color(chosen_ship, group_num)
 
 
 def choose_fighter(group_num):

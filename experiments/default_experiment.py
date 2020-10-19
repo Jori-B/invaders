@@ -1,3 +1,4 @@
+
 import pandas as pd
 from classes.button import Button
 from classes.rectangle import Rectangle
@@ -5,7 +6,6 @@ from classes.model import Model
 from slimstampen.spacingmodel import Response
 from utilities.constants import *
 from utilities.main_functions import *
-from classes.breakScreen import *
 
 MAX_ANS_LEN = 10
 
@@ -19,7 +19,7 @@ infoObject = pygame.display.Info()
 # The minutes and seconds when someone started are defined globally. Namely, if someone pressed the
 # menu during the game, then the minutes and seconds should still count as having passed.
 minutes_start = 0
-seconds_start = 10
+seconds_start = 2
 start_ticks = 0
 
 def default_main(group_num):
@@ -93,9 +93,8 @@ def default_main(group_num):
         # If the specified time is up the user should switch to the break sceen
         if minutes == 0 and seconds == 0:
             print("Experiment done")
-            # TODO: Make it so that we can pass group number to break screen
-            code = "0000"
-            break_screen(group_num, code)
+            # code = "0000"
+
             run = False
 
         # Check for all events (keypresses, mouseclick, etc.
