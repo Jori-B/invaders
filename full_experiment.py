@@ -67,19 +67,21 @@ def full_exp_main_menu():
             # if start button is pressed then start the game
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if one_button.isHovered(position):
-                    default_main_menu()
+                    group_num = 1
+                    default_main_menu(group_num)
 
                     # TODO: add break 
 
-                    main_menu()
+                    main_menu(group_num)
                 elif two_button.isHovered(position):
+                    group_num = 2
                     # This should be removed?
-                    main_menu()
+                    main_menu(group_num)
 
 
                     # TODO: add break 
 
-                    default_main_menu()
+                    default_main_menu(group_num)
 
 
 

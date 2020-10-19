@@ -34,10 +34,10 @@ def default_main():
 
     main_font = pygame.font.SysFont("notosansmonocjkkr", 30)
 
-    # Define reference to Model class
-    model = Model()
-
-    block = 1  # else: block = 2
+    if group_num == 1:
+        block = 1
+    else:
+        block = 2
     game_data = pd.DataFrame()
     trial_nr = 0
     is_gamification = False

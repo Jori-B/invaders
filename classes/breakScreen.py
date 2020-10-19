@@ -8,7 +8,8 @@ def break_screen(group_number, questionnaire_code):
     break_font = pygame.font.SysFont("Arial", font_size)
     link_font = pygame.font.SysFont("Arial", font_size * 2)
     break_text = "You can take a break right now. During this break,\n" \
-                 "we ask you to fill in a questionnaire. \n" \
+                 "we ask you to fill in a questionnaire.\n" \
+                 f"Please enter \"{ID_CODE_1}\" under Experiment Code.\n" \
                  "Go to the questionnaire using the following link: "
     link_text = "https://forms.gle/" + str(questionnaire_code)
     link_label = link_font.render(link_text, 1, WHITE)
@@ -61,6 +62,6 @@ def break_screen(group_number, questionnaire_code):
                 # Based on the condition bring the user to someplace
                 if continue_btn.isHovered(position):
                     if group_number == 1:
-                        print("main()")
+                        print("main(group_num=group_number)")
                     if group_number == 2:
-                        print("default_experiment()")
+                        print("default_experiment(group_num=group_number)"
