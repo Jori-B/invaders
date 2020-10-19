@@ -1,5 +1,3 @@
-import pygame
-from utilities.constants import *
 from utilities.main_functions import *
 from classes.button import Button
 import sys
@@ -58,10 +56,11 @@ def break_screen(group_number, questionnaire_code):
             if event.type == pygame.MOUSEMOTION:
                 continue_btn.hoverEffect(position)
 
-            # if start button is pressed then start the game
+            # if continue button is pressed then start the next phase of the experiment
             if event.type == pygame.MOUSEBUTTONDOWN:
                 # Based on the condition bring the user to someplace
-                if group_number == 1:
-                    print("main()")
-                if group_number == 2:
-                    print("default_experiment()")
+                if continue_btn.isHovered(position):
+                    if group_number == 1:
+                        print("main()")
+                    if group_number == 2:
+                        print("default_experiment()")

@@ -18,6 +18,7 @@ from classes.model import Model
 from classes.stats import Stats
 from slimstampen.spacingmodel import Response
 from classes.breakScreen import *
+from classes.aboutScreen import *
 from utilities.constants import *
 from utilities.main_functions import *
 
@@ -37,6 +38,7 @@ infoObject = pygame.display.Info()
 minutes_start = 0
 seconds_start = 10
 start_ticks = 0
+
 
 def create_new_player(ship, stats):
     player = Player(WIDTH / 2, HEIGHT, ship, stats)
@@ -525,10 +527,10 @@ def main_menu():
     start_button = Button(BACKGROUND_GREY, button_x, start_button_y, button_width,
                           button_height, button_font, "Start game!")
     upgrade_button = Button(BACKGROUND_GREY, button_x, start_button_y + 140, button_width,
-                            button_height, button_font, "Upgrades")
+                            button_height, button_font, "Upgrades", True)
     settings_button = Button(BACKGROUND_GREY, button_x, start_button_y + 280,
                              button_width,
-                             button_height, button_font, "Settings")
+                             button_height, button_font, "Settings", True)
     about_button = Button(BACKGROUND_GREY, button_x, start_button_y + 420, button_width,
                           button_height, button_font, "About")
     run = True
@@ -564,9 +566,10 @@ def main_menu():
             # if start button is pressed then start the game
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if start_button.isHovered(position):
-                    # initi slipsta
+                    # initialize ship
                     choose_fighter()
-    # pygame.quit()
+                if about_button.isHovered(position):
+                    about_screen()
 
 
 def lost_screen(ship, ship_name, ship_color):
@@ -615,10 +618,12 @@ def lost_screen(ship, ship_name, ship_color):
                 # Restart the game
                 if restart_button.isHovered(position):
                     main(ship, ship_name, ship_color)
-    # pygame.quit()
 
 
 def show_explanation(ship, chosen_ship, color):
+    button_font = pygame.font.SysFont("notosansmonocjkkr", 20)
+    back_button = Button(BACKGROUND_GREY, WIDTH * (1 / 21), button_font.get_height(), 150, 50, button_font, "< Back")
+
     font_size = 25
     explanation_font_general = pygame.font.SysFont("Arial", font_size)
     explanation_font = pygame.font.SysFont("Arial", font_size)
@@ -639,6 +644,8 @@ def show_explanation(ship, chosen_ship, color):
     run = True
     while run:
         WINDOW.blit(BACKGROUND, (0, 0))
+        back_button.draw(WINDOW, WHITE)
+
         max_y_general = render_multi_line(explanation_general, text_x, 50, font_size + 5, explanation_font_general)
 
         explanation_numpad_y = max_y_general + font_size * 3
@@ -667,7 +674,13 @@ def show_explanation(ship, chosen_ship, color):
             if event.type == pygame.KEYDOWN:
                 run = False
                 main(ship, chosen_ship, color)
-    # pygame.quit()
+
+            position = pygame.mouse.get_pos()
+            if event.type == pygame.MOUSEMOTION:
+                back_button.hoverEffect(position)
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if back_button.isHovered(position):
+                    choose_color(chosen_ship)
 
 
 def choose_fighter():
@@ -687,7 +700,8 @@ def choose_fighter():
     pointy_button = BigButton(BACKGROUND_GREY, WIDTH * (11 / 21), button_y,
                               button_width, button_height, button_font, POINTY_BOY, True, "pointy_boy", "Pointy Boy")
     donut_button = BigButton(BACKGROUND_GREY, WIDTH * (16 / 21), button_y, button_width,
-                             button_height, button_font, DONUT, True, "donut_warrior", "Donut Warrior", True)
+                             button_height, button_font, DONUT, True, "donut_warrior", "Donut Warrior", True,
+                             "3 answers correct in a row in a row to unlock")
 
     run = True
     while run:
@@ -722,7 +736,7 @@ def choose_fighter():
                 pointy_button.hoverEffect(position)
                 donut_button.hoverEffect(position)
 
-            # if start button is pressed then start the game
+            # if button is pressed then ...
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if back_button.isHovered(position):
                     main_menu()
@@ -735,7 +749,18 @@ def choose_fighter():
                 if donut_button.isHovered(position):
                     if not donut_button.is_locked:
                         choose_color("donut_warrior")
-    # pygame.quit()
+
+
+
+
+def switch_unlock_texts(chosen_ship):
+    switcher = {
+        "lord_nelson": "Get to level 3 to unlock",
+        "commander_cosmonaut": "Get a score of 5000 to unlock",
+        "pointy_boy": "Hit 3 aliens with only 3 lasers in a row to unlock",
+        "donut_warrior": "8 answers correct in a row in a row to unlock"
+    }
+    return switcher.get(chosen_ship, "")
 
 
 def choose_color(chosen_ship):
@@ -745,6 +770,9 @@ def choose_color(chosen_ship):
     button_width = WIDTH * (4 / 21)
     button_height = 400
     button_y = HEIGHT - button_height - 50
+
+    unlock_text = ""
+
     back_button = Button(BACKGROUND_GREY, WIDTH * (1 / 21), button_font.get_height(), 150, 50, button_font, "< Back")
     purple_button = BigButton(BACKGROUND_GREY, WIDTH * (1 / 21), button_y, button_width,
                               button_height, button_font, choose_ship(chosen_ship, "purple"), "", False, "Purple")
@@ -754,7 +782,8 @@ def choose_color(chosen_ship):
                            button_width,
                            button_height, button_font, choose_ship(chosen_ship, "red"), "", False, "Red")
     gold_button = BigButton(BACKGROUND_GREY, WIDTH * (16 / 21), button_y, button_width,
-                            button_height, button_font, choose_ship(chosen_ship, "gold"), "", False, "Gold", True)
+                            button_height, button_font, choose_ship(chosen_ship, "gold"), "", False, "Gold", True,
+                            switch_unlock_texts(chosen_ship))
 
     run = True
     while run:

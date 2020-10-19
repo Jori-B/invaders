@@ -5,7 +5,7 @@ offset = 3
 
 
 class Button():
-    def __init__(self, color, x, y, width, height, font, text=""):
+    def __init__(self, color, x, y, width, height, font, text="", is_locked=False):
         self.color = color
         self.x = x
         self.y = y
@@ -13,8 +13,16 @@ class Button():
         self.height = height
         self.text = text
         self.font = font
+        self.is_locked = is_locked
+        self.small_font = pygame.font.SysFont("notosansmonocjkkr", 15)
 
-    def draw(self, window, outline=None, shadow=None):
+    def getXMiddle(self, widthOfObject):
+        return self.x + self.width / 2 - widthOfObject / 2
+
+    def getYMiddle(self, heightOfObject):
+        return self.y + self.height / 2 - heightOfObject / 2
+
+    def draw(self, window, outline=None, shadow=None, text_color=WHITE):
         # To draw the button, this method is called
         if outline:
             pygame.draw.rect(window, outline, (self.x - 2, self.y - 2, self.width + 4, self.height + 4), 3)
@@ -27,10 +35,23 @@ class Button():
 
         if self.text != "":
             font = self.font
-            text = font.render(self.text, 1, WHITE)
+            text = font.render(self.text, 1, text_color)
             # Centers text in the middle of the button
             window.blit(text, (
             self.x + self.width / 2 - text.get_width() / 2, self.y + self.height / 2 - text.get_height() / 2))
+
+        if self.is_locked:
+            # Draw a semi-transparant button on top of the previous one when the item is locked
+            s = pygame.Surface((self.width, self.height))  # the size of your rect
+            s.set_alpha(128)  # alpha level
+            s.fill((0, 0, 0))  # this fills the entire surface
+            window.blit(s, (self.x, self.y))  # (0,0) are the top-left coordinates
+            # Draw a lock image on top of the button
+            window.blit(LOCK_SMALL, (self.x + 20, self.getYMiddle(LOCK_SMALL.get_height())))
+
+            unlock_text = self.small_font.render("Not available in experimental version", 1, WHITE)
+            unlock_text_y = self.y + self.height + unlock_text.get_height() / 2
+            window.blit(unlock_text, (self.getXMiddle(unlock_text.get_width()), unlock_text_y))
 
     def isHovered(self, position):
         X = 0

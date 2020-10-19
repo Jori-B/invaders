@@ -7,8 +7,8 @@ from classes.stats import Stats
 offset = 3
 
 
-class BigButton():
-    def __init__(self, color, x, y, width, height, font, img, show_stats=False, ship="", text="", is_locked=False):
+class BigButton:
+    def __init__(self, color, x, y, width, height, font, img, show_stats=False, ship="", text="", is_locked=False, unlock_text=""):
         self.color = color
         self.x = x
         self.y = y
@@ -19,6 +19,9 @@ class BigButton():
         self.img = img
         self.show_stats = show_stats
         self.is_locked = is_locked
+        self.small_font = pygame.font.SysFont("notosansmonocjkkr", 15)
+        if is_locked:
+            self.unlock_text = unlock_text
         if show_stats:
             self.stats = Stats(ship)
 
@@ -65,14 +68,14 @@ class BigButton():
             window.blit(text, (self.getXMiddle(text.get_width()), self.y + text.get_height()))
 
             if self.show_stats:
-                stats_font = pygame.font.SysFont("notosansmonocjkkr", 15)
+
                 stats_x = self.x + 20
                 speed_text_y = self.y + text.get_height() * 3
                 laser_width_text_y = speed_text_y + 50
                 laser_speed_text_y = laser_width_text_y + 50
-                speed_text = stats_font.render("Speed:", 1, WHITE)
-                laser_width_text = stats_font.render("Laser size:", 1, WHITE)
-                laser_speed_text = stats_font.render("Laser speed:", 1, WHITE)
+                speed_text = self.small_font.render("Speed:", 1, WHITE)
+                laser_width_text = self.small_font.render("Laser size:", 1, WHITE)
+                laser_speed_text = self.small_font.render("Laser speed:", 1, WHITE)
                 # Centers text in the middle of the button
                 window.blit(speed_text, (stats_x, speed_text_y))
                 window.blit(laser_width_text, (stats_x, laser_width_text_y))
@@ -97,6 +100,11 @@ class BigButton():
             window.blit(s, (self.x, self.y))  # (0,0) are the top-left coordinates
             # Draw a lock image on top of the button
             window.blit(LOCK, (self.getXMiddle(LOCK.get_width()), self.getYMiddle(LOCK.get_height())))
+
+            unlock_text = self.small_font.render(self.unlock_text, 1, WHITE)
+            unlock_text_y = self.y + self.height + unlock_text.get_height() / 2
+            window.blit(unlock_text, (self.getXMiddle(unlock_text.get_width()), unlock_text_y))
+
 
 
     def isHovered(self, position):

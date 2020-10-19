@@ -70,6 +70,7 @@ CORRECT_IMG = pygame.image.load(os.path.join("assets", "correct.png"))
 INCORRECT_IMG = pygame.image.load(os.path.join("assets", "incorrect.png"))
 
 LOCK = pygame.image.load(os.path.join("assets", "padlock.png"))
+LOCK_SMALL = pygame.image.load(os.path.join("assets", "padlock_small.png"))
 
 # Explosion dictionary (dic: has names instead of numbers) animation which is looped through in small and large scale
 EXPLOSION_ANIMATION = {}
