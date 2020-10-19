@@ -22,7 +22,7 @@ minutes_start = 0
 seconds_start = 10
 start_ticks = 0
 
-def default_main():
+def default_main(group_num):
     global minutes_start
     global seconds_start
     global start_ticks
