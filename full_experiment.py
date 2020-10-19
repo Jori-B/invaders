@@ -70,11 +70,16 @@ def full_exp_main_menu():
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if one_button.isHovered(position):
                     group_num = 1
-                    default_main_menu(group_num)
+                    done = default_main_menu(group_num)
+
+                    print("FULL EXPERIMENT")
+                    print(done)
+
+                    if done == True:
 
                     # TODO: add break 
-                    break_screen(group_num, "0000")
-                    main_menu(group_num)
+                        #break_screen(group_num, "0000")
+                        main_menu(group_num)
                 elif two_button.isHovered(position):
                     group_num = 2
                     # This should be removed?
@@ -82,7 +87,7 @@ def full_exp_main_menu():
 
 
                     # TODO: add break 
-                    break_screen(group_num, "0000")
+                    #break_screen(group_num, "0000")
                     default_main_menu(group_num)
 
 

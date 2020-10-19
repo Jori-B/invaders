@@ -96,8 +96,8 @@ def default_main(group_num):
         if minutes == 0 and seconds == 0:
             print("Experiment done")
             # code = "0000"
-
             run = False
+            return True
 
         # Check for all events (keypresses, mouseclick, etc.
         events = pygame.event.get()
@@ -210,6 +210,9 @@ default_main.has_been_called = False
 
 
 def default_main_menu(group_num):
+
+    done = False
+
     button_font = pygame.font.SysFont("notosansmonocjkkr", 30)
     button_width = 400
     button_height = 80
@@ -228,6 +231,9 @@ def default_main_menu(group_num):
     explanation_font_general = pygame.font.SysFont("Arial", font_size)
     run = True
     while run:
+
+        if done == True:
+            return True 
 
         WINDOW.blit(BACKGROUND, (0, 0))
         start_button.draw(WINDOW, WHITE)
@@ -250,7 +256,8 @@ def default_main_menu(group_num):
             # if start button is pressed then start the game
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if start_button.isHovered(position):
-                    default_main(group_num)
+                    done=default_main(group_num)
+
     # pygame.quit()
 
 
