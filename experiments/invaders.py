@@ -33,7 +33,7 @@ infoObject = pygame.display.Info()
 # The minutes and seconds when someone started are defined globally. Namely, if someone pressed the
 # menu during the game, then the minutes and seconds should still count as having passed.
 minutes_start = 0
-seconds_start = 30
+seconds_start = 59
 start_ticks = 0
 
 
@@ -268,7 +268,7 @@ def main(ship, ship_name, ship_color, group_num):
             # So for 3 seconds, show a "You lost message"
             if lost_count > FPS * 3:
                 #     run = False
-                lost_screen(ship, ship_name, ship_color, group_num)
+                return lost_screen(ship, ship_name, ship_color, group_num)
                 run = False
             else:
                 for enemy in enemies:
@@ -634,12 +634,13 @@ def lost_screen(ship, ship_name, ship_color, group_num):
             if event.type == pygame.MOUSEBUTTONDOWN:
                 # Setting run to false bring you back to menu
                 if menu_button.isHovered(position):
-                    main_menu(group_num)
+                    return main_menu(group_num)
                     run = False
                 # Restart the game
                 if restart_button.isHovered(position):
-                    main(ship, ship_name, ship_color, group_num)
+                    return main(ship, ship_name, ship_color, group_num)
 
+    return False
 
 
 def show_explanation(ship, chosen_ship, color, group_num):
