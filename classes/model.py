@@ -27,9 +27,6 @@ class Model:
                                  k=len(tables_array) * len(one_table_array) - 1)
 
     for i in range(0,(len(tables_array)*len(one_table_array) - 1)):
-        print(i % len(list_of_tables),i % len(times))
-
-    for i in range(0,(len(tables_array)*len(one_table_array) - 1)):
         m.add_fact(tables_array[int(random_table[i]/len(times))][random_table[i] % len(times)])
 
     def get_count_seen_facts(self, current_time):

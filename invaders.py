@@ -422,11 +422,11 @@ def main(ship, ship_name, ship_color):
                             game_data = pd.read_csv('Save_Data/temp_game_data.csv')
                             trial_nr = game_data['trial'].iloc[-1]
                         trial_nr += 1
-                        d = {'trial': trial_nr, 'block': block, 'is_gamification': [is_gamification],
+                        d = {'trial': trial_nr, 'block': block, 'is_gamification': is_gamification,
                              'answer_given': string, 'shots_fired': player.shots_fired - temp_shots_fired,
                              'shots_fired_total': player.shots_fired,
-                             'ship_name': [ship_name], 'ship_color': [ship_color], 'lives': lives, 'level': level,
-                             'enemies_on_screen': enemies_on_screen}
+                             'ship_name': ship_name, 'ship_color': [ship_color], 'lives': lives, 'level': level,
+                             'enemies_on_screen': enemies_on_screen + 1}
                         temp_shots_fired = player.shots_fired
                         temp_lives = lives
                         if game_data.empty:
