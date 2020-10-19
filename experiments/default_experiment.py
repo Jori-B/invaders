@@ -205,6 +205,7 @@ def default_main(group_num):
                         string += str(event.key - 48)
 
         pygame.display.update()
+    return False
 
 default_main.has_been_called = False
 
@@ -232,9 +233,6 @@ def default_main_menu(group_num):
     run = True
     while run:
 
-        if done == True:
-            return True 
-
         WINDOW.blit(BACKGROUND, (0, 0))
         start_button.draw(WINDOW, WHITE)
         WINDOW.blit(GHOST_BOY, (get_middle_x(GHOST_BOY), HEIGHT / 2 - 30))
@@ -256,9 +254,10 @@ def default_main_menu(group_num):
             # if start button is pressed then start the game
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if start_button.isHovered(position):
-                    done=default_main(group_num)
+                    return default_main(group_num)
 
     # pygame.quit()
+    return False
 
 
 def save_full_experiment_data():
