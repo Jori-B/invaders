@@ -1,0 +1,2 @@
+trial,start_time,rt,correct,fact_id,question,answer,question2,alpha,block,is_gamification,answer_given,shots_fired,shots_fired_total,ship_name,ship_color,lives,level,enemies_on_screen
+1,21042,11854,False,31,18 x 8,144,8 x 18,0.3,1,True,22,2,2,pointy_boy,red,3,1,1

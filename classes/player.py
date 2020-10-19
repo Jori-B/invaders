@@ -44,10 +44,11 @@ class Player(Ship):
 
     def healthbar(self, window):
         # Red rectangle
-        pygame.draw.rect(window, (255, 0, 0), (self.x, self.y + self.ship_img.get_height() + 20,
-                                               self.ship_img.get_width(), 10))
+        # The lord Nelson space ship is used to determine the width, so that all health-bars look the same
+        pygame.draw.rect(window, RED, (
+        self.x + self.ship_img.get_width() / 2 - NELSON.get_width() / 2, self.y + self.ship_img.get_height() + 20,
+        NELSON.get_width(), 10))
         # Green rectangle
-        pygame.draw.rect(window, (0, 255, 0), (self.x, self.y + self.ship_img.get_height() + 20,
-                                               self.ship_img.get_width() * (self.health / self.max_health), 10))
-
-
+        pygame.draw.rect(window, GREEN, (
+        self.x + self.ship_img.get_width() / 2 - NELSON.get_width() / 2, self.y + self.ship_img.get_height() + 20,
+        NELSON.get_width() * (self.health / self.max_health), 10))

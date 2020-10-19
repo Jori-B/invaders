@@ -16,6 +16,7 @@ from utilities.constants import *
 from utilities.main_functions import *
 from default_experiment import *
 from invaders import *
+import sys
 
 def full_exp_main_menu():
 
@@ -63,7 +64,11 @@ def full_exp_main_menu():
             # if pressing quit 'x' then stop
             if event.type == pygame.QUIT:
                 # save_full_experiment_data()
+
                 run = False
+                pygame.quit()
+                sys.exit()
+                break
             # if start button is pressed then start the game
             if event.type == pygame.MOUSEMOTION:
                 one_button.hoverEffect(position)
@@ -76,6 +81,6 @@ def full_exp_main_menu():
                 elif two_button.isHovered(position):
                     main_menu()
 
-    pygame.quit()
+    # pygame.quit()
 
 full_exp_main_menu()

@@ -29,9 +29,9 @@ class Explosion(pygame.sprite.Sprite):
                 self.image = EXPLOSION_ANIMATION[self.size][self.frame]
                 self.rect = self.image.get_rect()
                 self.rect.center = center
-
-                score_font = pygame.font.SysFont("Arial", 25)
-                score_font_rendered = score_font.render("+" + str(self.score), 1, WHITE)
-                width_text = score_font_rendered.get_width()
-                x, y = self.rect.center
-                WINDOW.blit(score_font_rendered, (x - width_text/2, y + 40))
+                if self.score:
+                    score_font = pygame.font.SysFont("Arial", 25)
+                    score_font_rendered = score_font.render("+" + str(self.score), 1, WHITE)
+                    width_text = score_font_rendered.get_width()
+                    x, y = self.rect.center
+                    WINDOW.blit(score_font_rendered, (x - width_text/2, y + 40))
