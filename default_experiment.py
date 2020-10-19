@@ -1,23 +1,11 @@
-# Based on https://www.youtube.com/watch?v=Q-__8Xw9KTM&ab_channel=UnityCoin
-
-import random
-import numpy as np
 import pandas as pd
 from classes.button import Button
-from classes.bigButton import BigButton
 from classes.rectangle import Rectangle
-#from classes.player import Player
-#from classes.enemy import Enemy
-#from classes.explosion import Explosion
-#from classes.disappear import Disappear
-#from classes.reappear import Reappear
-from classes.move import Move
 from classes.model import Model
 from slimstampen.spacingmodel import Response
 from utilities.constants import *
 from utilities.main_functions import *
-
-# import utility
+from classes.breakScreen import *
 
 MAX_ANS_LEN = 10
 
@@ -28,18 +16,23 @@ pygame.init()
 # How big is our window going to be, dimensions depend on the screen preventing windows to be too big
 infoObject = pygame.display.Info()
 
+# The minutes and seconds when someone started are defined globally. Namely, if someone pressed the
+# menu during the game, then the minutes and seconds should still count as having passed.
+minutes_start = 0
+seconds_start = 10
+start_ticks = 0
 
 def default_main():
+    global minutes_start
+    global seconds_start
+    global start_ticks
+
     # Dictates if while loop is going to run
     run = True
     # Amount of frames per second (checking if character is moving once every second)
     FPS = 60
-    level = 0
-    lives = 3
+
     main_font = pygame.font.SysFont("notosansmonocjkkr", 30)
-    lost_font = pygame.font.SysFont("notosansmonocjkkr", 60)
-    # If you want to know which fonts are available
-    # print(src.font.get_fonts())
 
     # Define reference to Model class
     model = Model()
@@ -51,8 +44,10 @@ def default_main():
 
     clock = pygame.time.Clock()
 
+    if start_ticks == 0:
+        start_ticks = pygame.time.get_ticks()  # starter tick
+
     answering_question = False
-    enemy_hit = None
 
     def show_answer(is_correct, answer, x, y):
 
@@ -84,10 +79,21 @@ def default_main():
 
     while run:
         clock.tick(FPS)
+
+        timer = (pygame.time.get_ticks() - start_ticks) / 1000  # calculate how many seconds since the start
+        minutes = minutes_start - int(timer / 60)  # divide seconds by 60 to get the amount of minutes
+        seconds = (seconds_start - int(timer)) % 60  # % the seconds passed so that only seconds are shown
+
         WINDOW.blit(BACKGROUND, (0, 0))
 
-        # No more lives or health then you lost
-        # If there are no more enemies on screen then
+        # If the specified time is up the user should switch to the break sceen
+        if minutes == 0 and seconds == 0:
+            print("Experiment done")
+            # TODO: Make it so that we can pass group number to break screen
+            group_number = 1
+            code = "0000"
+            break_screen(group_number, code)
+            run = False
 
         # Check for all events (keypresses, mouseclick, etc.
         events = pygame.event.get()
@@ -205,13 +211,22 @@ def default_main_menu():
     start_button_y = 3 * HEIGHT / 4
     start_button = Button(BACKGROUND_GREY, button_x, start_button_y, button_width,
                           button_height, button_font, "Start game!")
-
+    explanation_general = "This is the default SlimStampen implementation \n" \
+                          "of the experiment. \n\n" \
+                          "You will solve multiplication questions for 12 minutes. \n" \
+                          "After the 12 minutes are over a break screen will appear. \n" \
+                          "Only after you have filled in the questionnaire during\n" \
+                          "the break, should you press the button there to continue.\n\n" \
+                          "Have fun and good luck!"
+    font_size = 25
+    explanation_font_general = pygame.font.SysFont("Arial", font_size)
     run = True
     while run:
 
         WINDOW.blit(BACKGROUND, (0, 0))
         start_button.draw(WINDOW, WHITE)
-
+        WINDOW.blit(GHOST_BOY, (get_middle_x(GHOST_BOY), HEIGHT / 2 - 30))
+        render_multi_line(explanation_general, 200, 50, font_size + 5, explanation_font_general)
         pygame.display.update()
         for event in pygame.event.get():
             position = pygame.mouse.get_pos()
@@ -219,6 +234,8 @@ def default_main_menu():
             # if pressing quit 'x' then stop
             if event.type == pygame.QUIT:
                 save_full_experiment_data()
+                pygame.quit()
+                sys.exit()
                 run = False
             # if start button is pressed then start the game
             if event.type == pygame.MOUSEMOTION:
@@ -228,7 +245,7 @@ def default_main_menu():
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if start_button.isHovered(position):
                     default_main()
-    pygame.quit()
+    # pygame.quit()
 
 
 def save_full_experiment_data():

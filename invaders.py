@@ -17,6 +17,7 @@ from classes.move import Move
 from classes.model import Model
 from classes.stats import Stats
 from slimstampen.spacingmodel import Response
+from classes.breakScreen import *
 from utilities.constants import *
 from utilities.main_functions import *
 
@@ -31,6 +32,11 @@ pygame.init()
 # How big is our window going to be, dimensions depend on the screen preventing windows to be too big
 infoObject = pygame.display.Info()
 
+# The minutes and seconds when someone started are defined globally. Namely, if someone pressed the
+# menu during the game, then the minutes and seconds should still count as having passed.
+minutes_start = 0
+seconds_start = 10
+start_ticks = 0
 
 def create_new_player(ship, stats):
     player = Player(WIDTH / 2, HEIGHT, ship, stats)
@@ -41,6 +47,10 @@ def create_new_player(ship, stats):
 
 
 def main(ship, ship_name, ship_color):
+    global minutes_start
+    global seconds_start
+    global start_ticks
+
     # Dictates if while loop is going to run
     run = True
     # Amount of frames per second (checking if character is moving once every second)
@@ -63,14 +73,13 @@ def main(ship, ship_name, ship_color):
     temp_shots_fired = 0
     temp_lives = lives
     is_gamification = True
-    print(ship_color)
 
     enemies = []
     # Every level a new wave will be created of 5 enemies
-    wave_length = 3
+    wave_length = 5
     enemy_velocity = 0.5
-    print(ship_name)
     stats = Stats(ship_name)
+
     # How fast the player can move every time you press the key a max of 5 pixels to move
     player_velocity = 4 + stats.ship_speed
     laser_velocity = 4
@@ -81,9 +90,8 @@ def main(ship, ship_name, ship_color):
 
     clock = pygame.time.Clock()
 
-    minutes_start = 11
-    seconds_start = 59
-    start_ticks = pygame.time.get_ticks()  # starter tick
+    if start_ticks == 0:
+        start_ticks = pygame.time.get_ticks()  # starter tick
 
     lost = False
     lost_count = 0
@@ -216,7 +224,7 @@ def main(ship, ship_name, ship_color):
             seconds_string = "0" + seconds_string
 
         timer_label = main_font.render(f"Time left: {str(minutes)} : {seconds_string}", 1, WHITE)
-        WINDOW.blit(timer_label, (menu_x, HEIGHT - timer_label.get_height() - 20) )
+        WINDOW.blit(timer_label, (menu_x, HEIGHT - timer_label.get_height() - 20))
         # Draw all enemies (before you initialize the player so the player goes over them)
         for enemy in enemies:
             enemy.draw(WINDOW)
@@ -255,6 +263,14 @@ def main(ship, ship_name, ship_color):
                 # Create a new ship
                 player = create_new_player(ship, stats)
             lives -= 1
+        # If the specified time is up the user should switch to the break sceen
+        if minutes == 0 and seconds == 0:
+            print("Experiment done")
+            # TODO: Make it so that we can pass group number to break screen
+            group_number = 2
+            code = "0000"
+            break_screen(group_number, code)
+            run = False
         if lost:
             # FPS * 3 = 3 sec
             # So for 3 seconds, show a "You lost message"
@@ -603,23 +619,6 @@ def lost_screen(ship, ship_name, ship_color):
 
 
 def show_explanation(ship, chosen_ship, color):
-    def render_multi_line(text, x, y, fsize, font):
-        lines = text.splitlines()
-        x_all = 0
-        for i, l in enumerate(lines):
-            label = font.render(l, 1, WHITE)
-            if not x_all:
-                x_all = get_middle_x(label)
-            WINDOW.blit(label, (x_all, y + fsize * i))
-            max_y = y + fsize * i
-        return max_y
-
-    def get_middle_x(object):
-        if isinstance(object, int):
-            return WIDTH / 2 - object / 2
-        else:
-            return WIDTH / 2 - object.get_width() / 2
-
     font_size = 25
     explanation_font_general = pygame.font.SysFont("Arial", font_size)
     explanation_font = pygame.font.SysFont("Arial", font_size)

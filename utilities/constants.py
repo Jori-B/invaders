@@ -12,6 +12,8 @@ pygame.display.set_caption("Multiplication Invaders")
 # A way to completely go full screen (however when using two displays it, just like the above, it grows too big
 # src.display.set_mode((0, 0), src.FULLSCREEN)
 
+WELCOME_TEXT = pygame.image.load(os.path.join("assets", "welcome_msg.png"))
+GHOST_BOY = pygame.image.load(os.path.join("assets", "mascot.png"))
 MENU_TEXT = pygame.image.load(os.path.join("assets/menu", "header.png"))
 MENU_SHIP = pygame.image.load(os.path.join("assets/menu", "menu_ship.png"))
 # Colors

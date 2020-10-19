@@ -15,12 +15,6 @@ pygame.init()
 
 def full_exp_main_menu():
 
-    def get_middle_x(object):
-        if isinstance(object, int):
-            return WIDTH / 2 - object / 2
-        else:
-            return WIDTH / 2 - object.get_width() / 2
-
     font_size = 35
     explanation_font = pygame.font.SysFont("Arial", font_size)
 
@@ -46,7 +40,8 @@ def full_exp_main_menu():
     while run:
 
         WINDOW.blit(BACKGROUND, (0, 0))
-        WINDOW.blit(welcome_text_label, (get_middle_x(welcome_text_label), HEIGHT/3))
+        # WINDOW.blit(welcome_text_label, (get_middle_x(welcome_text_label), HEIGHT/3))
+        WINDOW.blit(WELCOME_TEXT, (get_middle_x(WELCOME_TEXT), HEIGHT / 3))
         WINDOW.blit(select_group_label, (get_middle_x(select_group_label), HEIGHT/3 + 80))
 
         one_button.draw(WINDOW, WHITE)
