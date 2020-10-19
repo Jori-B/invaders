@@ -17,9 +17,8 @@ class Model:
             table_counter = 0
         else:
             list_of_tables = [8, 9, 14, 17]
-            table_counter = len(times)*len(list_of_tables)
+            table_counter = 10000
         tables_array = []
-        print(list_of_tables)
 
         for num1 in list_of_tables:
             one_table_array = []
@@ -39,12 +38,18 @@ class Model:
     def get_count_seen_facts(self, current_time):
         return self.m.count_seen_facts(current_time)
 
-    def get_next_fact(self):
+    def get_next_fact(self, group_number, block):
         # Get the time for get_new_fact by subtracting the starting time from the current time in milliseconds
         # time.sleep(1); # is a test
         run_time = int(round(time.time() * 1000)) - START_TIME
-
-        next_fact, new = self.m.get_next_fact(current_time=run_time)
+        if (group_number == 1 and block == 1) or (group_number == 2 and block == 2):
+            lower_limit = 0
+            upper_limit = 100
+        else:
+            lower_limit = 10000
+            upper_limit = 10100
+        next_fact, new = self.m.get_next_fact(current_time=run_time, lower_id_limit=lower_limit,
+                                              upper_id_limit=upper_limit)
         return next_fact
 
     def save_model_data(self):

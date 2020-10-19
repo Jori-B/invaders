@@ -88,7 +88,7 @@ def main(ship, ship_name, ship_color, group_num):
     wave_length = 5
 
     start_enemy_velocity = 0.5
-    enemy_velocity = 10#start_enemy_velocity
+    enemy_velocity = start_enemy_velocity
 
     stats = Stats(ship_name)
 
@@ -197,20 +197,6 @@ def main(ship, ship_name, ship_color, group_num):
 
         all_sprites.update()
         all_sprites.draw(WINDOW)
-        # Draw the menu button
-        for event in events:
-            position = pygame.mouse.get_pos()
-            if event.type == pygame.MOUSEMOTION:
-                menu_btn.hoverEffect(position)
-            # if menu button is pressed then start the game
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                if menu_btn.isHovered(position):
-                    # Merge and save data from model and game in case the game is completely closed
-                    if not game_data.empty:
-                        model_data = model.save_model_data()
-                        save_data = pd.merge(model_data, game_data, on='trial', how='outer')
-                        save_data.to_csv(PATH, index=False)
-                    main_menu(group_num)
         # Draw text (f strings embed variables)
         lives_label = main_font.render(f"Lives: ", 1, WHITE)
         correct_label = main_font.render(f"Solved {correct_count} of {total_count}", 1, WHITE)
@@ -283,13 +269,13 @@ def main(ship, ship_name, ship_color, group_num):
         # If the specified time is up the user should switch to the break sceen
         if minutes == 0 and seconds == 0:
             print("Experiment done")
-            run = False
+            return True
         if lost:
             # FPS * 3 = 3 sec
             # So for 3 seconds, show a "You lost message"
             if lost_count > FPS * 3:
                 #     run = False
-                lost_screen(ship, ship_name, ship_color, group_num, score)
+                return lost_screen(ship, ship_name, ship_color, group_num, score)
                 run = False
             else:
                 for enemy in enemies:
@@ -380,6 +366,22 @@ def main(ship, ship_name, ship_color, group_num):
                     player.health -= 50
                     explode_object(enemy, True)
 
+
+        # Draw the menu button
+        for event in events:
+            position = pygame.mouse.get_pos()
+            if event.type == pygame.MOUSEMOTION:
+                menu_btn.hoverEffect(position)
+            # if menu button is pressed then start the game
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if menu_btn.isHovered(position):
+                    # Merge and save data from model and game in case the game is completely closed
+                    if not game_data.empty:
+                        model_data = model.save_model_data()
+                        save_data = pd.merge(model_data, game_data, on='trial', how='outer')
+                        save_data.to_csv(PATH, index=False)
+                    return main_menu(group_num)
+
         redraw_window()
 
         # Laser velocity needs to be negative since the y value is lower upwards the screen, meaning laser will go up
@@ -402,7 +404,7 @@ def main(ship, ship_name, ship_color, group_num):
             question_onset_time = question_onset_time_for_RT_calc - START_TIME
 
             # Get a new question from the model
-            new_fact = model.get_next_fact()
+            new_fact = model.get_next_fact(group_number=group_num, block=block)
             answer = f"{new_fact[2]}"
             present_alt_question = int(random.uniform(0.001, 1.999))
             if present_alt_question == 0:
@@ -527,6 +529,8 @@ def main(ship, ship_name, ship_color, group_num):
 
         pygame.display.update()
 
+    return False
+
 
 main.has_been_called = False
 
@@ -551,7 +555,12 @@ def main_menu(group_num):
     about_button = Button(BACKGROUND_GREY, button_x, start_button_y + 420, button_width,
                           button_height, button_font, "About")
     run = True
+    game_done = False
     while run:
+
+        if game_done:
+            return True
+
 
         WINDOW.blit(BACKGROUND, (0, 0))
         start_button.draw(WINDOW, WHITE)
@@ -584,9 +593,11 @@ def main_menu(group_num):
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if start_button.isHovered(position):
                     # initialize ship
-                    choose_fighter(group_num)
+                    game_done = choose_fighter(group_num)
                 if about_button.isHovered(position):
                     about_screen()
+
+    return False
 
 
 def lost_screen(ship, ship_name, ship_color, group_num, score):
@@ -662,12 +673,13 @@ def lost_screen(ship, ship_name, ship_color, group_num, score):
             if event.type == pygame.MOUSEBUTTONDOWN:
                 # Setting run to false bring you back to menu
                 if menu_button.isHovered(position):
-                    main_menu(group_num)
+                    return main_menu(group_num)
                     run = False
                 # Restart the game
                 if restart_button.isHovered(position):
-                    main(ship, ship_name, ship_color, group_num)
+                    return main(ship, ship_name, ship_color, group_num)
 
+    return False
 
 
 def show_explanation(ship, chosen_ship, color, group_num):
@@ -723,7 +735,7 @@ def show_explanation(ship, chosen_ship, color, group_num):
 
             if event.type == pygame.KEYDOWN:
                 run = False
-                main(ship, chosen_ship, color, group_num)
+                return main(ship, chosen_ship, color, group_num)
             position = pygame.mouse.get_pos()
             if event.type == pygame.MOUSEMOTION:
                 back_button.hoverEffect(position)
@@ -731,6 +743,7 @@ def show_explanation(ship, chosen_ship, color, group_num):
                 if back_button.isHovered(position):
                     choose_color(chosen_ship, group_num)
 
+    return False
 
 def choose_fighter(group_num):
     title_font = pygame.font.SysFont("notosansmonocjkkr", 40)
@@ -790,15 +803,17 @@ def choose_fighter(group_num):
                 if back_button.isHovered(position):
                     main_menu(group_num)
                 if nelson_button.isHovered(position):
-                    choose_color("lord_nelson", group_num)
+                    return choose_color("lord_nelson", group_num)
                 if commander_button.isHovered(position):
-                    choose_color("commander_cosmonaut", group_num)
+                    return choose_color("commander_cosmonaut", group_num)
                 if pointy_button.isHovered(position):
-                    choose_color("pointy_boy", group_num)
+                    return choose_color("pointy_boy", group_num)
                 if donut_button.isHovered(position):
                     if not donut_button.is_locked:
-                        choose_color("donut_warrior", group_num)
+                        return choose_color("donut_warrior", group_num)
     # pygame.quit()
+    return False
+
 def switch_unlock_texts(chosen_ship):
     switcher = {
         "lord_nelson": "Get to level 3 to unlock",
@@ -876,14 +891,16 @@ def choose_color(chosen_ship, group_num):
                 if back_button.isHovered(position):
                     choose_fighter(group_num)
                 if purple_button.isHovered(position):
-                    show_explanation(choose_ship(chosen_ship, "purple"), chosen_ship, "purple", group_num)
+                    return show_explanation(choose_ship(chosen_ship, "purple"), chosen_ship, "purple", group_num)
                 if green_button.isHovered(position):
-                    show_explanation(choose_ship(chosen_ship, "green"), chosen_ship, "green", group_num)
+                    return show_explanation(choose_ship(chosen_ship, "green"), chosen_ship, "green", group_num)
                 if red_button.isHovered(position):
-                    show_explanation(choose_ship(chosen_ship, "red"), chosen_ship, "red", group_num)
+                    return show_explanation(choose_ship(chosen_ship, "red"), chosen_ship, "red", group_num)
                 if gold_button.isHovered(position):
                     if not gold_button.is_locked:
-                        show_explanation(choose_ship(chosen_ship, "gold"), chosen_ship, "gold", group_num)
+                        return show_explanation(choose_ship(chosen_ship, "gold"), chosen_ship, "gold", group_num)
+
+    return False
     # pygame.quit()
 
 
