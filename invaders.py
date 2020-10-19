@@ -38,6 +38,7 @@ minutes_start = 0
 seconds_start = 10
 start_ticks = 0
 
+
 def create_new_player(ship, stats):
     player = Player(WIDTH / 2, HEIGHT, ship, stats)
     # Center the ship on screen
@@ -46,7 +47,7 @@ def create_new_player(ship, stats):
     return player
 
 
-def main(ship, ship_name, ship_color):
+def main(ship, ship_name, ship_color, group_num):
     global minutes_start
     global seconds_start
     global start_ticks
@@ -62,17 +63,23 @@ def main(ship, ship_name, ship_color):
     # If you want to know which fonts are available
     # print(src.font.get_fonts())
 
-    # Define reference to Model class
-    model = Model()
-
     # Setting variables for data recording
     # if this_is_the_first_block:
-    block = 1  # else: block = 2
+    if group_num == 1:
+        block = 2
+    else:
+        block = 1
     game_data = pd.DataFrame()
     trial_nr = 0
     temp_shots_fired = 0
     temp_lives = lives
     is_gamification = True
+
+    # Define reference to Model class
+    model = Model()
+    if not main.has_been_called:
+        model.add_facts_for_block(group_number=group_num, block=block)
+    main.has_been_called = True
 
     enemies = []
     # Every level a new wave will be created of 5 enemies
@@ -193,7 +200,12 @@ def main(ship, ship_name, ship_color):
             # if menu button is pressed then start the game
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if menu_btn.isHovered(position):
-                    main_menu()
+                    # Merge and save data from model and game in case the game is completely closed
+                    if not game_data.empty:
+                        model_data = model.save_model_data()
+                        save_data = pd.merge(model_data, game_data, on='trial', how='outer')
+                        save_data.to_csv(PATH, index=False)
+                    main_menu(group_num)
         # Draw text (f strings embed variables)
         lives_label = main_font.render(f"Lives: ", 1, WHITE)
         correct_label = main_font.render(f"Solved {correct_count} of {total_count}", 1, WHITE)
@@ -267,9 +279,8 @@ def main(ship, ship_name, ship_color):
         if minutes == 0 and seconds == 0:
             print("Experiment done")
             # TODO: Make it so that we can pass group number to break screen
-            group_number = 2
             code = "0000"
-            break_screen(group_number, code)
+            break_screen(group_num, code)
             run = False
         if lost:
             # FPS * 3 = 3 sec
@@ -316,6 +327,7 @@ def main(ship, ship_name, ship_color):
                     model_data = model.save_model_data()
                     save_data = pd.merge(model_data, game_data, on='trial', how='outer')
                     save_data.to_csv(PATH, index=False)
+                save_full_experiment_data()
                 # YOU COULD CHANGE THIS TO quit() to press 'x' and quit the program
                 run = False
                 pygame.quit()
@@ -482,10 +494,11 @@ def main(ship, ship_name, ship_color):
                             game_data = pd.read_csv('Save_Data/temp_game_data.csv')
                             trial_nr = game_data['trial'].iloc[-1]
                         trial_nr += 1
-                        d = {'trial': trial_nr, 'block': block, 'is_gamification': is_gamification,
-                             'answer_given': string, 'shots_fired': player.shots_fired - temp_shots_fired,
-                             'shots_fired_total': player.shots_fired,
-                             'ship_name': ship_name, 'ship_color': [ship_color], 'lives': lives, 'level': level,
+                        d = {'trial': trial_nr, 'block': block, 'group_number': group_num, 'ID_code_1': ID_CODE_1,
+                             'ID_code_2': ID_CODE_2, 'is_gamification': is_gamification, 'answer_given': string,
+                             'shots_fired': player.shots_fired - temp_shots_fired,
+                             'shots_fired_total': player.shots_fired, 'ship_name': ship_name,
+                             'ship_color': [ship_color], 'lives': lives, 'level': level,
                              'enemies_on_screen': enemies_on_screen + 1}
                         temp_shots_fired = player.shots_fired
                         temp_lives = lives
@@ -512,11 +525,15 @@ def main(ship, ship_name, ship_color):
 
         pygame.display.update()
 
-    # When run is set to false the system comes here
-    # TODO: The app should bring the user to a new instance of the menu
+
+main.has_been_called = False
 
 
-def main_menu():
+# When run is set to false the system comes here
+# TODO: The app should bring the user to a new instance of the menu
+
+
+def main_menu(group_num):
     button_font = pygame.font.SysFont("notosansmonocjkkr", 30)
     button_width = 400
     button_height = 80
@@ -565,7 +582,7 @@ def main_menu():
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if start_button.isHovered(position):
                     # initi slipsta
-                    choose_fighter()
+                    choose_fighter(group_num)
     # pygame.quit()
 
 
@@ -618,7 +635,7 @@ def lost_screen(ship, ship_name, ship_color):
     # pygame.quit()
 
 
-def show_explanation(ship, chosen_ship, color):
+def show_explanation(ship, chosen_ship, color, group_num):
     font_size = 25
     explanation_font_general = pygame.font.SysFont("Arial", font_size)
     explanation_font = pygame.font.SysFont("Arial", font_size)
@@ -666,11 +683,11 @@ def show_explanation(ship, chosen_ship, color):
 
             if event.type == pygame.KEYDOWN:
                 run = False
-                main(ship, chosen_ship, color)
+                main(ship, chosen_ship, color, group_num)
     # pygame.quit()
 
 
-def choose_fighter():
+def choose_fighter(group_num):
     title_font = pygame.font.SysFont("notosansmonocjkkr", 40)
     button_font = pygame.font.SysFont("notosansmonocjkkr", 20)
     # Essentially the screen is split up into 21 parts. Buttons take up 4*4 = 16 parts of space
@@ -725,20 +742,20 @@ def choose_fighter():
             # if start button is pressed then start the game
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if back_button.isHovered(position):
-                    main_menu()
+                    main_menu(group_num)
                 if nelson_button.isHovered(position):
-                    choose_color("lord_nelson")
+                    choose_color("lord_nelson", group_num)
                 if commander_button.isHovered(position):
-                    choose_color("commander_cosmonaut")
+                    choose_color("commander_cosmonaut", group_num)
                 if pointy_button.isHovered(position):
-                    choose_color("pointy_boy")
+                    choose_color("pointy_boy", group_num)
                 if donut_button.isHovered(position):
                     if not donut_button.is_locked:
-                        choose_color("donut_warrior")
+                        choose_color("donut_warrior", group_num)
     # pygame.quit()
 
 
-def choose_color(chosen_ship):
+def choose_color(chosen_ship, group_num):
     title_font = pygame.font.SysFont("notosansmonocjkkr", 40)
     subtitle_font = pygame.font.SysFont("notosansmonocjkkr", 30)
     button_font = pygame.font.SysFont("notosansmonocjkkr", 20)
@@ -799,16 +816,16 @@ def choose_color(chosen_ship):
             # if start button is pressed then start the game
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if back_button.isHovered(position):
-                    choose_fighter()
+                    choose_fighter(group_num)
                 if purple_button.isHovered(position):
-                    show_explanation(choose_ship(chosen_ship, "purple"), chosen_ship, "purple")
+                    show_explanation(choose_ship(chosen_ship, "purple"), chosen_ship, "purple", group_num)
                 if green_button.isHovered(position):
-                    show_explanation(choose_ship(chosen_ship, "green"), chosen_ship, "green")
+                    show_explanation(choose_ship(chosen_ship, "green"), chosen_ship, "green", group_num)
                 if red_button.isHovered(position):
-                    show_explanation(choose_ship(chosen_ship, "red"), chosen_ship, "red")
+                    show_explanation(choose_ship(chosen_ship, "red"), chosen_ship, "red", group_num)
                 if gold_button.isHovered(position):
                     if not gold_button.is_locked:
-                        show_explanation(choose_ship(chosen_ship, "gold"), chosen_ship, "gold")
+                        show_explanation(choose_ship(chosen_ship, "gold"), chosen_ship, "gold", group_num)
     # pygame.quit()
 
 
