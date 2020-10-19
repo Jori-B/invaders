@@ -11,7 +11,7 @@ def about_screen():
                              "This gamified learning system should increase the learners motivation \n\n" \
                              "SlimStampen is the Adaptive Fact Learning system used for timing the \n" \
                              "presentation of multiplication questions, based on the learner's memory \n" \
-                             "of those facts. The timing of when certain questions are asked should" \
+                             "of those facts. The timing of when certain questions are asked should \n" \
                              "optimize the learners memorization of the different multiplications"
     created_by_text = "Created by Jelle Bosch, Francesca Perin and Jori Blankestijn"
     created_by_label = about_font.render(created_by_text, 1, WHITE)

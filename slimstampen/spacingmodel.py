@@ -54,8 +54,8 @@ class SpacingModel(object):
         return(len(seen_facts))
 
 
-    def get_next_fact(self, current_time):
-        ## type: (int) -> (Fact, bool)
+    def get_next_fact(self, current_time, lower_id_limit = 0, upper_id_limit = 99999):
+        ## type: (int, int, int) -> (Fact, bool)
         """
         Returns a tuple containing the fact that needs to be repeated most urgently and a boolean indicating whether this fact is new (True) or has been presented before (False).
         If none of the previously studied facts needs to be repeated right now, return a new fact instead.
@@ -63,11 +63,11 @@ class SpacingModel(object):
         # Calculate all fact activations in the near future
         fact_activations = [(f, self.calculate_activation(current_time + self.LOOKAHEAD_TIME, f)) for f in self.facts]
 
-        seen_facts = [(f, a) for (f, a) in fact_activations if a > -float("inf")]
-        not_seen_facts = [(f, a) for (f, a) in fact_activations if a == -float("inf")]
+        seen_facts = [(f, a) for (f, a) in fact_activations if a > -float("inf") and lower_id_limit <= f.fact_id <= upper_id_limit]
+        not_seen_facts = [(f, a) for (f, a) in fact_activations if a == -float("inf") and lower_id_limit <= f.fact_id <= upper_id_limit]
 
         # Prevent an immediate repetition of the same fact
-        if len(seen_facts) > 2:
+        if len(seen_facts) > 1:
             last_response = self.responses[-1]
             seen_facts = [(f, a) for (f, a) in seen_facts if f.fact_id != last_response.fact.fact_id]
 

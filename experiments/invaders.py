@@ -33,7 +33,7 @@ infoObject = pygame.display.Info()
 # The minutes and seconds when someone started are defined globally. Namely, if someone pressed the
 # menu during the game, then the minutes and seconds should still count as having passed.
 minutes_start = 0
-seconds_start = 2
+seconds_start = 30
 start_ticks = 0
 
 
@@ -397,7 +397,7 @@ def main(ship, ship_name, ship_color, group_num):
             question_onset_time = question_onset_time_for_RT_calc - START_TIME
 
             # Get a new question from the model
-            new_fact = model.get_next_fact()
+            new_fact = model.get_next_fact(group_number=group_num, block=block)
             answer = f"{new_fact[2]}"
             present_alt_question = int(random.uniform(0.001, 1.999))
             if present_alt_question == 0:

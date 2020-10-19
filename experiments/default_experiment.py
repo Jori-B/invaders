@@ -121,7 +121,7 @@ def default_main(group_num):
             question_onset_time_for_RT_calc = int(round(time.time() * 1000))
             question_onset_time = question_onset_time_for_RT_calc - START_TIME
             # Get a new question from the model
-            new_fact = model.get_next_fact()
+            new_fact = model.get_next_fact(group_number=group_num, block=block)
             answer = f"{new_fact[2]}"
             present_alt_question = int(random.uniform(0.001, 1.999))
             if present_alt_question == 0:
