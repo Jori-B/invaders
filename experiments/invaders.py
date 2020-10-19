@@ -32,9 +32,11 @@ infoObject = pygame.display.Info()
 
 # The minutes and seconds when someone started are defined globally. Namely, if someone pressed the
 # menu during the game, then the minutes and seconds should still count as having passed.
-minutes_start = 0
+minutes_start = 2
 seconds_start = 2
 start_ticks = 0
+
+high_score = 0
 
 
 def create_new_player(ship, stats):
@@ -49,6 +51,8 @@ def main(ship, ship_name, ship_color, group_num):
     global minutes_start
     global seconds_start
     global start_ticks
+
+    global high_score
 
     # Dictates if while loop is going to run
     run = True
@@ -82,7 +86,10 @@ def main(ship, ship_name, ship_color, group_num):
     enemies = []
     # Every level a new wave will be created of 5 enemies
     wave_length = 5
-    enemy_velocity = 0.5
+
+    start_enemy_velocity = 0.5
+    enemy_velocity = 10#start_enemy_velocity
+
     stats = Stats(ship_name)
 
     # How fast the player can move every time you press the key a max of 5 pixels to move
@@ -282,7 +289,7 @@ def main(ship, ship_name, ship_color, group_num):
             # So for 3 seconds, show a "You lost message"
             if lost_count > FPS * 3:
                 #     run = False
-                lost_screen(ship, ship_name, ship_color, group_num)
+                lost_screen(ship, ship_name, ship_color, group_num, score)
                 run = False
             else:
                 for enemy in enemies:
@@ -411,7 +418,7 @@ def main(ship, ship_name, ship_color, group_num):
         if answering_question:
 
             # Slow down enemies by 50% while answering a question
-            enemy_velocity = (0.5 + (model.get_count_seen_facts(int(round(time.time() * 1000)) - START_TIME) * 0.1)) / 2
+            enemy_velocity = (start_enemy_velocity + (model.get_count_seen_facts(int(round(time.time() * 1000)) - START_TIME) * 0.1)) / 2
 
             code_text = str("Enter the kill code below")
             x = WIDTH / 2 - ANSWER_BOX.get_width() / 2
@@ -506,7 +513,7 @@ def main(ship, ship_name, ship_color, group_num):
                         show_answer(is_correct, answer, x, y + ANSWER_BOX.get_height())
 
                         # Update enemy velocity according to the amount of facts that have been seen
-                        enemy_velocity = 0.5 + (
+                        enemy_velocity = start_enemy_velocity + (
                                 model.get_count_seen_facts(int(round(time.time() * 1000)) - START_TIME) * 0.05)
 
                         answering_question = False
@@ -582,16 +589,41 @@ def main_menu(group_num):
                     about_screen()
 
 
-def lost_screen(ship, ship_name, ship_color, group_num):
+def lost_screen(ship, ship_name, ship_color, group_num, score):
+    global high_score
+
+    if score > high_score:
+        high_score_text = "Congratulations! You beat your own high score."
+        high_score = score
+    else:
+        high_score_text = "Well done! Please try again."
+
+    current_score_text = "Current score: " + str(score)
+    current_high_score_text = "High score: " + str(high_score)
+
     lost_font = pygame.font.SysFont("notosansmonocjkkr", 60)
-    lost_label = lost_font.render("You Lost!", 1, WHITE)
+    lost_label = lost_font.render("Game Over", 1, WHITE)
+
+    high_score_font = pygame.font.SysFont("notosansmonocjkkr", 30)
+    high_score_label = high_score_font.render(high_score_text, 1, WHITE)
+
+    current_high_score_font = pygame.font.SysFont("Arial", 25)
+    current_high_score_label = current_high_score_font.render(current_high_score_text, 1, WHITE)
+    current_score_font = pygame.font.SysFont("Arial", 25)
+    current_score_label = current_score_font.render(current_score_text, 1, WHITE)
+
+    y_lost_label = HEIGHT / 4 - lost_label.get_height()
+    y_high_score_text = y_lost_label + lost_label.get_height()
+    y_scores = y_high_score_text + lost_label.get_height()
+
     button_font = pygame.font.SysFont("notosansmonocjkkr", 20)
     button_width = 180
     button_height = 60
-    menu_button = Button(BACKGROUND_GREY, WIDTH / 2 - 1.5 * button_width, HEIGHT / 2 + lost_label.get_height(),
+    y_buttons = HEIGHT - 2 * lost_label.get_height()
+    menu_button = Button(BACKGROUND_GREY, WIDTH / 2 - 1.5 * button_width, y_buttons,
                          button_width, button_height, button_font,
                          "Menu")
-    restart_button = Button(BACKGROUND_GREY, WIDTH / 2 + button_width / 2, HEIGHT / 2 + lost_label.get_height(),
+    restart_button = Button(BACKGROUND_GREY, WIDTH / 2 + button_width / 2, y_buttons,
                             button_width, button_height, button_font,
                             "Try again")
 
@@ -600,7 +632,14 @@ def lost_screen(ship, ship_name, ship_color, group_num):
 
         WINDOW.blit(BACKGROUND, (0, 0))
         WINDOW.blit(lost_label,
-                    (WIDTH / 2 - lost_label.get_width() / 2, HEIGHT / 2 - lost_label.get_height()))
+                    (WIDTH / 2 - lost_label.get_width() / 2, y_lost_label))
+        WINDOW.blit(high_score_label,
+                    (WIDTH / 2 - high_score_label.get_width() / 2, y_high_score_text))
+        WINDOW.blit(current_score_label,
+                    (WIDTH * (3/8) - current_score_label.get_width() / 2, y_scores))
+        WINDOW.blit(current_high_score_label,
+                    (WIDTH * (5/8) - current_high_score_label.get_width() / 2, y_scores))
+
         menu_button.draw(WINDOW, WHITE)
         restart_button.draw(WINDOW, WHITE)
 

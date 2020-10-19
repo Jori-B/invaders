@@ -9,6 +9,7 @@ from classes.bigButton import BigButton
 from classes.rectangle import Rectangle
 from utilities.constants import *
 from utilities.main_functions import *
+from classes.endScreen import *
 
 import sys
 
@@ -70,6 +71,8 @@ def full_exp_main_menu():
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if one_button.isHovered(position):
                     group_num = 1
+                    end_screen("2")
+
                     done = default_main_menu(group_num)
 
                     print("FULL EXPERIMENT")
