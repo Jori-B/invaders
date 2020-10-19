@@ -94,9 +94,8 @@ def default_main(group_num):
         if minutes == 0 and seconds == 0:
             print("Experiment done")
             # TODO: Make it so that we can pass group number to break screen
-            group_number = 1
             code = "0000"
-            break_screen(group_number, code)
+            break_screen(group_num, code)
             run = False
 
         # Check for all events (keypresses, mouseclick, etc.
@@ -180,8 +179,8 @@ def default_main(group_num):
                             game_data = pd.read_csv('Save_Data/temp_basic_slimstampen_data.csv')
                             trial_nr = game_data['trial'].iloc[-1]
                         trial_nr += 1
-                        d = {'trial': trial_nr, 'block': block, 'is_gamification': [is_gamification],
-                             'answer_given': string}
+                        d = {'trial': trial_nr, 'block': block, 'group_number': group_num, 'ID_code_1': ID_CODE_1,
+                             'ID_code_2': ID_CODE_2, 'is_gamification': [is_gamification], 'answer_given': string}
 
                         if game_data.empty:
                             game_data = pd.DataFrame(data=d)
@@ -207,7 +206,7 @@ def default_main(group_num):
         pygame.display.update()
 
 
-def default_main_menu():
+def default_main_menu(group_num):
     button_font = pygame.font.SysFont("notosansmonocjkkr", 30)
     button_width = 400
     button_height = 80
@@ -248,7 +247,7 @@ def default_main_menu():
             # if start button is pressed then start the game
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if start_button.isHovered(position):
-                    default_main()
+                    default_main(group_num)
     # pygame.quit()
 
 
