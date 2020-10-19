@@ -4,18 +4,13 @@ import pandas as pd
 from classes.button import Button
 from classes.bigButton import BigButton
 from classes.rectangle import Rectangle
-from classes.player import Player
-from classes.enemy import Enemy
-#from classes.explosion import Explosion
-#from classes.disappear import Disappear
-from classes.reappear import Reappear
-from classes.move import Move
-from classes.model import Model
-from slimstampen.spacingmodel import Response
 from utilities.constants import *
 from utilities.main_functions import *
 from default_experiment import *
 from invaders import *
+
+pygame.font.init()
+pygame.init()
 
 def full_exp_main_menu():
 
@@ -73,8 +68,16 @@ def full_exp_main_menu():
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if one_button.isHovered(position):
                     default_main_menu()
+
+                    # TODO: add break 
+
+                    main_menu()
                 elif two_button.isHovered(position):
                     main_menu()
+
+                    # TODO: add break 
+
+                    default_main_menu()
 
     pygame.quit()
 
