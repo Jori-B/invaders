@@ -1,7 +1,0 @@
-trial,start_time,rt,correct,fact_id,question,answer,question2,alpha,block,is_gamification,answer_given
-1,1338,1927,False,22,13 x 7,91,7 x 13,0.3,1,False,12356
-2,6291,1190,False,22,13 x 7,91,7 x 13,0.3,1,[False],1
-3,10506,459,False,4,6 x 5,30,5 x 6,0.3,1,[False],2
-4,16146,3154,False,4,6 x 5,30,5 x 6,0.3,1,[False],9
-5,22330,935,False,32,14 x 9,126,9 x 14,0.3,1,[False],999
-6,26299,2451,True,33,16 x 2,32,2 x 16,0.3,1,[False],32
