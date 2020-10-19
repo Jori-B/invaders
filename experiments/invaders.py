@@ -282,7 +282,7 @@ def main(ship, ship_name, ship_color, group_num):
             # So for 3 seconds, show a "You lost message"
             if lost_count > FPS * 3:
                 #     run = False
-                lost_screen(ship, ship_name, ship_color)
+                lost_screen(ship, ship_name, ship_color, group_num)
                 run = False
             else:
                 for enemy in enemies:
@@ -582,7 +582,7 @@ def main_menu(group_num):
                     about_screen()
 
 
-def lost_screen(ship, ship_name, ship_color):
+def lost_screen(ship, ship_name, ship_color, group_num):
     lost_font = pygame.font.SysFont("notosansmonocjkkr", 60)
     lost_label = lost_font.render("You Lost!", 1, WHITE)
     button_font = pygame.font.SysFont("notosansmonocjkkr", 20)
@@ -623,11 +623,11 @@ def lost_screen(ship, ship_name, ship_color):
             if event.type == pygame.MOUSEBUTTONDOWN:
                 # Setting run to false bring you back to menu
                 if menu_button.isHovered(position):
-                    main_menu()
+                    main_menu(group_num)
                     run = False
                 # Restart the game
                 if restart_button.isHovered(position):
-                    main(ship, ship_name, ship_color)
+                    main(ship, ship_name, ship_color, group_num)
 
 
 

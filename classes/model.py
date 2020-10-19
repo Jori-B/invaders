@@ -11,13 +11,14 @@ class Model:
     # Index with tables_array["table"]["question in table"]["tuple content"].
     # E.g. tables_array[2][5][2] will return the answer to 3*6, which is 18.
     def add_facts_for_block(self, group_number, block):
+        times = range(2, 9 + 1)
         if (group_number == 1 and block == 1) or (group_number == 2 and block == 2):
             list_of_tables = [6, 7, 13, 18]
+            table_counter = 0
         else:
             list_of_tables = [8, 9, 14, 17]
-        times = range(2, 9 + 1)
+            table_counter = len(times)*len(list_of_tables)
         tables_array = []
-        table_counter = 0
         print(list_of_tables)
 
         for num1 in list_of_tables:
