@@ -32,7 +32,7 @@ infoObject = pygame.display.Info()
 
 # The minutes and seconds when someone started are defined globally. Namely, if someone pressed the
 # menu during the game, then the minutes and seconds should still count as having passed.
-minutes_start = 2
+minutes_start = 0
 seconds_start = 2
 start_ticks = 0
 
@@ -650,6 +650,7 @@ def lost_screen(ship, ship_name, ship_color, group_num, score):
                     (WIDTH * (3/8) - current_score_label.get_width() / 2, y_scores))
         WINDOW.blit(current_high_score_label,
                     (WIDTH * (5/8) - current_high_score_label.get_width() / 2, y_scores))
+        WINDOW.blit(GHOST_BOY_GOOD, (get_middle_x(GHOST_BOY_GOOD), HEIGHT / 2))
 
         menu_button.draw(WINDOW, WHITE)
         restart_button.draw(WINDOW, WHITE)

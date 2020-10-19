@@ -54,20 +54,6 @@ def end_screen(questionnaire_code):
             else:
                 WINDOW.blit(THANKS_TEXT, (get_middle_x(WELCOME_TEXT), HEIGHT / 4))
                 WINDOW.blit(GHOST_BOY_BYE, (get_middle_x(GHOST_BOY_BYE), img_y))
-                # WINDOW.blit(GHOST_BOY_BYE[picture_cnt], (get_middle_x(GHOST_BOY_BYE[picture_cnt]), img_y))
-                # if cnt_direction == "forward" and picture_cnt < 5:
-                #     picture_cnt += 1
-                # if cnt_direction == "forward" and picture_cnt == 5:
-                #     cnt_direction = "backward"
-                #     picture_cnt -= 1
-                # if cnt_direction == "backward" and picture_cnt < 1:
-                #     picture_cnt -= 1
-                # if cnt_direction == "backward" and picture_cnt == 1:
-                #     cnt_direction = "forward"
-                #     picture_cnt += 1
-
-
-
 
         pygame.display.update()
         for event in pygame.event.get():

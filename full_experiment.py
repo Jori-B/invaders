@@ -71,7 +71,7 @@ def full_exp_main_menu():
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if one_button.isHovered(position):
                     group_num = 1
-                    end_screen("2")
+
 
                     done = default_main_menu(group_num)
 
@@ -81,8 +81,9 @@ def full_exp_main_menu():
                     if done == True:
 
                     # TODO: add break 
-                        #break_screen(group_num, "0000")
+                        break_screen(group_num, "0000")
                         main_menu(group_num)
+                        end_screen("2")
                         exit()
                 elif two_button.isHovered(position):
                     group_num = 2
@@ -94,13 +95,12 @@ def full_exp_main_menu():
 
                     if done == True:
                     # TODO: add break 
-                    #break_screen(group_num, "0000")
+                        break_screen(group_num, "0000")
+
                         default_main_menu(group_num)
+                        end_screen("2")
                         exit()
 
-
-
-full_exp_main_menu()
 
 
 def break_screen(group_number, questionnaire_code):
@@ -161,9 +161,15 @@ def break_screen(group_number, questionnaire_code):
             if event.type == pygame.MOUSEBUTTONDOWN:
                 # Based on the condition bring the user to someplace
                 if continue_btn.isHovered(position):
-                    if group_number == 1:
-                        main(group_number)
-                        print("main(group_num=group_number)")
-                    if group_number == 2:
-                        default_experiment(group_number)
-                        print("default_experiment(group_num=group_number)")
+                    run = False
+                    # if group_number == 1:
+                    #     main(group_number)
+                    #     print("main(group_num=group_number)")
+                    # if group_number == 2:
+                    #     default_experiment(group_number)
+                    #     print("default_experiment(group_num=group_number)")
+
+full_exp_main_menu()
+
+
+

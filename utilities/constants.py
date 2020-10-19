@@ -16,9 +16,8 @@ WELCOME_TEXT = pygame.image.load(os.path.join("assets", "welcome_msg.png"))
 THANKS_TEXT = pygame.image.load(os.path.join("assets", "thanks_msg.png"))
 GHOST_BOY = pygame.image.load(os.path.join("assets", "mascot.png"))
 GHOST_BOY_BYE = pygame.image.load(os.path.join("assets", "bye_mascot.png"))
-# GHOST_BOY_BYE = [None] * 6
-# for i in range(1, 6):
-#     GHOST_BOY_BYE[i] = pygame.image.load(os.path.join("assets", "bye_mascot_" + str(i) + ".png"))
+GHOST_BOY_GOOD = pygame.image.load(os.path.join("assets", "good_job_mascot.png"))
+
 MENU_TEXT = pygame.image.load(os.path.join("assets/menu", "header.png"))
 MENU_SHIP = pygame.image.load(os.path.join("assets/menu", "menu_ship.png"))
 # Colors
