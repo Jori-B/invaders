@@ -101,9 +101,9 @@ def main(ship, ship_name, ship_color, group_num):
     stats = Stats(ship_name)
 
     # How fast the player can move every time you press the key a max of 5 pixels to move
-    player_velocity = 4 + stats.ship_speed
+    player_velocity = 4 + (2 * stats.ship_speed)
     laser_velocity = 4
-    player_laser_velocity = 3 + stats.laser_speed
+    player_laser_velocity = 3 + (2 * stats.laser_speed)
 
     # Define a player space ship at location
     player = create_new_player(ship, stats)
