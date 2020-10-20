@@ -12,7 +12,6 @@ def end_screen(questionnaire_code):
     link_font = pygame.font.SysFont("Arial", font_size * 2)
     end_text = "You\'ve finished the second and last block!\n" \
                "As with the first, we ask you to fill out a questionnaire.\n" \
-               f"In it, please enter \"{ID_CODE_2}\" under Experiment Code.\n" \
                "Go to the questionnaire using the following link: "
     link_text = "https://forms.gle/" + str(questionnaire_code)
     link_label = link_font.render(link_text, 1, WHITE)
