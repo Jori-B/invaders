@@ -36,6 +36,7 @@ infoObject = pygame.display.Info()
 minutes_start = 1
 seconds_start = 59
 start_ticks = 0
+ticks_offset = 0
 
 high_score = 0
 max_level = 0
@@ -54,6 +55,7 @@ def main(ship, ship_name, ship_color, group_num):
     global minutes_start
     global seconds_start
     global start_ticks
+    global ticks_offset
 
     global high_score
     global max_level
@@ -110,8 +112,7 @@ def main(ship, ship_name, ship_color, group_num):
 
     clock = pygame.time.Clock()
 
-    if start_ticks == 0:
-        start_ticks = pygame.time.get_ticks()  # starter tick
+    start_ticks = pygame.time.get_ticks()  # starter tick
 
     lost = False
     lost_count = 0
@@ -250,7 +251,7 @@ def main(ship, ship_name, ship_color, group_num):
     while run:
         clock.tick(FPS)
 
-        timer = (pygame.time.get_ticks() - start_ticks) / 1000  # calculate how many seconds since the start
+        timer = (pygame.time.get_ticks() - start_ticks + ticks_offset) / 1000  # calculate how many seconds since the start
         minutes = minutes_start - int(timer / 60)  # divide seconds by 60 to get the amount of minutes
         seconds = (seconds_start - int(timer)) % 60  # % the seconds passed so that only seconds are shown
 
@@ -395,6 +396,7 @@ def main(ship, ship_name, ship_color, group_num):
                         model_data = model.save_model_data()
                         save_data = pd.merge(model_data, game_data, on='trial', how='outer')
                         save_data.to_csv(PATH, index=False)
+                    ticks_offset += pygame.time.get_ticks() - start_ticks
                     return main_menu(group_num)
 
         redraw_window()
