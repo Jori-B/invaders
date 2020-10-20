@@ -20,7 +20,7 @@ infoObject = pygame.display.Info()
 # The minutes and seconds when someone started are defined globally. Namely, if someone pressed the
 # menu during the game, then the minutes and seconds should still count as having passed.
 minutes_start = 0
-seconds_start = 2
+seconds_start = 10
 start_ticks = 0
 
 def default_main(group_num):
@@ -95,7 +95,6 @@ def default_main(group_num):
         WINDOW.blit(BACKGROUND, (0, 0))
 
         # If the specified time is up the user should switch to the break screen
-        print("minutes " + str(minutes) + " seconds " + str(seconds))
         # The second statement is a failsafe for when the time.sleep() function cause the timer to run back to 59 sec again
         if (minutes <= 0 and seconds <= 0) or (minutes <= 0 and seconds_start - int(timer) < 0):
             if not game_data.empty:

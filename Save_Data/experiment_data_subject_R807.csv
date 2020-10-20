@@ -1,0 +1,2 @@
+trial,start_time,rt,correct,fact_id,question,answer,question2,alpha,block,group_number,ID_code_1,ID_code_2,is_gamification,answer_given
+1,1236,2390,True,2,6 x 3,18,3 x 6,0.3,1,1,m807,q509,False,18
