@@ -1,6 +1,0 @@
-trial,start_time,rt,correct,fact_id,question,answer,question2,alpha,block,group_number,ID_code_1,ID_code_2,is_gamification,answer_given,shots_fired,shots_fired_total,ship_name,ship_color,lives,level,enemies_on_screen
-1,998,1490,False,23,13 x 8,104,8 x 13,0.3,1.0,1.0,H584,e253,False,456.0,,,,,,,
-2,5499,1734,True,17,13 x 2,26,2 x 13,0.3,1.0,1.0,H584,e253,[False],26.0,,,,,,,
-3,17459,1464,False,10008,8 x 9,72,9 x 8,0.3,2.0,1.0,H584,e253,True,28.0,2.0,2.0,lord_nelson,red,3.0,1.0,1.0
-4,27216,1627,True,10012,9 x 5,45,5 x 9,0.3,2.0,1.0,H584,e253,True,45.0,5.0,7.0,lord_nelson,['red'],3.0,1.0,2.0
-5,31897,1310,False,10008,8 x 9,72,9 x 8,0.3,2.0,1.0,H584,e253,True,78.0,1.0,8.0,lord_nelson,['red'],3.0,1.0,1.0

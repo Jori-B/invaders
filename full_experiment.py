@@ -18,7 +18,6 @@ pygame.font.init()
 pygame.init()
 
 def full_exp_main_menu():
-
     font_size = 35
     explanation_font = pygame.font.SysFont("Arial", font_size)
 
