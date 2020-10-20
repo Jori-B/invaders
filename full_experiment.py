@@ -111,7 +111,7 @@ def break_screen(group_number, questionnaire_code):
     link_font.set_underline(True)
     break_text = "You can now take a short break. During this break,\n" \
                  "we ask you to fill out a questionnaire.\n" \
-                 "Go to the questionnaire using the following link: "
+                 "Go to the questionnaire by clicking the following link: "
     link_text = "https://forms.gle/" + str(questionnaire_code)
     link_label = link_font.render(link_text, 1, WHITE)
     max_y_text = render_multi_line(break_text, 150, 70, font_size + 5, break_font)

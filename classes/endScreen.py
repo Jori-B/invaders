@@ -14,7 +14,7 @@ def end_screen(questionnaire_code):
     link_font.set_underline(True)
     end_text = "You\'ve finished the second and last block!\n" \
                "As with the first, we ask you to fill out a questionnaire.\n" \
-               "Go to the questionnaire using the following link: "
+               "Go to the questionnaire by clicking the following link: "
     link_text = "https://forms.gle/" + str(questionnaire_code)
     link_label = link_font.render(link_text, 1, WHITE)
     max_y_text = render_multi_line(end_text, 150, 70, font_size + 5, end_font)
