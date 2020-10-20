@@ -10,7 +10,7 @@ def end_screen(questionnaire_code):
     font_size = 25
     end_font = pygame.font.SysFont("Arial", font_size)
     link_font = pygame.font.SysFont("Arial", font_size * 2)
-    end_text = "You finished the second an last block!\n" \
+    end_text = "You\'ve finished the second and last block!\n" \
                "As with the first, we ask you to fill out a questionnaire.\n" \
                f"In it, please enter \"{ID_CODE_2}\" under Experiment Code.\n" \
                "Go to the questionnaire using the following link: "
@@ -68,6 +68,10 @@ def end_screen(questionnaire_code):
             # if pressing quit 'x' then stop
             if event.type == pygame.QUIT:
                 save_full_experiment_data()
+                if os.path.isfile('Save_Data/temp_basic_slimstampen_data.csv'):
+                    os.remove("Save_Data/temp_basic_slimstampen_data.csv")
+                if os.path.isfile('Save_Data/temp_game_data.csv'):
+                    os.remove("Save_Data/temp_game_data.csv")
                 run = False
                 pygame.quit()
                 sys.exit()
