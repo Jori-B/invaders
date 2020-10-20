@@ -13,7 +13,7 @@
 
 
 #### Requirements
-- [Python 3](https://www.python.org/downloads/) (recommended 3.7 or 3.7,7) or Python 2.7+
+- [Python 3](https://www.python.org/downloads/) (recommended 3.7 or 3.7.7) or Python 2.7+
 - [pandas] 1.1.2(https://pandas.pydata.org/getting_started.html)
 - [numpy] 1.18.5
 - [pygame] 2.0.0.dev1 (try 2.0.0.dev6 for python 3.8+)
