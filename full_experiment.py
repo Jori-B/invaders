@@ -18,10 +18,6 @@ pygame.font.init()
 pygame.init()
 
 def full_exp_main_menu():
-    if os.path.isfile('Save_Data/temp_basic_slimstampen_data.csv'):
-        os.remove("Save_Data/temp_basic_slimstampen_data.csv")
-    if os.path.isfile('Save_Data/temp_game_data.csv'):
-        os.remove("Save_Data/temp_game_data.csv")
 
     font_size = 35
     explanation_font = pygame.font.SysFont("Arial", font_size)
