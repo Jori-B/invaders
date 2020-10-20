@@ -1,0 +1,13 @@
+trial,block,group_number,ID_code_1,ID_code_2,is_gamification,answer_given,shots_fired,shots_fired_total,ship_name,ship_color,lives,level,enemies_on_screen
+1,1,2,K259,A278,True,22.0,1,1,pointy_boy,red,3,1,1
+2,1,2,K259,A278,True,,1,2,pointy_boy,['red'],3,1,3
+3,1,2,W710,B486,True,34.0,3,3,pointy_boy,['red'],2,2,3
+4,1,2,g624,H10,True,40.0,1,1,pointy_boy,['green'],3,1,1
+5,1,2,g624,H10,True,64.0,1,2,pointy_boy,['green'],3,1,2
+6,1,2,g624,H10,True,2.0,1,3,pointy_boy,['green'],3,2,1
+7,1,2,E179,S363,True,153.0,1,1,commander_cosmonaut,['purple'],3,1,1
+8,1,2,E179,S363,True,63.0,1,2,commander_cosmonaut,['purple'],3,1,2
+9,1,2,E179,S363,True,153.0,1,3,commander_cosmonaut,['purple'],3,2,2
+10,1,2,R610,j334,True,27.0,1,1,pointy_boy,['red'],3,1,1
+11,1,2,x674,p293,True,2.0,1,1,pointy_boy,['green'],3,1,1
+12,1,2,C299,Z890,True,2,1,1,pointy_boy,['green'],3,1,1

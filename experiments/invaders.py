@@ -33,11 +33,13 @@ infoObject = pygame.display.Info()
 
 # The minutes and seconds when someone started are defined globally. Namely, if someone pressed the
 # menu during the game, then the minutes and seconds should still count as having passed.
-minutes_start = 0
-seconds_start = 2
+minutes_start = 11
+seconds_start = 20
 start_ticks = 0
 
 high_score = 0
+max_level = 0
+max_answers_in_a_row_correct = 0
 
 
 def create_new_player(ship, stats):
@@ -54,7 +56,10 @@ def main(ship, ship_name, ship_color, group_num):
     global start_ticks
 
     global high_score
+    global max_level
+    global max_answers_in_a_row_correct
 
+    answers_in_a_row_correct = 0
     # Dictates if while loop is going to run
     run = True
     # Amount of frames per second (checking if character is moving once every second)
@@ -124,19 +129,19 @@ def main(ship, ship_name, ship_color, group_num):
         if is_correct:
             text = "Correct!"
             correct_img = CORRECT_IMG
-            main_font_size = 30
-            main_font = pygame.font.SysFont("notosansmonocjkkr", main_font_size)
-            correct_box = Rectangle(WHITE, x + correct_img.get_width(), y, 250, 100, main_font, main_font, False, text)
+            cor_font_size = 30
+            cor_font = pygame.font.SysFont("notosansmonocjkkr", cor_font_size)
+            correct_box = Rectangle(WHITE, x + correct_img.get_width(), y, 250, 100, cor_font, main_font, False, text)
             correct_box.draw(WINDOW, None, True)
 
         else:
             text = "Incorrect! Answer was: "
             correct_img = INCORRECT_IMG
-            main_font_size = 20
-            main_font = pygame.font.SysFont("notosansmonocjkkr", main_font_size)
+            cor_font_size = 20
+            cor_font = pygame.font.SysFont("notosansmonocjkkr", cor_font_size)
             answer_font = pygame.font.SysFont("notosansmonocjkkr", 30)
 
-            correct_box = Rectangle(WHITE, x + correct_img.get_width(), y, 250, 100, main_font, answer_font, True, text,
+            correct_box = Rectangle(WHITE, x + correct_img.get_width(), y, 250, 100, cor_font, answer_font, True, text,
                                     str(answer))
             correct_box.draw(WINDOW, None, True)
 
@@ -149,6 +154,7 @@ def main(ship, ship_name, ship_color, group_num):
         if is_correct:
             # Less time for when the answer is correct
             time.sleep(1)
+
         else:
             time.sleep(3)
 
@@ -294,6 +300,7 @@ def main(ship, ship_name, ship_color, group_num):
         # If there are no more enemies on screen then
         if len(enemies) == 0 or len(enemies) == 1:
             level += 1
+            max_level = level
             y_background = 0
             y_background_new = - HEIGHT
             wave_length += 3
@@ -375,7 +382,6 @@ def main(ship, ship_name, ship_color, group_num):
                     player.health -= 50
                     explode_object(enemy, True)
 
-
         # Draw the menu button
         for event in events:
             position = pygame.mouse.get_pos()
@@ -421,7 +427,7 @@ def main(ship, ship_name, ship_color, group_num):
             else:
                 question = f"{new_fact[3]} = "
             # TODO: Add multiplication showing and check if answer is correct or wrong
-            main_font = pygame.font.SysFont("notosansmonocjkkr", 25)
+            main_font = pygame.font.SysFont("notosansmonocjkkr", 30)
             string = ""
 
             answering_question = True
@@ -429,7 +435,8 @@ def main(ship, ship_name, ship_color, group_num):
         if answering_question:
 
             # Slow down enemies by 50% while answering a question
-            enemy_velocity = (start_enemy_velocity + (model.get_count_seen_facts(int(round(time.time() * 1000)) - START_TIME) * 0.1)) / 2
+            enemy_velocity = (start_enemy_velocity + (
+                        model.get_count_seen_facts(int(round(time.time() * 1000)) - START_TIME) * 0.1)) / 2
 
             code_text = str("Enter the kill code below")
             x = WIDTH / 2 - ANSWER_BOX.get_width() / 2
@@ -479,6 +486,13 @@ def main(ship, ship_name, ship_color, group_num):
                             points_added = 50 + bonus_score
                             score = score + points_added
                             correct_count += 1
+                            answers_in_a_row_correct += 1
+                            if answers_in_a_row_correct > max_answers_in_a_row_correct:
+                                max_answers_in_a_row_correct = answers_in_a_row_correct
+                                print(max_answers_in_a_row_correct)
+                        else:
+                            answers_in_a_row_correct = 0
+                            print(answers_in_a_row_correct)
                         total_count += 1
                         # Log the response
                         # Stringify answer instead of typecasting string as int (since a string might not
@@ -570,7 +584,6 @@ def main_menu(group_num):
         if game_done:
             return True
 
-
         WINDOW.blit(BACKGROUND, (0, 0))
         start_button.draw(WINDOW, WHITE)
         upgrade_button.draw(WINDOW, WHITE)
@@ -656,9 +669,9 @@ def lost_screen(ship, ship_name, ship_color, group_num, score):
         WINDOW.blit(high_score_label,
                     (WIDTH / 2 - high_score_label.get_width() / 2, y_high_score_text))
         WINDOW.blit(current_score_label,
-                    (WIDTH * (3/8) - current_score_label.get_width() / 2, y_scores))
+                    (WIDTH * (3 / 8) - current_score_label.get_width() / 2, y_scores))
         WINDOW.blit(current_high_score_label,
-                    (WIDTH * (5/8) - current_high_score_label.get_width() / 2, y_scores))
+                    (WIDTH * (5 / 8) - current_high_score_label.get_width() / 2, y_scores))
         WINDOW.blit(GHOST_BOY_GOOD, (get_middle_x(GHOST_BOY_GOOD), HEIGHT / 2))
 
         menu_button.draw(WINDOW, WHITE)
@@ -755,7 +768,12 @@ def show_explanation(ship, chosen_ship, color, group_num):
 
     return False
 
+
 def choose_fighter(group_num):
+    donut_is_locked = True
+    if high_score > 3000:
+        donut_is_locked = False
+
     title_font = pygame.font.SysFont("notosansmonocjkkr", 40)
     button_font = pygame.font.SysFont("notosansmonocjkkr", 20)
     # Essentially the screen is split up into 21 parts. Buttons take up 4*4 = 16 parts of space
@@ -772,8 +790,8 @@ def choose_fighter(group_num):
     pointy_button = BigButton(BACKGROUND_GREY, WIDTH * (11 / 21), button_y,
                               button_width, button_height, button_font, POINTY_BOY, True, "pointy_boy", "Pointy Boy")
     donut_button = BigButton(BACKGROUND_GREY, WIDTH * (16 / 21), button_y, button_width,
-                             button_height, button_font, DONUT, True, "donut_warrior", "Donut Warrior", True,
-                             "3 answers correct in a row in a row to unlock")
+                             button_height, button_font, DONUT, True, "donut_warrior", "Donut Warrior", donut_is_locked,
+                             "Get a score greater than 3000 to unlock")
 
     run = True
     while run:
@@ -824,14 +842,38 @@ def choose_fighter(group_num):
     # pygame.quit()
     return False
 
+
 def switch_unlock_texts(chosen_ship):
     switcher = {
         "lord_nelson": "Get to level 3 to unlock",
-        "commander_cosmonaut": "Get a score of 5000 to unlock",
-        "pointy_boy": "Hit 3 aliens with only 3 lasers in a row to unlock",
-        "donut_warrior": "8 answers correct in a row in a row to unlock"
+        "commander_cosmonaut": "8 answers correct in a row in a row to unlock",
+        "pointy_boy": "Get to level 8 to unlock",
+        "donut_warrior": "Get a score of 5000 to unlock"
     }
     return switcher.get(chosen_ship, "")
+
+
+def is_locked(chosen_ship):
+    if chosen_ship == "lord_nelson":
+        if max_level > 2:
+            return False
+        else:
+            return True
+    if chosen_ship == "commander_cosmonaut":
+        if max_answers_in_a_row_correct > 7:
+            return False
+        else:
+            return True
+    if chosen_ship == "pointy_boy":
+        if max_level > 8:
+            return False
+        else:
+            return True
+    if chosen_ship == "donut_warrior":
+        if high_score > 5000:
+            return False
+        else:
+            return True
 
 
 def choose_color(chosen_ship, group_num):
@@ -853,7 +895,8 @@ def choose_color(chosen_ship, group_num):
                            button_width,
                            button_height, button_font, choose_ship(chosen_ship, "red"), "", False, "Red")
     gold_button = BigButton(BACKGROUND_GREY, WIDTH * (16 / 21), button_y, button_width,
-                            button_height, button_font, choose_ship(chosen_ship, "gold"), "", False, "Gold", True,
+                            button_height, button_font, choose_ship(chosen_ship, "gold"), "", False, "Gold",
+                            is_locked(chosen_ship),
                             switch_unlock_texts(chosen_ship))
 
     run = True
@@ -913,8 +956,8 @@ def choose_color(chosen_ship, group_num):
     return False
     # pygame.quit()
 
-def before_main_menu(group_num):
 
+def before_main_menu(group_num):
     done = False
 
     button_font = pygame.font.SysFont("notosansmonocjkkr", 30)
