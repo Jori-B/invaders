@@ -33,8 +33,8 @@ infoObject = pygame.display.Info()
 
 # The minutes and seconds when someone started are defined globally. Namely, if someone pressed the
 # menu during the game, then the minutes and seconds should still count as having passed.
-minutes_start = 0
-seconds_start = 10
+minutes_start = 1
+seconds_start = 59
 start_ticks = 0
 
 high_score = 0
@@ -967,7 +967,7 @@ def before_main_menu(group_num):
     start_button = Button(BACKGROUND_GREY, button_x, start_button_y, button_width,
                           button_height, button_font, "Continue")
     if group_num == 2:
-        explanation_general = "This is the Game block of the experiment. \n\n" \
+        explanation_general = "This is the \"Space Times\" game block of the experiment. \n\n" \
                               "In the upcoming block you will solve multiplication questions.\n" \
                               "After 12 minutes there is a break in which you will be asked\n" \
                               "to fill out a questionnaire about your experience with the task\n" \

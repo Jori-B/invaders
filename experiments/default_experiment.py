@@ -19,8 +19,8 @@ infoObject = pygame.display.Info()
 
 # The minutes and seconds when someone started are defined globally. Namely, if someone pressed the
 # menu during the game, then the minutes and seconds should still count as having passed.
-minutes_start = 0
-seconds_start = 10
+minutes_start = 1
+seconds_start = 59
 start_ticks = 0
 
 def default_main(group_num):
