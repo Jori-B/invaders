@@ -48,6 +48,10 @@ def end_screen(questionnaire_code):
         else:
             time_passed_in_sec = (pygame.time.get_ticks() - start_time) / 1000
             if time_passed_in_sec > 3:
+                if os.path.isfile('Save_Data/temp_basic_slimstampen_data.csv'):
+                    os.remove("Save_Data/temp_basic_slimstampen_data.csv")
+                if os.path.isfile('Save_Data/temp_game_data.csv'):
+                    os.remove("Save_Data/temp_game_data.csv")
                 save_full_experiment_data()
                 run = False
                 pygame.quit()
@@ -64,6 +68,10 @@ def end_screen(questionnaire_code):
             # if pressing quit 'x' then stop
             if event.type == pygame.QUIT:
                 save_full_experiment_data()
+                if os.path.isfile('Save_Data/temp_basic_slimstampen_data.csv'):
+                    os.remove("Save_Data/temp_basic_slimstampen_data.csv")
+                if os.path.isfile('Save_Data/temp_game_data.csv'):
+                    os.remove("Save_Data/temp_game_data.csv")
                 run = False
                 pygame.quit()
                 sys.exit()

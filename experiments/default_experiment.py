@@ -40,7 +40,8 @@ def default_main(group_num):
         trial_nr = 0
     else:
         block = 2
-        trial_nr = pd.read_csv("Save_Data/temp_game_data.csv").shape[0]
+        if os.path.isfile("Save_Data/temp_game_data.csv"):
+            trial_nr = pd.read_csv("Save_Data/temp_game_data.csv").shape[0]
     game_data = pd.DataFrame()
     is_gamification = False
 
@@ -274,9 +275,5 @@ def default_main_menu(group_num):
 
     # pygame.quit()
     return False
-
-
-if os.path.isfile('Save_Data/temp_basic_slimstampen_data.csv'):
-    os.remove("Save_Data/temp_basic_slimstampen_data.csv")
 
 #default_main_menu()

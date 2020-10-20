@@ -34,7 +34,7 @@ infoObject = pygame.display.Info()
 # The minutes and seconds when someone started are defined globally. Namely, if someone pressed the
 # menu during the game, then the minutes and seconds should still count as having passed.
 minutes_start = 0
-seconds_start = 2
+seconds_start = 20
 start_ticks = 0
 
 high_score = 0
@@ -70,7 +70,8 @@ def main(ship, ship_name, ship_color, group_num):
     # if this_is_the_first_block:
     if group_num == 1:
         block = 2
-        trial_nr = pd.read_csv('Save_Data/temp_basic_slimstampen_data.csv').shape[0]
+        if os.path.isfile('Save_Data/temp_basic_slimstampen_data.csv'):
+            trial_nr = pd.read_csv('Save_Data/temp_basic_slimstampen_data.csv').shape[0]
         print(trial_nr)
     else:
         block = 1
@@ -912,7 +913,4 @@ def choose_color(chosen_ship, group_num):
     return False
     # pygame.quit()
 
-
-if os.path.isfile('Save_Data/temp_game_data.csv'):
-    os.remove("Save_Data/temp_game_data.csv")
 # main_menu()

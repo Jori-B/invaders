@@ -1,3 +1,0 @@
-trial,start_time,rt,correct,fact_id,question,answer,question2,alpha,block,group_number,ID_code_1,ID_code_2,is_gamification,answer_given
-1,1488,1103,False,17,13 x 2,26,2 x 13,0.3,1,1,H700,z149,False,
-2,5612,3930,True,25,18 x 2,36,2 x 18,0.3,1,1,H700,z149,[False],36.0
