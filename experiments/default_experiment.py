@@ -189,8 +189,8 @@ def default_main(group_num):
                             game_data = pd.read_csv('Save_Data/temp_basic_slimstampen_data.csv')
                             trial_nr = game_data['trial'].iloc[-1]
                         trial_nr += 1
-                        d = {'trial': trial_nr, 'block': block, 'group_number': group_num, 'ID_code_1': ID_CODE_1,
-                             'ID_code_2': ID_CODE_2, 'is_gamification': [is_gamification], 'answer_given': string}
+                        d = {'trial': trial_nr, 'block': block, 'group_number': group_num,
+                             'is_gamification': [is_gamification], 'answer_given': string}
 
                         if game_data.empty:
                             game_data = pd.DataFrame(data=d)

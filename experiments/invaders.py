@@ -33,8 +33,8 @@ infoObject = pygame.display.Info()
 
 # The minutes and seconds when someone started are defined globally. Namely, if someone pressed the
 # menu during the game, then the minutes and seconds should still count as having passed.
-minutes_start = 11
-seconds_start = 20
+minutes_start = 0
+seconds_start = 40
 start_ticks = 0
 
 high_score = 0
@@ -77,7 +77,6 @@ def main(ship, ship_name, ship_color, group_num):
         block = 2
         if os.path.isfile('Save_Data/temp_basic_slimstampen_data.csv'):
             trial_nr = pd.read_csv('Save_Data/temp_basic_slimstampen_data.csv').shape[0]
-        print(trial_nr)
     else:
         block = 1
         trial_nr = 0
@@ -300,7 +299,8 @@ def main(ship, ship_name, ship_color, group_num):
         # If there are no more enemies on screen then
         if len(enemies) == 0 or len(enemies) == 1:
             level += 1
-            max_level = level
+            if level > max_level:
+                max_level = level
             y_background = 0
             y_background_new = - HEIGHT
             wave_length += 3
@@ -435,8 +435,7 @@ def main(ship, ship_name, ship_color, group_num):
         if answering_question:
 
             # Slow down enemies by 50% while answering a question
-            enemy_velocity = (start_enemy_velocity + (
-                        model.get_count_seen_facts(int(round(time.time() * 1000)) - START_TIME) * 0.1)) / 2
+            enemy_velocity = (start_enemy_velocity + (model.get_count_seen_facts(int(round(time.time() * 1000)) - START_TIME) * 0.05)) / 2
 
             code_text = str("Enter the kill code below")
             x = WIDTH / 2 - ANSWER_BOX.get_width() / 2
@@ -521,8 +520,8 @@ def main(ship, ship_name, ship_color, group_num):
                             game_data = pd.read_csv('Save_Data/temp_game_data.csv')
                             trial_nr = game_data['trial'].iloc[-1]
                         trial_nr += 1
-                        d = {'trial': trial_nr, 'block': block, 'group_number': group_num, 'ID_code_1': ID_CODE_1,
-                             'ID_code_2': ID_CODE_2, 'is_gamification': is_gamification, 'answer_given': string,
+                        d = {'trial': trial_nr, 'block': block, 'group_number': group_num,
+                             'is_gamification': is_gamification, 'answer_given': string,
                              'shots_fired': player.shots_fired - temp_shots_fired,
                              'shots_fired_total': player.shots_fired, 'ship_name': ship_name,
                              'ship_color': [ship_color], 'lives': lives, 'level': level,

@@ -11,6 +11,7 @@ from utilities.constants import *
 from utilities.main_functions import *
 from classes.endScreen import *
 from classes.saveData import *
+import webbrowser
 
 import sys
 
@@ -18,7 +19,6 @@ pygame.font.init()
 pygame.init()
 
 def full_exp_main_menu():
-
     font_size = 35
     explanation_font = pygame.font.SysFont("Arial", font_size)
 
@@ -82,9 +82,9 @@ def full_exp_main_menu():
                     if done == True:
 
                     # TODO: add break 
-                        break_screen(group_num, "0000")
+                        break_screen(group_num, "FgkZUPkYWuW3aug88")
                         before_main_menu(group_num)
-                        end_screen("1")
+                        end_screen("ebGJPqoxMzf3K4Yi7")
                         exit()
                 elif two_button.isHovered(position):
                     group_num = 2
@@ -96,10 +96,10 @@ def full_exp_main_menu():
 
                     if done == True:
                     # TODO: add break 
-                        break_screen(group_num, "0000")
+                        break_screen(group_num, "ebGJPqoxMzf3K4Yi7")
 
                         default_main_menu(group_num)
-                        end_screen("2")
+                        end_screen("FgkZUPkYWuW3aug88")
                         exit()
 
 
@@ -110,7 +110,6 @@ def break_screen(group_number, questionnaire_code):
     link_font = pygame.font.SysFont("Arial", font_size * 2)
     break_text = "You can now take a short break. During this break,\n" \
                  "we ask you to fill out a questionnaire.\n" \
-                 f"In it, pease enter \"{ID_CODE_1}\" under Experiment Code.\n" \
                  "Go to the questionnaire using the following link: "
     link_text = "https://forms.gle/" + str(questionnaire_code)
     link_label = link_font.render(link_text, 1, WHITE)
