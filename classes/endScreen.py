@@ -2,6 +2,7 @@ import sys
 from classes.button import Button
 from utilities.main_functions import *
 from classes.saveData import *
+import webbrowser
 
 
 def end_screen(questionnaire_code):
@@ -10,6 +11,7 @@ def end_screen(questionnaire_code):
     font_size = 25
     end_font = pygame.font.SysFont("Arial", font_size)
     link_font = pygame.font.SysFont("Arial", font_size * 2)
+    link_font.set_underline(True)
     end_text = "You\'ve finished the second and last block!\n" \
                "As with the first, we ask you to fill out a questionnaire.\n" \
                "Go to the questionnaire using the following link: "
@@ -28,6 +30,8 @@ def end_screen(questionnaire_code):
 
     close_btn_y = close_text_y + close_label.get_height() * 3
 
+    link_btn = Button(BACKGROUND_GREY, get_middle_x(link_label), link_y, link_label.get_width(), link_label.get_height(), link_font, link_text)
+
     close_btn = Button(BACKGROUND_GREY, get_middle_x(button_width), close_btn_y,
                           button_width, button_height, button_font, "Finish")
 
@@ -38,8 +42,8 @@ def end_screen(questionnaire_code):
 
         if not has_pressed_close:
             render_multi_line(end_text, 150, 50, font_size + 5, end_font)
-            WINDOW.blit(link_label,
-                        (get_middle_x(link_label), link_y))
+            # WINDOW.blit(link_label,(get_middle_x(link_label), link_y))
+            link_btn.draw(WINDOW, BACKGROUND_GREY)
             WINDOW.blit(GHOST_BOY, (get_middle_x(GHOST_BOY), img_y))
             WINDOW.blit(close_label,
                         (get_middle_x(close_label), close_text_y))
@@ -81,8 +85,10 @@ def end_screen(questionnaire_code):
 
             # if continue button is pressed then start the next phase of the experiment
             if event.type == pygame.MOUSEBUTTONDOWN:
+                if link_btn.isHovered(position):
+                    webbrowser.open("https://forms.gle/" + str(questionnaire_code))
                 # Based on the condition bring the user to someplace
-                if close_btn.isHovered(position):
+                elif close_btn.isHovered(position):
                     start_time = pygame.time.get_ticks()
                     picture_cnt = 1
                     cnt_direction = "forward"

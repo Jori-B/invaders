@@ -108,6 +108,7 @@ def break_screen(group_number, questionnaire_code):
     font_size = 25
     break_font = pygame.font.SysFont("Arial", font_size)
     link_font = pygame.font.SysFont("Arial", font_size * 2)
+    link_font.set_underline(True)
     break_text = "You can now take a short break. During this break,\n" \
                  "we ask you to fill out a questionnaire.\n" \
                  "Go to the questionnaire using the following link: "
@@ -127,6 +128,9 @@ def break_screen(group_number, questionnaire_code):
 
     continue_btn_y = continue_text_y + continue_label.get_height() * 3
 
+
+    link_btn = Button(BACKGROUND_GREY, get_middle_x(link_label), link_y, link_label.get_width(), link_label.get_height(), link_font, link_text)
+
     continue_btn = Button(BACKGROUND_GREY, get_middle_x(button_width), continue_btn_y,
                           button_width, button_height, button_font, "Continue")
 
@@ -136,8 +140,8 @@ def break_screen(group_number, questionnaire_code):
 
         WINDOW.blit(BACKGROUND, (0, 0))
         render_multi_line(break_text, 150, 50, font_size + 5, break_font)
-        WINDOW.blit(link_label,
-                    (get_middle_x(link_label), link_y))
+        #WINDOW.blit(link_label, (get_middle_x(link_label), link_y))
+        link_btn.draw(WINDOW, BACKGROUND_GREY)
         WINDOW.blit(GHOST_BOY, (get_middle_x(GHOST_BOY), img_y))
         WINDOW.blit(continue_label,
                     (get_middle_x(continue_label), continue_text_y))
@@ -159,8 +163,10 @@ def break_screen(group_number, questionnaire_code):
 
             # if continue button is pressed then start the next phase of the experiment
             if event.type == pygame.MOUSEBUTTONDOWN:
+                if link_btn.isHovered(position):
+                    webbrowser.open("https://forms.gle/" + str(questionnaire_code))
                 # Based on the condition bring the user to someplace
-                if continue_btn.isHovered(position):
+                elif continue_btn.isHovered(position):
                     run = False
                     # if group_number == 1:
                     #     main(group_number)
