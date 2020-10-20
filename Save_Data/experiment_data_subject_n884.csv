@@ -1,0 +1,5 @@
+trial,start_time,rt,correct,fact_id,question,answer,question2,alpha,block,group_number,ID_code_1,ID_code_2,is_gamification,answer_given,shots_fired,shots_fired_total,ship_name,ship_color,lives,level,enemies_on_screen
+1,15264,1870,True,10020,14 x 5,70,5 x 14,0.3,1.0,2.0,M884,k192,True,70.0,3.0,3.0,lord_nelson,green,3.0,1.0,2.0
+2,20028,566,False,10013,9 x 6,54,6 x 9,0.3,1.0,2.0,M884,k192,True,234.0,1.0,4.0,lord_nelson,['green'],3.0,1.0,1.0
+3,26682,2308,True,17,13 x 2,26,2 x 13,0.3,2.0,2.0,M884,k192,False,26.0,,,,,,,
+4,31998,2361,True,12,7 x 5,35,5 x 7,0.3,2.0,2.0,M884,k192,[False],35.0,,,,,,,

@@ -1,0 +1,5 @@
+trial,start_time,rt,correct,fact_id,question,answer,question2,alpha,block,group_number,ID_code_1,ID_code_2,is_gamification,answer_given,shots_fired,shots_fired_total,ship_name,ship_color,lives,level,enemies_on_screen
+1,1488,1405,True,9,7 x 2,14,2 x 7,0.3,1.0,1.0,R550,t797,False,14.0,,,,,,,
+2,5903,406,False,32,18 x 9,162,9 x 18,0.3,1.0,1.0,R550,t797,[False],26.0,,,,,,,
+3,9323,425,True,9,7 x 2,14,2 x 7,0.3,1.0,1.0,R550,t797,[False],14.0,,,,,,,
+4,24243,2769,False,10029,17 x 6,102,6 x 17,0.3,2.0,1.0,R550,t797,True,36.0,6.0,6.0,pointy_boy,red,3.0,1.0,1.0

@@ -70,7 +70,8 @@ def main(ship, ship_name, ship_color, group_num):
     # if this_is_the_first_block:
     if group_num == 1:
         block = 2
-        trial_nr = pd.read_csv('Save_Data/temp_basic_slimstampen_data.csv').shape[0]
+        if os.path.isfile('Save_Data/temp_basic_slimstampen_data.csv'):
+            trial_nr = pd.read_csv('Save_Data/temp_basic_slimstampen_data.csv').shape[0]
         print(trial_nr)
     else:
         block = 1
@@ -970,10 +971,4 @@ def before_main_menu(group_num):
                 if start_button.isHovered(position):
                     return main_menu(group_num)
 
-    # pygame.quit()
     return False
-
-
-if os.path.isfile('Save_Data/temp_game_data.csv'):
-    os.remove("Save_Data/temp_game_data.csv")
-# main_menu()
