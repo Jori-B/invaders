@@ -34,7 +34,7 @@ infoObject = pygame.display.Info()
 # The minutes and seconds when someone started are defined globally. Namely, if someone pressed the
 # menu during the game, then the minutes and seconds should still count as having passed.
 minutes_start = 0
-seconds_start = 40
+seconds_start = 10
 start_ticks = 0
 
 high_score = 0
