@@ -912,6 +912,67 @@ def choose_color(chosen_ship, group_num):
     return False
     # pygame.quit()
 
+def before_main_menu(group_num):
+
+    done = False
+
+    button_font = pygame.font.SysFont("notosansmonocjkkr", 30)
+    button_width = 400
+    button_height = 80
+    button_x = WIDTH / 2 - button_width / 2
+    start_button_y = 3 * HEIGHT / 4
+    start_button = Button(BACKGROUND_GREY, button_x, start_button_y, button_width,
+                          button_height, button_font, "Continue")
+    if group_num == 2:
+        explanation_general = "This is the Game block of the experiment. \n\n" \
+                              "In the upcoming block you will solve multiplication questions.\n" \
+                              "After 12 minutes there is a break in which you will be asked\n" \
+                              "to fill out a questionnaire about your experience with the task\n" \
+                              "and the Space Times program. \n" \
+                              "It should be noted that you are allowed to switch ships when\n" \
+                              "you're Game Over, by entering the menu again.\n\n" \
+                              "Have fun and good luck!"
+    else:
+        explanation_general = "Next is the Game block of the experiment. \n\n" \
+                              "In the upcoming block you will again solve multiplication questions.\n" \
+                              "After 12 minutes there is a break in which you will be asked\n" \
+                              "to fill out a questionnaire about your experience with the task\n" \
+                              "and the Space Times program. \n" \
+                              "It should be noted that you are allowed to switch ships when\n" \
+                              "you're Game Over, by entering the menu again.\n\n" \
+                              "Have fun and good luck!"
+
+    font_size = 25
+    explanation_font_general = pygame.font.SysFont("Arial", font_size)
+    run = True
+    while run:
+
+        WINDOW.blit(BACKGROUND, (0, 0))
+        start_button.draw(WINDOW, WHITE)
+        WINDOW.blit(GHOST_BOY, (get_middle_x(GHOST_BOY), HEIGHT / 2 - 15))
+        render_multi_line(explanation_general, 100, 50, font_size + 5, explanation_font_general)
+        pygame.display.update()
+        for event in pygame.event.get():
+            position = pygame.mouse.get_pos()
+
+            # if pressing quit 'x' then stop
+            if event.type == pygame.QUIT:
+                save_full_experiment_data()
+                pygame.quit()
+                sys.exit()
+                run = False
+            # if start button is pressed then start the game
+            if event.type == pygame.MOUSEMOTION:
+                start_button.hoverEffect(position)
+
+            # if start button is pressed then start the game
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if start_button.isHovered(position):
+                    return main_menu(group_num)
+
+    # pygame.quit()
+    return False
+
 
 if os.path.isfile('Save_Data/temp_game_data.csv'):
     os.remove("Save_Data/temp_game_data.csv")

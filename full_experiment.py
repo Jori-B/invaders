@@ -83,13 +83,13 @@ def full_exp_main_menu():
 
                     # TODO: add break 
                         break_screen(group_num, "0000")
-                        main_menu(group_num)
+                        before_main_menu(group_num)
                         end_screen("1")
                         exit()
                 elif two_button.isHovered(position):
                     group_num = 2
                     # This should be removed?
-                    done = main_menu(group_num)
+                    done = before_main_menu(group_num)
 
                     print("FULL EXPERIMENT")
                     print(done)
