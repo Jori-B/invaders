@@ -6,6 +6,7 @@ from classes.model import Model
 from slimstampen.spacingmodel import Response
 from utilities.constants import *
 from utilities.main_functions import *
+from classes.saveData import *
 
 MAX_ANS_LEN = 10
 
@@ -19,7 +20,7 @@ infoObject = pygame.display.Info()
 # The minutes and seconds when someone started are defined globally. Namely, if someone pressed the
 # menu during the game, then the minutes and seconds should still count as having passed.
 minutes_start = 0
-seconds_start = 2
+seconds_start = 30
 start_ticks = 0
 
 def default_main(group_num):
@@ -36,10 +37,11 @@ def default_main(group_num):
 
     if group_num == 1:
         block = 1
+        trial_nr = 0
     else:
         block = 2
+        trial_nr = pd.read_csv("Save_Data/temp_game_data.csv").shape[0]
     game_data = pd.DataFrame()
-    trial_nr = 0
     is_gamification = False
 
     # Define reference to Model class
@@ -92,8 +94,13 @@ def default_main(group_num):
 
         WINDOW.blit(BACKGROUND, (0, 0))
 
-        # If the specified time is up the user should switch to the break sceen
+        # If the specified time is up the user should switch to the break screen
         if minutes == 0 and seconds == 0:
+            if not game_data.empty:
+                model_data = model.save_model_data()
+                save_data = pd.merge(model_data, game_data, on='trial', how='outer')
+                save_data.to_csv(PATH, index=False)
+            save_full_experiment_data()
             print("Experiment done")
             # code = "0000"
             run = False
@@ -221,13 +228,21 @@ def default_main_menu(group_num):
     start_button_y = 3 * HEIGHT / 4
     start_button = Button(BACKGROUND_GREY, button_x, start_button_y, button_width,
                           button_height, button_font, "Start game!")
-    explanation_general = "This is the default SlimStampen implementation \n" \
-                          "of the experiment. \n\n" \
-                          "You will solve multiplication questions for 12 minutes. \n" \
-                          "After the 12 minutes are over a break screen will appear. \n" \
-                          "Only after you have filled in the questionnaire during\n" \
-                          "the break, should you press the button there to continue.\n\n" \
-                          "Have fun and good luck!"
+    if group_num == 1:
+        explanation_general = "This is the standard SlimStampen block of the experiment. \n\n" \
+                              "In the upcoming block you will solve multiplication questions. \n" \
+                              "After 12 minutes there is a break in which you will be asked. \n" \
+                              "to fill out a questionnaire about you experience with the \n" \
+                              "task and the SlimStampen program. \n" \
+                              "Have fun and good luck!"
+    else:
+        explanation_general = "Next is the standard SlimStampen block of the experiment. \n\n" \
+                              "In the upcoming block you will again solve multiplication \n" \
+                              "questions. After 12 minutes you will again to be asked \n" \
+                              "to fill out a questionnaire about you experience with the \n" \
+                              "task and the SlimStampen program. \n" \
+                              "Have fun and good luck!"
+
     font_size = 25
     explanation_font_general = pygame.font.SysFont("Arial", font_size)
     run = True
@@ -258,16 +273,6 @@ def default_main_menu(group_num):
 
     # pygame.quit()
     return False
-
-
-def save_full_experiment_data():
-    if os.path.isfile(PATH):
-        experiment_data = pd.read_csv(PATH)
-        # if os.path.isfile(FINAL_PATH):
-        #     old_experiment_data = pd.read_csv(FINAL_PATH)
-        #     experiment_data = old_experiment_data.append(experiment_data, ignore_index=True)
-        os.remove(PATH)
-        experiment_data.to_csv(FINAL_PATH, index=False)
 
 
 if os.path.isfile('Save_Data/temp_basic_slimstampen_data.csv'):

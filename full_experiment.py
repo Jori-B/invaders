@@ -10,6 +10,7 @@ from classes.rectangle import Rectangle
 from utilities.constants import *
 from utilities.main_functions import *
 from classes.endScreen import *
+from classes.saveData import *
 
 import sys
 
@@ -107,9 +108,9 @@ def break_screen(group_number, questionnaire_code):
     font_size = 25
     break_font = pygame.font.SysFont("Arial", font_size)
     link_font = pygame.font.SysFont("Arial", font_size * 2)
-    break_text = "You can take a break right now. During this break,\n" \
-                 "we ask you to fill in a questionnaire.\n" \
-                 f"Please enter \"{ID_CODE_1}\" under Experiment Code.\n" \
+    break_text = "You can now take a short break. During this break,\n" \
+                 "we ask you to fill out a questionnaire.\n" \
+                 f"In it, pease enter \"{ID_CODE_1}\" under Experiment Code.\n" \
                  "Go to the questionnaire using the following link: "
     link_text = "https://forms.gle/" + str(questionnaire_code)
     link_label = link_font.render(link_text, 1, WHITE)

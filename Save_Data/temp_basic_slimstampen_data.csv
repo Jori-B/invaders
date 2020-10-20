@@ -1,0 +1,4 @@
+trial,block,group_number,ID_code_1,ID_code_2,is_gamification,answer_given
+1,1,1,W688,j698,False,5
+2,1,1,W688,j698,[False],1234
+3,1,1,W688,j698,[False],42

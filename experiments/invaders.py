@@ -20,6 +20,7 @@ from slimstampen.spacingmodel import Response
 from classes.aboutScreen import *
 from utilities.constants import *
 from utilities.main_functions import *
+from classes.saveData import *
 
 MAX_ANS_LEN = 10
 
@@ -33,7 +34,7 @@ infoObject = pygame.display.Info()
 # The minutes and seconds when someone started are defined globally. Namely, if someone pressed the
 # menu during the game, then the minutes and seconds should still count as having passed.
 minutes_start = 0
-seconds_start = 2
+seconds_start = 40
 start_ticks = 0
 
 high_score = 0
@@ -69,10 +70,12 @@ def main(ship, ship_name, ship_color, group_num):
     # if this_is_the_first_block:
     if group_num == 1:
         block = 2
+        trial_nr = pd.read_csv('Save_Data/temp_basic_slimstampen_data.csv').shape[0]
+        print(trial_nr)
     else:
         block = 1
+        trial_nr = 0
     game_data = pd.DataFrame()
-    trial_nr = 0
     temp_shots_fired = 0
     temp_lives = lives
     is_gamification = True
@@ -268,6 +271,11 @@ def main(ship, ship_name, ship_color, group_num):
             lives -= 1
         # If the specified time is up the user should switch to the break sceen
         if minutes == 0 and seconds == 0:
+            if not game_data.empty:
+                model_data = model.save_model_data()
+                save_data = pd.merge(model_data, game_data, on='trial', how='outer')
+                save_data.to_csv(PATH, index=False)
+            save_full_experiment_data()
             print("Experiment done")
             return True
         if lost:
@@ -903,16 +911,6 @@ def choose_color(chosen_ship, group_num):
 
     return False
     # pygame.quit()
-
-
-def save_full_experiment_data():
-    if os.path.isfile(PATH):
-        experiment_data = pd.read_csv(PATH)
-        # if os.path.isfile(FINAL_PATH):
-        #     old_experiment_data = pd.read_csv(FINAL_PATH)
-        #     experiment_data = old_experiment_data.append(experiment_data, ignore_index=True)
-        os.remove(PATH)
-        experiment_data.to_csv(FINAL_PATH, index=False)
 
 
 if os.path.isfile('Save_Data/temp_game_data.csv'):

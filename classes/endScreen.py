@@ -1,6 +1,7 @@
+import sys
 from classes.button import Button
 from utilities.main_functions import *
-import sys
+from classes.saveData import *
 
 
 def end_screen(questionnaire_code):
@@ -9,9 +10,9 @@ def end_screen(questionnaire_code):
     font_size = 25
     end_font = pygame.font.SysFont("Arial", font_size)
     link_font = pygame.font.SysFont("Arial", font_size * 2)
-    end_text = "You finished the second experimental round!\n" \
-               "As with the first, we ask you to fill in a questionnaire.\n" \
-               f"Please enter \"{ID_CODE_1}\" under Experiment Code.\n" \
+    end_text = "You finished the second an last block!\n" \
+               "As with the first, we ask you to fill out a questionnaire.\n" \
+               f"In it, please enter \"{ID_CODE_2}\" under Experiment Code.\n" \
                "Go to the questionnaire using the following link: "
     link_text = "https://forms.gle/" + str(questionnaire_code)
     link_label = link_font.render(link_text, 1, WHITE)
@@ -47,6 +48,7 @@ def end_screen(questionnaire_code):
         else:
             time_passed_in_sec = (pygame.time.get_ticks() - start_time) / 1000
             if time_passed_in_sec > 3:
+                save_full_experiment_data()
                 run = False
                 pygame.quit()
                 sys.exit()
@@ -61,6 +63,7 @@ def end_screen(questionnaire_code):
 
             # if pressing quit 'x' then stop
             if event.type == pygame.QUIT:
+                save_full_experiment_data()
                 run = False
                 pygame.quit()
                 sys.exit()

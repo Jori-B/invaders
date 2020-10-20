@@ -67,7 +67,7 @@ class SpacingModel(object):
         not_seen_facts = [(f, a) for (f, a) in fact_activations if a == -float("inf") and lower_id_limit <= f.fact_id <= upper_id_limit]
 
         # Prevent an immediate repetition of the same fact
-        if len(seen_facts) > 1:
+        if len(seen_facts) > 0:
             last_response = self.responses[-1]
             seen_facts = [(f, a) for (f, a) in seen_facts if f.fact_id != last_response.fact.fact_id]
 
