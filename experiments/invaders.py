@@ -34,7 +34,7 @@ infoObject = pygame.display.Info()
 # The minutes and seconds when someone started are defined globally. Namely, if someone pressed the
 # menu during the game, then the minutes and seconds should still count as having passed.
 minutes_start = 0
-seconds_start = 40
+seconds_start = 2
 start_ticks = 0
 
 high_score = 0
@@ -270,7 +270,7 @@ def main(ship, ship_name, ship_color, group_num):
                 player = create_new_player(ship, stats)
             lives -= 1
         # If the specified time is up the user should switch to the break sceen
-        if minutes == 0 and seconds == 0:
+        if (minutes <= 0 and seconds <= 0) or (minutes <= 0 and seconds_start - int(timer) < 0):
             if not game_data.empty:
                 model_data = model.save_model_data()
                 save_data = pd.merge(model_data, game_data, on='trial', how='outer')
