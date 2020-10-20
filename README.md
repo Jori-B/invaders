@@ -1,28 +1,41 @@
-# User Models 2020/2021
+# Space Times - User Models 2020/2021
 
 Materials for User Models (20/21)
 
+#### Groups
+
 
 #### Requirements
-- [Python 3](https://www.python.org/downloads/) (recommended) or Python 2.7+
-- [pandas](https://pandas.pydata.org/getting_started.html)
+- [Python 3](https://www.python.org/downloads/) (recommended 3.7 or 3.7,7) or Python 2.7+
+- [pandas] 1.1.2(https://pandas.pydata.org/getting_started.html)
+- [numpy] 1.18.5
+- [pygame] 2.0.0.dev1 (try 2.0.0.dev6 for python 3.8+)
 
-To open the tutorial, you need [jupyter](https://jupyter.org/install). The experiment example requires [OpenSesame](https://osdoc.cogsci.nl/3.3/download/).
-If something is not working as expected, first make sure that you have up-to-date versions of all these software packages.
+#### Anaconda 
+- For this project you will be asked to install Anaconda (a packet manager) if do not already have it. To do so, go to: https://www.anaconda.com/products/individual. For this project we used conda 4.8.3 / python 3.7.7.
+
+- Download the experiment folder from this github repository by clicking Code, then Download ZIP or using `` git clone https://github.com/joblowow/invaders``
+- Using the terminal move inside the experiment folder directory (with cd directory). For Windows users use the ancaonda terminal.
+- Use the command ``conda env create -f environment.yml``
+- Once done use the command conda activate experiment_invaders to activate the environment.
+- Run the experiment using the command ``python full_experiment.py``
+- AFTER YOU’VE COMPLETED THE EXPERIMENT:
+- Deactivate environment with ``conda deactivate``
+- Remove environment with ``conda remove --name experiment_invaders --all ``
+- If desired uninstall Ancaconda.
 
 
-#### How to download
-Download the code in this repository by clicking Code, then Download ZIP.
-Alternatively, open a terminal and type
+#### Trouble shooting
 
-    git clone https://github.com/VanRijnLab/user-models-2020.git
+In case the anaconda environment does not manage to install pygame in the environment try the command line ``pip install pygame==2.0.0.dev6``. If you have any problem contact us we will do our best to help !
 
+#### Data
 
-
-#### Tutorial
-The jupyter notebook ([Tutorial.ipynb](Tutorial.ipynb)) shows the basics of using the spacing model.
+As a participant you are required to send the results back to us, the data files to be send can be found in the Save Data folder. You can send the results back to following emails (please state in the email your name and surname): j.blankestijn@student.rug.nl, j.bosh@student.rug.nl or f.perin@student.rug.nl.
+Deadline to send data back to us is 25th of October
 
 
 
-#### OpenSesame example
-An OpenSesame example is included with the code ([OpenSesameExample.osexp](OpenSesameExample.osexp)). The spacing model code is embedded in the file, so that it is easier to share with participants.
+
+
+
