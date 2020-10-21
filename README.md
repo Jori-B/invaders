@@ -38,7 +38,7 @@ In case the anaconda environment does not manage to install pygame in the enviro
 
 #### Data
 
-As a participant you are required to send the results back to us, the data files to be send can be found in the Save Data folder. You can send the results back to following emails (please state in the email your name and surname): j.a.blankestijn.1@student.rug.nl, j.bosh@student.rug.nl or f.perin@student.rug.nl.
+As a participant you are required to send the results back to us, the data files to be send can be found in the Save Data folder. You can send the results back to following emails (please state in the email your name and surname): j.a.blankestijn.1@student.rug.nl, j.r.a.bosh@student.rug.nl or f.perin@student.rug.nl.
 Deadline to send data back to us is 25th of October
 
 
