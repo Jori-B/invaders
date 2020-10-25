@@ -19,7 +19,7 @@ class BigButton:
         self.img = img
         self.show_stats = show_stats
         self.is_locked = is_locked
-        self.small_font = pygame.font.SysFont("notosansmonocjkkr", 15)
+        self.small_font = pygame.font.SysFont("notosansmonocjkkr", 25)
         if is_locked:
             self.unlock_text = unlock_text
         if show_stats:

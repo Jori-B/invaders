@@ -14,7 +14,7 @@ class Button():
         self.text = text
         self.font = font
         self.is_locked = is_locked
-        self.small_font = pygame.font.SysFont("notosansmonocjkkr", 15)
+        self.small_font = pygame.font.SysFont("notosansmono", 25)
 
     def getXMiddle(self, widthOfObject):
         return self.x + self.width / 2 - widthOfObject / 2

@@ -63,16 +63,16 @@ def default_main(group_num):
         if is_correct:
             text = "Correct!"
             correct_img = CORRECT_IMG
-            main_font_size = 30
+            main_font_size = 35
             main_font = pygame.font.SysFont("notosansmonocjkkr", main_font_size)
             correct_box = Rectangle(WHITE, x + correct_img.get_width(), y, 250, 100, main_font, main_font, False, text)
             correct_box.draw(WINDOW, None, False)
         else:
             text = "Incorrect! Answer was: "
             correct_img = INCORRECT_IMG
-            main_font_size = 20
+            main_font_size = 25
             main_font = pygame.font.SysFont("notosansmonocjkkr", main_font_size)
-            answer_font = pygame.font.SysFont("notosansmonocjkkr", 30)
+            answer_font = pygame.font.SysFont("notosansmonocjkkr", 40)
 
             correct_box = Rectangle(WHITE, x + correct_img.get_width(), y, 250, 100, main_font, answer_font, True, text,
                                     str(answer), )
@@ -138,7 +138,7 @@ def default_main(group_num):
             else:
                 question = f"{new_fact[3]} = "
             # TODO: Add multiplication showing and check if answer is correct or wrong
-            main_font = pygame.font.SysFont("notosansmonocjkkr", 30)
+
             string = ""
 
             answering_question = True
@@ -151,7 +151,7 @@ def default_main(group_num):
             y = HEIGHT / 2 - ANSWER_BOX.get_height() / 2
             width = 400
             height = 150
-
+            box_font = pygame.font.SysFont("notosansmonocjkkr", 40)
             correct_box = Rectangle(WHITE, x, y, width, height, main_font, main_font, True, code_text, str(question),
                                     RED, BLACK_NON_TRANSPARENT)
             correct_box.draw(WINDOW, None, False)

@@ -68,7 +68,7 @@ def main(ship, ship_name, ship_color, group_num):
     FPS = 60
     level = 0
     lives = 3
-    main_font = pygame.font.SysFont("notosansmonocjkkr", 30)
+    main_font = pygame.font.SysFont("notosansmonocjkkr", 35)
     # lost_font = pygame.font.SysFont("notosansmonocjkkr", 60)
     # If you want to know which fonts are available
     # print(src.font.get_fonts())
@@ -129,7 +129,7 @@ def main(ship, ship_name, ship_color, group_num):
         if is_correct:
             text = "Correct!"
             correct_img = CORRECT_IMG
-            cor_font_size = 30
+            cor_font_size = 35
             cor_font = pygame.font.SysFont("notosansmonocjkkr", cor_font_size)
             correct_box = Rectangle(WHITE, x + correct_img.get_width(), y, 250, 100, cor_font, main_font, False, text)
             correct_box.draw(WINDOW, None, True)
@@ -137,9 +137,9 @@ def main(ship, ship_name, ship_color, group_num):
         else:
             text = "Incorrect! Answer was: "
             correct_img = INCORRECT_IMG
-            cor_font_size = 20
+            cor_font_size = 25
             cor_font = pygame.font.SysFont("notosansmonocjkkr", cor_font_size)
-            answer_font = pygame.font.SysFont("notosansmonocjkkr", 30)
+            answer_font = pygame.font.SysFont("notosansmonocjkkr", 40)
 
             correct_box = Rectangle(WHITE, x + correct_img.get_width(), y, 250, 100, cor_font, answer_font, True, text,
                                     str(answer))
@@ -214,7 +214,7 @@ def main(ship, ship_name, ship_color, group_num):
         score_label = main_font.render(f"Score: {score}", 1, WHITE)
         # Top left hand corner plus a little offset for room for the menu button
         lives_label_x = 10 + menu_btn.width * 2
-        WINDOW.blit(lives_label, (lives_label_x, 10))
+        WINDOW.blit(lives_label, (lives_label_x, 20))
         # Draw an amount of hearts in the top left corner indicating the amount of lives
         for life_cnt in range(1, lives + 1):
             WINDOW.blit(LIFE, (
@@ -226,9 +226,9 @@ def main(ship, ship_name, ship_color, group_num):
         score_x = WIDTH - score_label.get_width() - offset_right
         level_x = score_x - level_label.get_width() - offset
         correct_x = level_x - correct_label.get_width() - offset
-        WINDOW.blit(score_label, (score_x, 10))
-        WINDOW.blit(level_label, (level_x, 10))
-        WINDOW.blit(correct_label, (correct_x, 10))
+        WINDOW.blit(score_label, (score_x, 20))
+        WINDOW.blit(level_label, (level_x, 20))
+        WINDOW.blit(correct_label, (correct_x, 20))
 
         menu_btn.draw(WINDOW, WHITE)
 
@@ -430,7 +430,7 @@ def main(ship, ship_name, ship_color, group_num):
             else:
                 question = f"{new_fact[3]} = "
             # TODO: Add multiplication showing and check if answer is correct or wrong
-            main_font = pygame.font.SysFont("notosansmonocjkkr", 30)
+            # main_font = pygame.font.SysFont("notosansmonocjkkr", 30)
             string = ""
 
             answering_question = True
@@ -445,13 +445,13 @@ def main(ship, ship_name, ship_color, group_num):
             y = HEIGHT / 2 - ANSWER_BOX.get_height() / 2
             width = 400
             height = 150
-
-            correct_box = Rectangle(WHITE, x, y, width, height, main_font, main_font, True, code_text, str(question),
+            box_font = pygame.font.SysFont("notosansmonocjkkr", 40)
+            correct_box = Rectangle(WHITE, x, y, width, height, box_font, box_font, True, code_text, str(question),
                                     RED, BLACK_NON_TRANSPARENT)
 
             correct_box.draw(WINDOW, None, True)
 
-            txt_surface = main_font.render(string, True, pygame.Color('black'))
+            txt_surface = box_font.render(string, True, pygame.Color('black'))
             txt_y = y + (height / 4) * 3 - (txt_surface.get_height() / 4) * 3 - 5
             WINDOW.blit(
                 txt_surface,
@@ -651,7 +651,7 @@ def lost_screen(ship, ship_name, ship_color, group_num, score):
     y_high_score_text = y_lost_label + lost_label.get_height()
     y_scores = y_high_score_text + lost_label.get_height()
 
-    button_font = pygame.font.SysFont("notosansmonocjkkr", 20)
+    button_font = pygame.font.SysFont("notosansmonocjkkr", 30)
     button_width = 180
     button_height = 60
     y_buttons = HEIGHT - 2 * lost_label.get_height()
@@ -708,7 +708,7 @@ def lost_screen(ship, ship_name, ship_color, group_num, score):
 
 
 def show_explanation(ship, chosen_ship, color, group_num):
-    button_font = pygame.font.SysFont("notosansmonocjkkr", 20)
+    button_font = pygame.font.SysFont("notosansmonocjkkr", 30)
     back_button = Button(BACKGROUND_GREY, WIDTH * (1 / 21), button_font.get_height(), 150, 50, button_font, "< Back")
 
     font_size = 25
@@ -777,7 +777,7 @@ def choose_fighter(group_num):
         donut_is_locked = False
 
     title_font = pygame.font.SysFont("notosansmonocjkkr", 40)
-    button_font = pygame.font.SysFont("notosansmonocjkkr", 20)
+    button_font = pygame.font.SysFont("notosansmonocjkkr", 30)
     # Essentially the screen is split up into 21 parts. Buttons take up 4*4 = 16 parts of space
     button_width = WIDTH * (4 / 21)
     button_height = 500
@@ -807,8 +807,8 @@ def choose_fighter(group_num):
         title_label = title_font.render("Choose fighter:", 1, WHITE)
         title_label_drop_shadow = title_font.render("Choose fighter:", 1, BLACK)
         offset = 3
-        WINDOW.blit(title_label_drop_shadow, (WIDTH * (1 / 21) + offset, title_label.get_height() + 50 + offset))
-        WINDOW.blit(title_label, (WIDTH * (1 / 21), title_label.get_height() + 50))
+        WINDOW.blit(title_label_drop_shadow, (WIDTH * (1 / 21) + offset, title_label.get_height() + 60 + offset))
+        WINDOW.blit(title_label, (WIDTH * (1 / 21), title_label.get_height() + 60))
         pygame.display.update()
         for event in pygame.event.get():
             position = pygame.mouse.get_pos()
@@ -881,7 +881,7 @@ def is_locked(chosen_ship):
 def choose_color(chosen_ship, group_num):
     title_font = pygame.font.SysFont("notosansmonocjkkr", 40)
     subtitle_font = pygame.font.SysFont("notosansmonocjkkr", 30)
-    button_font = pygame.font.SysFont("notosansmonocjkkr", 20)
+    button_font = pygame.font.SysFont("notosansmonocjkkr", 30)
     button_width = WIDTH * (4 / 21)
     button_height = 400
     button_y = HEIGHT - button_height - 50
@@ -917,11 +917,11 @@ def choose_color(chosen_ship, group_num):
         subtitle_label = subtitle_font.render(ship_name, 1, WHITE)
         subtitle_label_drop_shadow = subtitle_font.render(ship_name, 1, BLACK)
         offset = 3
-        WINDOW.blit(title_label_drop_shadow, (WIDTH * (1 / 21) + offset, title_label.get_height() + 50 + offset))
-        WINDOW.blit(title_label, (WIDTH * (1 / 21), title_label.get_height() + 50))
+        WINDOW.blit(title_label_drop_shadow, (WIDTH * (1 / 21) + offset, title_label.get_height() + 60 + offset))
+        WINDOW.blit(title_label, (WIDTH * (1 / 21), title_label.get_height() + 60))
         WINDOW.blit(subtitle_label_drop_shadow,
-                    (WIDTH * (1 / 21) + offset, title_label.get_height() * 2 + 50 + offset))
-        WINDOW.blit(subtitle_label, (WIDTH * (1 / 21), title_label.get_height() * 2 + 50))
+                    (WIDTH * (1 / 21) + offset, title_label.get_height() * 2 + 70 + offset))
+        WINDOW.blit(subtitle_label, (WIDTH * (1 / 21), title_label.get_height() * 2 + 70))
         pygame.display.update()
         for event in pygame.event.get():
             position = pygame.mouse.get_pos()

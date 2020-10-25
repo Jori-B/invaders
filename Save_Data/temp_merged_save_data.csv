@@ -1,0 +1,5 @@
+trial,start_time,rt,correct,fact_id,question,answer,question2,alpha,block,group_number,is_gamification,answer_given
+1,4459.0,2856.0,False,23.0,13 x 8,104,8 x 13,0.3,1,1,False,123
+2,,,,,,,,,1,1,[False],43
+3,,,,,,,,,1,1,[False],21
+4,,,,,,,,,1,1,[False],22

@@ -1,0 +1,3 @@
+trial,start_time,rt,correct,fact_id,question,answer,question2,alpha,block,group_number,is_gamification,answer_given,shots_fired,shots_fired_total,ship_name,ship_color,lives,level,enemies_on_screen
+1,36386,1885,True,10016,9 x 9,81,9 x 9,0.3,1,2,True,81,2,2,lord_nelson,purple,3,1,1
+2,45773,5067,False,10030,17 x 7,119,7 x 17,0.3,1,2,True,2,1,3,lord_nelson,['purple'],3,1,1

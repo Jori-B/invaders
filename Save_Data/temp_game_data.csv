@@ -1,0 +1,9 @@
+trial,block,group_number,is_gamification,answer_given,shots_fired,shots_fired_total,ship_name,ship_color,lives,level,enemies_on_screen
+1,1,2,True,81,2,2,lord_nelson,purple,3,1,1
+2,1,2,True,2,1,3,lord_nelson,['purple'],3,1,1
+3,1,2,True,24,1,1,pointy_boy,['green'],3,1,1
+4,1,2,True,22,1,1,commander_cosmonaut,['green'],3,1,1
+5,1,2,True,2,1,1,pointy_boy,['red'],3,1,1
+6,1,2,True,28,1,1,pointy_boy,['red'],3,1,1
+7,1,2,True,2,1,2,pointy_boy,['red'],3,1,2
+8,1,2,True,34,2,2,pointy_boy,['red'],3,1,2
