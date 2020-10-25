@@ -7,3 +7,5 @@ trial,block,group_number,is_gamification,answer_given,shots_fired,shots_fired_to
 6,1,2,True,28,1,1,pointy_boy,['red'],3,1,1
 7,1,2,True,2,1,2,pointy_boy,['red'],3,1,2
 8,1,2,True,34,2,2,pointy_boy,['red'],3,1,2
+9,1,2,True,23,1,1,pointy_boy,['red'],3,1,2
+10,1,2,True,28,1,2,pointy_boy,['red'],3,1,2

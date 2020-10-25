@@ -4,7 +4,7 @@ import sys
 
 
 def about_screen():
-    font_size = 25
+    font_size = 30
     about_font = pygame.font.SysFont("Arial", font_size)
     about_explanation_text = "This application uses an Adaptive Fact Learning system for \n" \
                              "teaching people multiplication (tables) while playing Space Invaders. \n" \
