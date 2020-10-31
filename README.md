@@ -1,17 +1,5 @@
 # Space Times - User Models 2020/2021
 
-#### Groups
-
-- Karlijn Rozestraten - Group 1
-- Niklas (Erdmann or Martin) - Group 1
-- Max van IJsselmuiden - Group 1
-
-- Peter Kegel - Group 2
-- Ivana Akrum - Group 2
-- Han Havinga - Group 2
-- Tessa Bouws - Group 2
-
-
 #### Requirements
 - [Python 3](https://www.python.org/downloads/) (recommended  python 3.5 or 3.7.7)
 - [pandas  1.1.2](https://pandas.pydata.org/getting_started.html)
